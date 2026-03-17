@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>회원가입 | HYUNDAI YACHT CARE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+<div class="auth-page" style="align-items:flex-start;padding:40px 20px">
+  <div class="auth-card" style="max-width:560px;margin:0 auto">
+    <div class="auth-logo">
+      <div class="nav-logo" style="display:inline-flex">
+        <span class="logo-hyundai">HYUNDAI</span>
+        <span class="logo-yacht">YACHT CARE</span>
+      </div>
+    </div>
+    <h2 class="auth-title">회원가입</h2>
+    <p class="auth-subtitle">프리미엄 요트 케어 서비스에 오신 것을 환영합니다</p>
+    <div id="regAlert" class="alert"></div>
+    <form onsubmit="handleRegister(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">성함 <span class="required">*</span></label>
+          <input type="text" class="form-input" id="name" placeholder="홍길동" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">연락처</label>
+          <input type="tel" class="form-input" id="phone" placeholder="010-0000-0000">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">이메일 <span class="required">*</span></label>
+        <input type="email" class="form-input" id="email" placeholder="example@email.com" required>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">비밀번호 <span class="required">*</span></label>
+          <input type="password" class="form-input" id="pw" placeholder="8자 이상" required minlength="8">
+        </div>
+        <div class="form-group">
+          <label class="form-label">비밀번호 확인 <span class="required">*</span></label>
+          <input type="password" class="form-input" id="pw2" placeholder="비밀번호 재입력" required>
+        </div>
+      </div>
+      <hr class="divider">
+      <p style="font-size:13px;color:var(--text-light);margin-bottom:16px">요트 정보 (선택사항)</p>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">요트 이름</label>
+          <input type="text" class="form-input" id="yachtName" placeholder="예: 블루오션">
+        </div>
+        <div class="form-group">
+          <label class="form-label">요트 모델</label>
+          <input type="text" class="form-input" id="yachtModel" placeholder="예: Beneteau 40">
+        </div>
+        <div class="form-group">
+          <label class="form-label">요트 길이 (ft)</label>
+          <input type="number" class="form-input" id="yachtLength" placeholder="예: 42" min="20">
+        </div>
+        <div class="form-group">
+          <label class="form-label">계류 마리나</label>
+          <select class="form-select" id="marina">
+            <option value="">선택</option>
+            <option>부산 수영만 요트경기장</option>
+            <option>거제 옥포 마리나</option>
+            <option>여수 엑스포 마리나</option>
+            <option>통영 마리나</option>
+            <option>제주 중문 마리나</option>
+            <option>기타</option>
+          </select>
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px" id="regBtn">
+        <i class="fas fa-user-plus"></i> 회원가입
+      </button>
+    </form>
+    <div class="auth-footer">
+      이미 계정이 있으신가요? <a href="/login.html">로그인</a>
+      &nbsp;·&nbsp; <a href="/">홈으로</a>
+    </div>
+  </div>
+</div>
+<script>
+async function handleRegister(e) {
+  e.preventDefault();
+  const pw = document.getElementById('pw').value;
+  const pw2 = document.getElementById('pw2').value;
+  if (pw !== pw2) { 
+    const alert = document.getElementById('regAlert');
+    alert.className = 'alert alert-error'; alert.style.display = 'block';
+    alert.textContent = '비밀번호가 일치하지 않습니다.'; return; 
+  }
+  const btn = document.getElementById('regBtn');
+  const alert = document.getElementById('regAlert');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 처리 중...';
+  try {
+    const res = await fetch('/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: document.getElementById('name').value,
+        phone: document.getElementById('phone').value,
+        email: document.getElementById('email').value,
+        password: pw,
+        yacht_name: document.getElementById('yachtName').value,
+        yacht_model: document.getElementById('yachtModel').value,
+        yacht_length: parseFloat(document.getElementById('yachtLength').value) || null,
+        marina_berth: document.getElementById('marina').value
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      localStorage.setItem('yachtToken', data.token);
+      localStorage.setItem('yachtUser', JSON.stringify(data.user));
+      alert.className = 'alert alert-success'; alert.style.display = 'block';
+      alert.textContent = '회원가입이 완료되었습니다!';
+      setTimeout(() => { location.href = '/dashboard.html'; }, 1500);
+    } else { throw new Error(data.error); }
+  } catch(err) {
+    alert.className = 'alert alert-error'; alert.style.display = 'block';
+    alert.textContent = err.message || '회원가입에 실패했습니다.';
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-user-plus"></i> 회원가입';
+  }
+}
+</script>
+</body>
+</html>

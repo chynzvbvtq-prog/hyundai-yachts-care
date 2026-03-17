@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지 | HYUNDAI YACHT CARE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- Navigation -->
+<nav class="navbar scrolled" id="navbar" style="position:fixed">
+  <div class="nav-container">
+    <a href="/" class="nav-logo">
+      <span class="logo-hyundai">HYUNDAI</span>
+      <span class="logo-yacht">YACHT CARE</span>
+    </a>
+    <ul class="nav-menu" id="navMenu">
+      <li><a href="/" class="nav-link">홈</a></li>
+      <li><a href="/booking.html" class="nav-link">예약하기</a></li>
+      <li><a href="#" class="btn-nav" onclick="logout()">로그아웃</a></li>
+    </ul>
+    <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+<div class="menu-overlay" id="menuOverlay" onclick="closeMobileMenu()"></div>
+
+<div class="dashboard-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-profile">
+      <div class="sidebar-avatar" id="sidebarAvatar">U</div>
+      <div class="sidebar-name" id="sidebarName">로딩 중...</div>
+      <div class="sidebar-email" id="sidebarEmail">-</div>
+      <div class="sidebar-badge" id="sidebarMembership">Standard</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="sidebar-section">메뉴</div>
+      <div class="sidebar-link active" onclick="showTab('overview')" id="tab-overview">
+        <i class="fas fa-tachometer-alt"></i> 대시보드
+      </div>
+      <div class="sidebar-link" onclick="showTab('bookings')" id="tab-bookings">
+        <i class="fas fa-calendar-check"></i> 예약 내역
+      </div>
+      <div class="sidebar-link" onclick="showTab('history')" id="tab-history">
+        <i class="fas fa-history"></i> 서비스 이력
+      </div>
+      <div class="sidebar-link" onclick="showTab('maintenance')" id="tab-maintenance">
+        <i class="fas fa-tools"></i> 정기 점검 일정
+      </div>
+      <div class="sidebar-section">계정</div>
+      <div class="sidebar-link" onclick="showTab('profile')" id="tab-profile">
+        <i class="fas fa-user-cog"></i> 프로필 설정
+      </div>
+      <div class="sidebar-link" onclick="logout()" style="color:#e53e3e">
+        <i class="fas fa-sign-out-alt"></i> 로그아웃
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="mainContent">
+
+    <!-- Overview Tab -->
+    <div id="content-overview">
+      <div class="page-title">대시보드</div>
+      <div class="page-subtitle" id="dashGreeting">안녕하세요!</div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon gold"><i class="fas fa-calendar-check"></i></div>
+          <div><div class="stat-num" id="statTotal">-</div><div class="stat-label">총 예약</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon navy"><i class="fas fa-clock"></i></div>
+          <div><div class="stat-num" id="statPending">-</div><div class="stat-label">대기 중</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+          <div><div class="stat-num" id="statCompleted">-</div><div class="stat-label">완료</div></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon blue"><i class="fas fa-tools"></i></div>
+          <div><div class="stat-num" id="statMaintenance">-</div><div class="stat-label">예정 점검</div></div>
+        </div>
+      </div>
+
+      <!-- Next appointment -->
+      <div class="dashboard-section">
+        <div class="dashboard-section-title">
+          다음 예약
+          <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
+        </div>
+        <div class="card" id="nextBookingCard">
+          <div class="empty-state"><i class="fas fa-calendar"></i><p>예정된 예약이 없습니다</p></div>
+        </div>
+      </div>
+
+      <!-- Recent bookings -->
+      <div class="dashboard-section">
+        <div class="dashboard-section-title">
+          최근 예약
+          <a href="#" onclick="showTab('bookings')" style="font-size:13px;color:var(--gold)">전체 보기</a>
+        </div>
+        <div class="card">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>예약 번호</th><th>서비스</th><th>날짜</th><th>상태</th><th>금액</th>
+                </tr>
+              </thead>
+              <tbody id="recentBookingsTable">
+                <tr><td colspan="5"><div class="empty-state" style="padding:30px"><i class="fas fa-calendar"></i><p>예약 내역이 없습니다</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bookings Tab -->
+    <div id="content-bookings" style="display:none">
+      <div class="page-title">예약 내역</div>
+      <div class="page-subtitle">모든 예약을 확인하고 관리하세요</div>
+      <div style="margin-bottom:20px;display:flex;gap:10px;flex-wrap:wrap">
+        <select class="form-select" style="width:auto" id="bookingFilter" onchange="filterBookings()">
+          <option value="">전체 상태</option>
+          <option value="pending">대기 중</option>
+          <option value="confirmed">확정</option>
+          <option value="completed">완료</option>
+          <option value="cancelled">취소</option>
+        </select>
+        <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>예약 번호</th><th>패키지</th><th>요트</th><th>예약 날짜</th><th>상태</th><th>금액</th><th>관리</th></tr>
+            </thead>
+            <tbody id="allBookingsTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- History Tab -->
+    <div id="content-history" style="display:none">
+      <div class="page-title">서비스 이력</div>
+      <div class="page-subtitle">완료된 서비스 내역을 확인하세요</div>
+      <div class="card">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>서비스 일자</th><th>서비스 유형</th><th>요트</th><th>담당 기술진</th><th>다음 점검</th></tr>
+            </thead>
+            <tbody id="historyTable"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Maintenance Tab -->
+    <div id="content-maintenance" style="display:none">
+      <div class="page-title">정기 점검 일정</div>
+      <div class="page-subtitle">다가오는 정기 점검 일정을 확인하세요</div>
+      <div id="maintenanceCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px"></div>
+    </div>
+
+    <!-- Profile Tab -->
+    <div id="content-profile" style="display:none">
+      <div class="page-title">프로필 설정</div>
+      <div class="page-subtitle">계정 정보와 요트 정보를 관리하세요</div>
+      <div class="card" style="max-width:700px">
+        <div id="profileAlert" class="alert"></div>
+        <form onsubmit="updateProfile(event)">
+          <h4 style="margin-bottom:20px;color:var(--primary-dark)">기본 정보</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">이름</label>
+              <input type="text" class="form-input" id="profName">
+            </div>
+            <div class="form-group">
+              <label class="form-label">연락처</label>
+              <input type="tel" class="form-input" id="profPhone">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">이메일</label>
+            <input type="email" class="form-input" id="profEmail" disabled style="background:var(--bg-light)">
+          </div>
+          <hr class="divider">
+          <h4 style="margin-bottom:20px;color:var(--primary-dark)">요트 정보</h4>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="form-label">요트 이름</label>
+              <input type="text" class="form-input" id="profYachtName">
+            </div>
+            <div class="form-group">
+              <label class="form-label">요트 모델</label>
+              <input type="text" class="form-input" id="profYachtModel">
+            </div>
+            <div class="form-group">
+              <label class="form-label">요트 길이 (ft)</label>
+              <input type="number" class="form-input" id="profYachtLength">
+            </div>
+            <div class="form-group">
+              <label class="form-label">계류 마리나</label>
+              <input type="text" class="form-input" id="profMarina">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary" id="profSaveBtn">
+            <i class="fas fa-save"></i> 변경사항 저장
+          </button>
+        </form>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+let currentUser = null;
+let allBookings = [];
+
+window.addEventListener('load', async () => {
+  const token = localStorage.getItem('yachtToken');
+  if (!token) { location.href = '/login.html?redirect=/dashboard.html'; return; }
+  currentUser = JSON.parse(localStorage.getItem('yachtUser') || 'null');
+  if (!currentUser) { location.href = '/login.html'; return; }
+  updateSidebar();
+  await loadDashboardData();
+});
+
+function updateSidebar() {
+  if (!currentUser) return;
+  document.getElementById('sidebarAvatar').textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
+  document.getElementById('sidebarName').textContent = currentUser.name || '-';
+  document.getElementById('sidebarEmail').textContent = currentUser.email || '-';
+  document.getElementById('sidebarMembership').textContent = {standard:'Standard', premium:'Premium', vip:'VIP'}[currentUser.membership_type || 'standard'];
+  document.getElementById('dashGreeting').textContent = currentUser.name + ' 고객님, 안녕하세요!';
+}
+
+async function loadDashboardData() {
+  const token = localStorage.getItem('yachtToken');
+  try {
+    const res = await fetch('/api/bookings/my', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if (data.success) {
+      allBookings = data.bookings || [];
+      renderStats();
+      renderRecentBookings();
+      renderNextBooking();
+    }
+  } catch(e) { console.error(e); }
+
+  // Load maintenance
+  try {
+    const res = await fetch('/api/users/maintenance', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if (data.success) {
+      const count = data.schedule?.length || 0;
+      document.getElementById('statMaintenance').textContent = count;
+      renderMaintenanceCards(data.schedule || []);
+    }
+  } catch(e) {}
+
+  // Load profile
+  try {
+    const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if (data.success && data.user) {
+      document.getElementById('profName').value = data.user.name || '';
+      document.getElementById('profPhone').value = data.user.phone || '';
+      document.getElementById('profEmail').value = data.user.email || '';
+      document.getElementById('profYachtName').value = data.user.yacht_name || '';
+      document.getElementById('profYachtModel').value = data.user.yacht_model || '';
+      document.getElementById('profYachtLength').value = data.user.yacht_length || '';
+      document.getElementById('profMarina').value = data.user.marina_berth || '';
+    }
+  } catch(e) {}
+}
+
+function renderStats() {
+  document.getElementById('statTotal').textContent = allBookings.length;
+  document.getElementById('statPending').textContent = allBookings.filter(b => b.status === 'pending' || b.status === 'confirmed').length;
+  document.getElementById('statCompleted').textContent = allBookings.filter(b => b.status === 'completed').length;
+}
+
+function renderRecentBookings() {
+  const tbody = document.getElementById('recentBookingsTable');
+  const recent = allBookings.slice(0, 5);
+  if (!recent.length) return;
+  tbody.innerHTML = recent.map(b => `
+    <tr>
+      <td><span style="font-family:Montserrat;font-size:12px;font-weight:600">${b.booking_number}</span></td>
+      <td>${b.package_name || '개별 서비스'}</td>
+      <td>${b.scheduled_date} ${b.scheduled_time}</td>
+      <td>${statusBadge(b.status)}</td>
+      <td style="font-family:Montserrat;font-weight:600">${Number(b.total_price).toLocaleString()}원</td>
+    </tr>
+  `).join('');
+}
+
+function renderNextBooking() {
+  const upcoming = allBookings.find(b => b.status === 'pending' || b.status === 'confirmed');
+  const el = document.getElementById('nextBookingCard');
+  if (!upcoming) { el.innerHTML = '<div class="empty-state"><i class="fas fa-calendar"></i><p>예정된 예약이 없습니다</p></div><div style="text-align:center;padding:20px"><a href="/booking.html" class="btn btn-primary">새 예약하기</a></div>'; return; }
+  el.innerHTML = `
+    <div style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+      <div style="background:var(--primary-dark);color:white;border-radius:12px;padding:20px 28px;text-align:center;min-width:100px">
+        <div style="font-size:11px;letter-spacing:0.1em;opacity:0.7">${upcoming.scheduled_date.split('-')[1]}월</div>
+        <div style="font-family:Montserrat;font-size:36px;font-weight:700;line-height:1">${upcoming.scheduled_date.split('-')[2]}</div>
+        <div style="font-size:12px;opacity:0.7">${upcoming.scheduled_time}</div>
+      </div>
+      <div style="flex:1">
+        <div style="font-size:12px;color:var(--text-light);margin-bottom:4px">예약 번호: ${upcoming.booking_number}</div>
+        <div style="font-size:18px;font-weight:700;margin-bottom:6px">${upcoming.package_name || '개별 서비스'}</div>
+        <div style="font-size:14px;color:var(--text-medium)"><i class="fas fa-anchor" style="color:var(--gold);margin-right:6px"></i>${upcoming.yacht_name}</div>
+        <div style="font-size:14px;color:var(--text-medium);margin-top:4px"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:6px"></i>${upcoming.marina_berth || '위치 미지정'}</div>
+      </div>
+      <div style="text-align:right">
+        ${statusBadge(upcoming.status)}
+        <div style="font-family:Montserrat;font-size:22px;font-weight:700;color:var(--primary-dark);margin-top:8px">${Number(upcoming.total_price).toLocaleString()}원</div>
+      </div>
+    </div>
+  `;
+}
+
+function renderAllBookings() {
+  const filter = document.getElementById('bookingFilter').value;
+  const list = filter ? allBookings.filter(b => b.status === filter) : allBookings;
+  const tbody = document.getElementById('allBookingsTable');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="7"><div class="empty-state" style="padding:40px"><i class="fas fa-calendar"></i><p>예약 내역이 없습니다</p></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(b => `
+    <tr>
+      <td><span style="font-family:Montserrat;font-size:12px;font-weight:600">${b.booking_number}</span></td>
+      <td>${b.package_name || '-'}</td>
+      <td>${b.yacht_name}</td>
+      <td>${b.scheduled_date} ${b.scheduled_time}</td>
+      <td>${statusBadge(b.status)}</td>
+      <td style="font-family:Montserrat;font-weight:600">${Number(b.total_price).toLocaleString()}원</td>
+      <td>
+        ${b.status === 'pending' ? '<button class="btn btn-sm" style="color:#c53030;border-color:#c53030" onclick="cancelBooking(' + b.id + ')">취소</button>' : '-'}
+      </td>
+    </tr>
+  `).join('');
+}
+
+async function cancelBooking(id) {
+  if (!confirm('예약을 취소하시겠습니까?')) return;
+  const token = localStorage.getItem('yachtToken');
+  try {
+    const res = await fetch('/api/bookings/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    if (data.success) { showToast('예약이 취소되었습니다', 'success'); await loadDashboardData(); renderAllBookings(); }
+    else throw new Error(data.error);
+  } catch(e) { showToast(e.message, 'error'); }
+}
+
+function filterBookings() { renderAllBookings(); }
+
+async function loadHistory() {
+  const token = localStorage.getItem('yachtToken');
+  try {
+    const res = await fetch('/api/users/service-history', { headers: { 'Authorization': 'Bearer ' + token } });
+    const data = await res.json();
+    const tbody = document.getElementById('historyTable');
+    if (!data.success || !data.history?.length) {
+      tbody.innerHTML = '<tr><td colspan="5"><div class="empty-state" style="padding:40px"><i class="fas fa-history"></i><p>서비스 이력이 없습니다</p></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = data.history.map(h => `
+      <tr>
+        <td>${h.completed_at?.split('T')[0] || '-'}</td>
+        <td>${h.service_type}</td>
+        <td>${h.yacht_name || '-'}</td>
+        <td>${h.technician_name || '-'}</td>
+        <td>${h.next_service_date || '-'}</td>
+      </tr>
+    `).join('');
+  } catch(e) {}
+}
+
+function renderMaintenanceCards(schedule) {
+  const container = document.getElementById('maintenanceCards');
+  if (!schedule.length) {
+    container.innerHTML = '<div class="card"><div class="empty-state"><i class="fas fa-tools"></i><p>예정된 정기 점검이 없습니다</p></div></div>';
+    return;
+  }
+  container.innerHTML = schedule.map(m => `
+    <div class="card" style="border-left:4px solid var(--gold)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span class="status-badge ${m.priority === 'urgent' ? 'status-cancelled' : 'status-pending'}">${m.priority === 'urgent' ? '긴급' : '일반'}</span>
+        <span style="font-size:12px;color:var(--text-light)">${m.due_date}</span>
+      </div>
+      <h4 style="margin-bottom:8px">${m.maintenance_type}</h4>
+      <p style="font-size:14px;color:var(--text-medium)">${m.description || ''}</p>
+      <a href="/booking.html" class="btn btn-sm btn-outline-dark" style="margin-top:16px">예약하기</a>
+    </div>
+  `).join('');
+}
+
+async function updateProfile(e) {
+  e.preventDefault();
+  const token = localStorage.getItem('yachtToken');
+  const btn = document.getElementById('profSaveBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  try {
+    const res = await fetch('/api/users/profile', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({
+        name: document.getElementById('profName').value,
+        phone: document.getElementById('profPhone').value,
+        yacht_name: document.getElementById('profYachtName').value,
+        yacht_model: document.getElementById('profYachtModel').value,
+        yacht_length: parseFloat(document.getElementById('profYachtLength').value) || null,
+        marina_berth: document.getElementById('profMarina').value
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      const pa = document.getElementById('profileAlert');
+      pa.className = 'alert alert-success'; pa.style.display = 'block';
+      pa.textContent = '프로필이 업데이트되었습니다.';
+      showToast('저장되었습니다', 'success');
+    }
+  } catch(e) { showToast('저장에 실패했습니다', 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> 변경사항 저장'; }
+}
+
+function showTab(tab) {
+  ['overview','bookings','history','maintenance','profile'].forEach(t => {
+    document.getElementById('content-' + t).style.display = 'none';
+    document.getElementById('tab-' + t)?.classList.remove('active');
+  });
+  document.getElementById('content-' + tab).style.display = 'block';
+  document.getElementById('tab-' + tab)?.classList.add('active');
+  if (tab === 'bookings') renderAllBookings();
+  if (tab === 'history') loadHistory();
+  // Mobile: close sidebar
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('menuOverlay').classList.remove('active');
+}
+
+function toggleMobileMenu() {
+  document.getElementById('navMenu').classList.toggle('open');
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('menuOverlay').classList.toggle('active');
+}
+function closeMobileMenu() {
+  document.getElementById('navMenu').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('menuOverlay').classList.remove('active');
+}
+
+function statusBadge(s) {
+  const map = { pending:'status-pending', confirmed:'status-confirmed', completed:'status-completed', cancelled:'status-cancelled', in_progress:'status-inprogress' };
+  const label = { pending:'대기 중', confirmed:'확정', completed:'완료', cancelled:'취소', in_progress:'진행 중' };
+  return '<span class="status-badge ' + (map[s]||'') + '">' + (label[s]||s) + '</span>';
+}
+
+function logout() {
+  localStorage.removeItem('yachtToken');
+  localStorage.removeItem('yachtUser');
+  location.href = '/';
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'toast ' + type + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+</body>
+</html>
