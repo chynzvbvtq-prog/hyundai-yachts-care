@@ -2499,3 +2499,608 @@ img[loading="lazy"] {
   animation: spin 0.8s linear infinite !important;
   display: inline-block;
 }
+
+/* ════════════════════════════════════════════════
+   BATCH 7 — 전면 UI 재설계 (카드/그리드 레이아웃)
+   ================================================ */
+
+/* ── 공통 카드 시스템 ── */
+.card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--bg-medium);
+  background: var(--bg-light);
+}
+.card-header-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.card-header-title i { color: var(--brand-red); font-size: 14px; }
+.card-body { padding: 24px; }
+
+/* ── 예약 카드 그리드 ── */
+.booking-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px;
+}
+.booking-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+  padding: 20px;
+  transition: var(--transition);
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.booking-card:hover {
+  border-color: var(--brand-red);
+  box-shadow: 0 4px 20px rgba(157,29,34,0.1);
+  transform: translateY(-2px);
+}
+.booking-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+.booking-card-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--text-light);
+}
+.booking-card-pkg {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-top: 4px;
+}
+.booking-card-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.booking-card-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-medium);
+}
+.booking-card-row i {
+  color: var(--brand-red);
+  width: 14px;
+  flex-shrink: 0;
+}
+.booking-card-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  padding-top: 12px;
+  border-top: 1px solid var(--bg-medium);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.booking-card-price .cancel-btn {
+  font-size: 11px;
+  padding: 4px 10px;
+  background: rgba(220,38,38,0.08);
+  color: #dc2626;
+  border: 1px solid rgba(220,38,38,0.2);
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  transition: var(--transition);
+}
+.booking-card-price .cancel-btn:hover {
+  background: rgba(220,38,38,0.15);
+}
+
+/* ── 통계 카드 그리드 ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--brand-red);
+  border-radius: 3px 3px 0 0;
+}
+.kpi-card.blue::before { background: var(--navy); }
+.kpi-card.green::before { background: #16a34a; }
+.kpi-card.gold::before { background: #d97706; }
+.kpi-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+.kpi-icon.red { background: rgba(157,29,34,0.1); color: var(--brand-red); }
+.kpi-icon.blue { background: rgba(0,45,86,0.08); color: var(--navy); }
+.kpi-icon.green { background: rgba(22,163,74,0.1); color: #16a34a; }
+.kpi-icon.gold { background: rgba(217,119,6,0.1); color: #d97706; }
+.kpi-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: 'Montserrat', sans-serif;
+}
+.kpi-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--navy);
+  line-height: 1;
+}
+.kpi-sub {
+  font-size: 12px;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+/* ── 관리자 예약 테이블 개선 ── */
+.admin-table-wrap {
+  overflow-x: auto;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+}
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.admin-table thead tr {
+  background: var(--navy);
+  color: rgba(255,255,255,0.8);
+}
+.admin-table thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.admin-table tbody tr {
+  border-bottom: 1px solid var(--bg-medium);
+  transition: var(--transition);
+}
+.admin-table tbody tr:last-child { border-bottom: none; }
+.admin-table tbody tr:hover { background: rgba(0,45,86,0.03); }
+.admin-table tbody td {
+  padding: 14px 16px;
+  color: var(--text-dark);
+  vertical-align: middle;
+}
+.admin-table .td-mono {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--text-light);
+}
+.admin-table .td-name {
+  font-weight: 600;
+  color: var(--navy);
+}
+.admin-table .td-price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+/* ── 홈페이지 서비스 카드 그리드 개선 ── */
+.services-grid-new {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.service-card-new {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--bg-medium);
+  overflow: hidden;
+  transition: var(--transition);
+}
+.service-card-new:hover {
+  border-color: var(--brand-red);
+  box-shadow: 0 8px 32px rgba(157,29,34,0.12);
+  transform: translateY(-4px);
+}
+.service-card-img {
+  height: 160px;
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  color: var(--brand-red);
+  position: relative;
+  overflow: hidden;
+}
+.service-card-img::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 50%, rgba(0,45,86,0.4) 100%);
+}
+.service-card-body { padding: 24px; }
+.service-card-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.service-card-desc {
+  font-size: 13px;
+  color: var(--text-medium);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.service-card-features {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 20px;
+}
+.service-card-feature {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-medium);
+}
+.service-card-feature i {
+  color: #16a34a;
+  font-size: 12px;
+  flex-shrink: 0;
+}
+.service-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--bg-medium);
+}
+.service-card-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--navy);
+}
+.service-card-price span {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--text-light);
+}
+
+/* ── FAQ/프로세스 섹션 개선 ── */
+.process-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+.process-step {
+  text-align: center;
+  padding: 28px 20px;
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+  position: relative;
+  transition: var(--transition);
+}
+.process-step:hover {
+  border-color: var(--brand-red);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-sm);
+}
+.process-step-num {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 28px;
+  background: var(--brand-red);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+}
+.process-icon {
+  font-size: 36px;
+  color: var(--brand-red);
+  margin-bottom: 14px;
+  margin-top: 8px;
+}
+.process-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.process-desc {
+  font-size: 13px;
+  color: var(--text-medium);
+  line-height: 1.6;
+}
+
+/* ── 관리자 사용자 목록 카드 ── */
+.user-list-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+.user-card {
+  background: #fff;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: var(--transition);
+}
+.user-card:hover {
+  border-color: var(--brand-red);
+  box-shadow: var(--shadow-sm);
+}
+.user-card-avatar {
+  width: 48px;
+  height: 48px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.user-card-info { flex: 1; min-width: 0; }
+.user-card-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-card-email {
+  font-size: 12px;
+  color: var(--text-light);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.user-card-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ── 홈페이지 히어로 개선 ── */
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(157,29,34,0.15);
+  border: 1px solid rgba(157,29,34,0.3);
+  color: var(--brand-red-light);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  padding: 6px 14px;
+  border-radius: 99px;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+.hero-stats-row {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+}
+.hero-stat-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+}
+.hero-stat-label {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  margin-top: 2px;
+}
+
+/* ── 빠른 예약 버튼 플로팅 ── */
+.quick-book-float {
+  display: none;
+}
+
+/* ── 모바일 반응형 ── */
+@media (max-width: 1100px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .services-grid-new { grid-template-columns: repeat(2, 1fr); }
+  .process-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 768px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .kpi-value { font-size: 22px; }
+  .booking-card-grid { grid-template-columns: 1fr; }
+  .services-grid-new { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .user-list-grid { grid-template-columns: 1fr; }
+  .admin-table { min-width: 600px; }
+  .card-header { padding: 14px 16px; }
+  .card-body { padding: 16px; }
+}
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi-card { padding: 16px; }
+  .kpi-value { font-size: 20px; }
+  .process-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── 빈 상태 UI ── */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-medium);
+}
+.empty-state-icon {
+  font-size: 48px;
+  color: var(--bg-medium);
+  margin-bottom: 16px;
+}
+.empty-state-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.empty-state-desc {
+  font-size: 13px;
+  color: var(--text-light);
+  margin-bottom: 20px;
+}
+
+/* ── 대시보드 예약 이력 테이블 개선 ── */
+.booking-table-wrap {
+  overflow-x: auto;
+}
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.booking-table thead th {
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 11px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--text-light);
+  border-bottom: 2px solid var(--bg-medium);
+  white-space: nowrap;
+}
+.booking-table tbody td {
+  padding: 14px 14px;
+  border-bottom: 1px solid var(--bg-light);
+  vertical-align: middle;
+}
+.booking-table tbody tr:hover { background: rgba(0,45,86,0.02); }
+.booking-table .td-num {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  color: var(--text-light);
+}
+.booking-table .td-name { font-weight: 600; color: var(--navy); }
+.booking-table .td-price {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+}
+
+/* ── 마이페이지 다음 예약 카드 ── */
+.next-booking-card {
+  background: linear-gradient(135deg, var(--navy) 0%, #0a3561 100%);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  color: #fff;
+  margin-bottom: 20px;
+  position: relative;
+  overflow: hidden;
+}
+.next-booking-card::after {
+  content: '\f21a';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  right: 24px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 80px;
+  opacity: 0.05;
+}
+.next-booking-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(157,29,34,0.8);
+  margin-bottom: 8px;
+}
+.next-booking-date {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.next-booking-info {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+}
+.next-booking-empty {
+  font-size: 14px;
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

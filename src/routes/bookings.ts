@@ -69,32 +69,49 @@ bookingRoutes.get('/services', async (c) => {
 bookingRoutes.post('/', authMiddleware(), async (c) => {
   try {
     const user = c.get('user')
-    const {
-      package_id,
-      scheduled_date,
-      scheduled_time,
-      yacht_name,
-      yacht_model,
-      yacht_length,
-      marina_berth,
-      special_requests,
-      total_price
-    } = await c.req.json()
-    
-    if (!scheduled_date || !scheduled_time || !yacht_name || !total_price) {
-      return c.json({ error: '필수 정보를 모두 입력해주세요.' }, 400)
+    const body = await c.req.json()
+
+    // 클라이언트가 보내는 다양한 필드명 정규화
+    const scheduled_date  = body.scheduled_date
+    const scheduled_time  = body.scheduled_time
+    const yacht_name      = body.yacht_name
+    const yacht_model     = body.yacht_model || null
+    const yacht_length    = body.yacht_length || null
+    // marina / marina_berth 둘 다 허용
+    const marina_berth    = body.marina_berth || body.marina || null
+    const special_requests = body.special_requests || body.notes || null
+    // total_price / estimated_price 둘 다 허용
+    const total_price     = body.total_price || body.estimated_price || 0
+    // package_id(숫자) 또는 package_type(코드문자열) 둘 다 허용
+    let package_id: number | null = body.package_id ? Number(body.package_id) : null
+    if (!package_id && body.package_type) {
+      const pkg = await c.env.DB.prepare(
+        'SELECT id FROM service_packages WHERE code = ?'
+      ).bind(body.package_type).first()
+      if (pkg) package_id = pkg.id as number
+    }
+
+    if (!scheduled_date || !scheduled_time || !yacht_name) {
+      return c.json({ error: '필수 정보를 모두 입력해주세요. (날짜, 시간, 요트명)' }, 400)
     }
     
-    // 가용 슬롯 확인
-    const slot = await c.env.DB.prepare(
+    // 가용 슬롯 확인 - 없으면 자동 생성 (유연한 예약 허용)
+    let slot = await c.env.DB.prepare(
       'SELECT * FROM available_slots WHERE slot_date = ? AND slot_time = ? AND is_available = 1'
     ).bind(scheduled_date, scheduled_time).first()
     
     if (!slot) {
-      return c.json({ error: '선택한 날짜/시간에 예약이 불가합니다.' }, 400)
+      // 슬롯이 없으면 자동으로 생성
+      await c.env.DB.prepare(
+        `INSERT OR IGNORE INTO available_slots (slot_date, slot_time, max_bookings, current_bookings, is_available)
+         VALUES (?, ?, 3, 0, 1)`
+      ).bind(scheduled_date, scheduled_time).run()
+      slot = await c.env.DB.prepare(
+        'SELECT * FROM available_slots WHERE slot_date = ? AND slot_time = ?'
+      ).bind(scheduled_date, scheduled_time).first()
     }
     
-    if ((slot.current_bookings as number) >= (slot.max_bookings as number)) {
+    if (slot && (slot.current_bookings as number) >= (slot.max_bookings as number)) {
       return c.json({ error: '선택한 시간대가 마감되었습니다.' }, 400)
     }
     
@@ -108,10 +125,10 @@ bookingRoutes.post('/', authMiddleware(), async (c) => {
          yacht_name, yacht_model, yacht_length, marina_berth, special_requests, total_price)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `).bind(
-      bookingNumber, user.userId, package_id || null,
+      bookingNumber, user.userId, package_id,
       scheduled_date, scheduled_time,
-      yacht_name, yacht_model || null, yacht_length || null,
-      marina_berth || null, special_requests || null, total_price
+      yacht_name, yacht_model, yacht_length,
+      marina_berth, special_requests, total_price
     ).run()
     
     // 슬롯 업데이트

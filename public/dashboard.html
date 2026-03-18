@@ -181,93 +181,92 @@
         <!-- C-3: 예약 상태 알림 배너 -->
         <div id="bookingAlertBanner" style="display:none;margin-bottom:20px"></div>
 
-        <div class="stats-grid">
-          <div class="stat-card">
-            <div class="stat-icon gold" style="float:right"><i class="fas fa-calendar-check"></i></div>
-            <div class="stat-label">총 예약</div>
-            <div class="stat-value" id="statTotal">-</div>
-            <div class="stat-sub">전체 예약 건수</div>
+        <!-- KPI 카드 그리드 -->
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-icon gold"><i class="fas fa-calendar-check"></i></div>
+            <div class="kpi-label">총 예약</div>
+            <div class="kpi-value" id="statTotal">-</div>
+            <div class="kpi-sub">전체 예약 건수</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon navy" style="float:right"><i class="fas fa-clock"></i></div>
-            <div class="stat-label">대기 / 확정</div>
-            <div class="stat-value" id="statPending">-</div>
-            <div class="stat-sub">처리 대기 중</div>
+          <div class="kpi-card blue">
+            <div class="kpi-icon blue"><i class="fas fa-clock"></i></div>
+            <div class="kpi-label">대기 / 확정</div>
+            <div class="kpi-value" id="statPending">-</div>
+            <div class="kpi-sub">처리 대기 중</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon green" style="float:right"><i class="fas fa-check-circle"></i></div>
-            <div class="stat-label">완료</div>
-            <div class="stat-value" id="statCompleted">-</div>
-            <div class="stat-sub">완료된 서비스</div>
+          <div class="kpi-card green">
+            <div class="kpi-icon green"><i class="fas fa-check-circle"></i></div>
+            <div class="kpi-label">완료</div>
+            <div class="kpi-value" id="statCompleted">-</div>
+            <div class="kpi-sub">완료된 서비스</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon blue" style="float:right"><i class="fas fa-tools"></i></div>
-            <div class="stat-label">예정 점검</div>
-            <div class="stat-value" id="statMaintenance">-</div>
-            <div class="stat-sub">정기 점검 일정</div>
-          </div>
-        </div>
-
-        <!-- Next Booking -->
-        <div class="data-card">
-          <div class="data-card-header">
-            <div class="data-card-title"><i class="fas fa-calendar-day" style="color:var(--brand-red);margin-right:8px"></i>다음 예약</div>
-            <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
-          </div>
-          <div class="data-card-body" id="nextBookingCard" style="padding:28px">
-            <div style="text-align:center;color:var(--text-light);padding:20px">
-              <i class="fas fa-calendar" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>
-              예정된 예약이 없습니다
-            </div>
+          <div class="kpi-card gold">
+            <div class="kpi-icon gold"><i class="fas fa-tools"></i></div>
+            <div class="kpi-label">예정 점검</div>
+            <div class="kpi-value" id="statMaintenance">-</div>
+            <div class="kpi-sub">정기 점검 일정</div>
           </div>
         </div>
 
-        <!-- Recent Bookings -->
-        <div class="data-card">
-          <div class="data-card-header">
-            <div class="data-card-title"><i class="fas fa-history" style="color:var(--brand-red);margin-right:8px"></i>최근 예약</div>
+        <!-- 다음 예약 카드 -->
+        <div class="next-booking-card" id="nextBookingCard">
+          <div class="next-booking-label">NEXT APPOINTMENT</div>
+          <div class="next-booking-empty">
+            <i class="fas fa-calendar-plus"></i>
+            예정된 예약이 없습니다
+          </div>
+          <div style="margin-top:12px">
+            <a href="/booking.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.6);font-weight:600">
+              <i class="fas fa-plus-circle" style="color:var(--brand-red-light)"></i> 지금 예약하기
+            </a>
+          </div>
+        </div>
+
+        <!-- 최근 예약 카드 그리드 -->
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header">
+            <div class="card-header-title"><i class="fas fa-history"></i>최근 예약</div>
             <a href="#" onclick="showTab('bookings')" style="font-size:13px;color:var(--brand-red);font-weight:600">전체 보기 →</a>
           </div>
-          <div class="data-card-body overflow-x">
-            <table>
-              <thead>
-                <tr>
-                  <th>예약 번호</th><th>서비스</th><th>날짜</th><th>상태</th><th>금액</th>
-                </tr>
-              </thead>
-              <tbody id="recentBookingsTable">
-                <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-light)">예약 내역이 없습니다</td></tr>
-              </tbody>
-            </table>
+          <div class="card-body" style="padding:16px 20px">
+            <div id="recentBookingsGrid" class="booking-card-grid">
+              <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-calendar"></i></div>
+                <div class="empty-state-title">예약 내역이 없습니다</div>
+                <div class="empty-state-desc">첫 번째 예약을 시작해보세요!</div>
+                <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Bookings Tab -->
       <div id="content-bookings" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
-          <p style="color:var(--text-medium);font-size:15px">모든 예약을 확인하고 관리하세요</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <select class="form-select" style="width:auto;height:40px" id="bookingFilter" onchange="filterBookings()">
-              <option value="">전체 상태</option>
-              <option value="pending">대기 중</option>
-              <option value="confirmed">확정</option>
-              <option value="completed">완료</option>
-              <option value="cancelled">취소</option>
-            </select>
-            <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-title"><i class="fas fa-calendar-check"></i>전체 예약 내역</div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <select class="form-select" style="height:36px;font-size:13px;width:auto" id="bookingFilter" onchange="filterBookings()">
+                <option value="">전체 상태</option>
+                <option value="pending">대기 중</option>
+                <option value="confirmed">확정</option>
+                <option value="completed">완료</option>
+                <option value="cancelled">취소</option>
+              </select>
+              <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
+            </div>
           </div>
-        </div>
-        <div class="data-card">
-          <div class="data-card-body overflow-x">
-            <table>
-              <thead>
-                <tr><th>예약 번호</th><th>패키지</th><th>요트</th><th>예약 날짜</th><th>상태</th><th>금액</th><th>관리</th></tr>
-              </thead>
-              <tbody id="allBookingsTable">
-                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">예약 내역이 없습니다</td></tr>
-              </tbody>
-            </table>
+          <div class="card-body" style="padding:16px 20px">
+            <div id="allBookingsGrid" class="booking-card-grid">
+              <div class="empty-state">
+                <div class="empty-state-icon"><i class="fas fa-calendar"></i></div>
+                <div class="empty-state-title">예약 내역이 없습니다</div>
+                <div class="empty-state-desc">첫 번째 예약을 시작해보세요!</div>
+                <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -595,82 +594,97 @@ function checkOnboardingBanner() {
   }
 }
 
-function renderRecentBookings() {
-  const tbody = document.getElementById('recentBookingsTable');
-  const recent = allBookings.slice(0, 5);
-  if (!recent.length) {
-    tbody.innerHTML = `<tr><td colspan="5">
-      <div class="empty-state" style="padding:32px">
-        <i class="fas fa-calendar-times"></i>
-        <p style="font-size:14px;margin-bottom:12px">아직 예약 내역이 없습니다</p>
-        <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 첫 예약하기</a>
+function bookingCardHTML(b, showCancel=false) {
+  const pkgName = b.package_name || '개별 서비스';
+  const dateStr = b.scheduled_date ? `${b.scheduled_date} ${b.scheduled_time||''}` : '-';
+  const price = Number(b.total_price || 0).toLocaleString('ko-KR');
+  const cancelBtn = (showCancel && b.status==='pending')
+    ? `<button class="cancel-btn" onclick="openCancelModal(${b.id},'${b.booking_number}','${b.scheduled_date}')">취소</button>`
+    : '';
+  return `
+    <div class="booking-card">
+      <div class="booking-card-top">
+        <div>
+          <div class="booking-card-num">${b.booking_number}</div>
+          <div class="booking-card-pkg">${pkgName}</div>
+        </div>
+        ${statusBadge(b.status)}
       </div>
-    </td></tr>`;
+      <div class="booking-card-info">
+        <div class="booking-card-row"><i class="fas fa-ship"></i>${b.yacht_name||'-'}</div>
+        <div class="booking-card-row"><i class="fas fa-calendar"></i>${dateStr}</div>
+        ${b.marina_berth ? `<div class="booking-card-row"><i class="fas fa-map-marker-alt"></i>${b.marina_berth}</div>` : ''}
+      </div>
+      <div class="booking-card-price">
+        <span>${price}원</span>
+        ${cancelBtn}
+      </div>
+    </div>`;
+}
+
+function renderRecentBookings() {
+  const grid = document.getElementById('recentBookingsGrid');
+  if (!grid) return;
+  const recent = allBookings.slice(0, 6);
+  if (!recent.length) {
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-state-icon"><i class="fas fa-calendar-times"></i></div>
+      <div class="empty-state-title">아직 예약 내역이 없습니다</div>
+      <div class="empty-state-desc">첫 예약을 시작해보세요!</div>
+      <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>
+    </div>`;
     return;
   }
-  tbody.innerHTML = recent.map(b => `
-    <tr>
-      <td><span style="font-family:Montserrat;font-size:12px;font-weight:700;color:var(--navy)">${b.booking_number}</span></td>
-      <td>${b.package_name||'개별 서비스'}</td>
-      <td>${b.scheduled_date} ${b.scheduled_time}</td>
-      <td>${statusBadge(b.status)}</td>
-      <td style="font-family:Montserrat;font-weight:700;color:var(--navy)">${Number(b.total_price).toLocaleString()}원</td>
-    </tr>
-  `).join('');
+  grid.innerHTML = recent.map(b => bookingCardHTML(b, false)).join('');
 }
 
 function renderNextBooking() {
   const upcoming = allBookings.find(b=>b.status==='pending'||b.status==='confirmed');
   const el = document.getElementById('nextBookingCard');
+  if (!el) return;
   if (!upcoming) {
-    el.innerHTML = `<div style="text-align:center;color:var(--text-light)">
-      <i class="fas fa-calendar" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>
-      예정된 예약이 없습니다
-      <div style="margin-top:16px"><a href="/booking.html" class="btn btn-primary btn-sm">새 예약하기</a></div>
-    </div>`;
+    el.innerHTML = `
+      <div class="next-booking-label">NEXT APPOINTMENT</div>
+      <div class="next-booking-empty">
+        <i class="fas fa-calendar-plus"></i>
+        예정된 예약이 없습니다
+      </div>
+      <div style="margin-top:12px">
+        <a href="/booking.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.6);font-weight:600">
+          <i class="fas fa-plus-circle" style="color:var(--brand-red-light)"></i> 지금 예약하기
+        </a>
+      </div>`;
     return;
   }
   const parts = upcoming.scheduled_date.split('-');
   el.innerHTML = `
-    <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
-      <div style="background:var(--navy);color:white;border-radius:var(--radius-md);padding:20px 28px;text-align:center;min-width:100px">
-        <div style="font-size:11px;letter-spacing:0.1em;opacity:0.6;font-family:'Montserrat',sans-serif">${parts[1]}월</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:36px;font-weight:800;line-height:1;color:var(--brand-red)">${parts[2]}</div>
-        <div style="font-size:12px;opacity:0.6">${upcoming.scheduled_time}</div>
-      </div>
-      <div style="flex:1;min-width:200px">
-        <div style="font-size:11px;color:var(--text-light);margin-bottom:6px;font-family:'Montserrat',sans-serif;letter-spacing:0.08em">예약 번호: ${upcoming.booking_number}</div>
-        <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">${upcoming.package_name||'개별 서비스'}</div>
-        <div style="font-size:14px;color:var(--text-medium);margin-bottom:4px"><i class="fas fa-anchor" style="color:var(--brand-red);width:16px"></i> ${upcoming.yacht_name}</div>
-        <div style="font-size:14px;color:var(--text-medium)"><i class="fas fa-map-marker-alt" style="color:var(--brand-red);width:16px"></i> ${upcoming.marina_berth||'위치 미지정'}</div>
-      </div>
-      <div style="text-align:right">
-        ${statusBadge(upcoming.status)}
-        <div style="font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;color:var(--brand-red);margin-top:8px">${Number(upcoming.total_price).toLocaleString()}원</div>
-      </div>
+    <div class="next-booking-label">NEXT APPOINTMENT</div>
+    <div class="next-booking-date">${parts[1]}월 ${parts[2]}일 ${upcoming.scheduled_time||''}</div>
+    <div class="next-booking-info">
+      <span style="margin-right:16px"><i class="fas fa-ship" style="margin-right:6px;color:var(--brand-red)"></i>${upcoming.package_name||'개별 서비스'}</span>
+      <span><i class="fas fa-anchor" style="margin-right:6px;color:rgba(255,255,255,0.3)"></i>${upcoming.yacht_name||'-'}</span>
     </div>
-  `;
+    <div style="margin-top:8px;display:flex;align-items:center;gap:12px">
+      ${statusBadge(upcoming.status)}
+      <span style="font-family:'Montserrat',sans-serif;font-size:13px;color:rgba(255,255,255,0.5)">${upcoming.booking_number}</span>
+    </div>`;
 }
 
 function renderAllBookings() {
-  const filter = document.getElementById('bookingFilter').value;
+  const filter = document.getElementById('bookingFilter')?.value || '';
   const list = filter ? allBookings.filter(b=>b.status===filter) : allBookings;
-  const tbody = document.getElementById('allBookingsTable');
+  const grid = document.getElementById('allBookingsGrid');
+  if (!grid) return;
   if (!list.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">예약 내역이 없습니다</td></tr>';
+    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
+      <div class="empty-state-icon"><i class="fas fa-calendar-times"></i></div>
+      <div class="empty-state-title">예약 내역이 없습니다</div>
+      <div class="empty-state-desc">${filter ? '해당 상태의 예약이 없습니다.' : '첫 예약을 시작해보세요!'}</div>
+      ${!filter ? '<a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>' : ''}
+    </div>`;
     return;
   }
-  tbody.innerHTML = list.map(b => `
-    <tr>
-      <td><span style="font-family:Montserrat;font-size:12px;font-weight:700;color:var(--navy)">${b.booking_number}</span></td>
-      <td>${b.package_name||'-'}</td>
-      <td>${b.yacht_name}</td>
-      <td>${b.scheduled_date} ${b.scheduled_time}</td>
-      <td>${statusBadge(b.status)}</td>
-      <td style="font-family:Montserrat;font-weight:700">${Number(b.total_price).toLocaleString()}원</td>
-      <td>${b.status==='pending'?`<button class="btn btn-sm" style="color:#c53030;border:1.5px solid #c53030;height:34px;padding:0 14px;border-radius:var(--radius-sm)" onclick="openCancelModal(${b.id},'${b.booking_number}','${b.scheduled_date}')">취소</button>`:'-'}</td>
-    </tr>
-  `).join('');
+  grid.innerHTML = list.map(b => bookingCardHTML(b, true)).join('');
 }
 
 // C-4: 예약 취소 모달

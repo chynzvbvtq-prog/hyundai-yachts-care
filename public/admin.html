@@ -284,31 +284,31 @@
 
         <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">서비스 운영 현황을 한눈에 확인하세요</p>
 
-        <!-- KPI 카드 -->
-        <div class="stats-grid" style="margin-bottom:28px">
-          <div class="stat-card">
-            <div class="stat-icon gold" style="float:right"><i class="fas fa-calendar-check"></i></div>
-            <div class="stat-label">전체 예약</div>
-            <div class="stat-value" id="statTotalBookings">-</div>
-            <div class="stat-sub">누적 예약 건수</div>
+        <!-- KPI 카드 그리드 -->
+        <div class="kpi-grid" style="margin-bottom:28px">
+          <div class="kpi-card">
+            <div class="kpi-icon gold"><i class="fas fa-calendar-check"></i></div>
+            <div class="kpi-label">전체 예약</div>
+            <div class="kpi-value" id="statTotalBookings">-</div>
+            <div class="kpi-sub">누적 예약 건수</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon navy" style="float:right"><i class="fas fa-clock"></i></div>
-            <div class="stat-label">대기 예약</div>
-            <div class="stat-value" id="statPendingBookings">-</div>
-            <div class="stat-sub">처리 대기 중</div>
+          <div class="kpi-card blue">
+            <div class="kpi-icon blue"><i class="fas fa-clock"></i></div>
+            <div class="kpi-label">대기 예약</div>
+            <div class="kpi-value" id="statPendingBookings">-</div>
+            <div class="kpi-sub">처리 대기 중</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon blue" style="float:right"><i class="fas fa-users"></i></div>
-            <div class="stat-label">총 고객</div>
-            <div class="stat-value" id="statTotalUsers">-</div>
-            <div class="stat-sub">등록된 회원 수</div>
+          <div class="kpi-card">
+            <div class="kpi-icon red"><i class="fas fa-users"></i></div>
+            <div class="kpi-label">총 고객</div>
+            <div class="kpi-value" id="statTotalUsers">-</div>
+            <div class="kpi-sub">등록된 회원 수</div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon green" style="float:right"><i class="fas fa-won-sign"></i></div>
-            <div class="stat-label">총 매출</div>
-            <div class="stat-value" id="statRevenue" style="font-size:20px">-</div>
-            <div class="stat-sub">완료 기준 매출</div>
+          <div class="kpi-card green">
+            <div class="kpi-icon green"><i class="fas fa-won-sign"></i></div>
+            <div class="kpi-label">총 매출</div>
+            <div class="kpi-value" id="statRevenue" style="font-size:22px">-</div>
+            <div class="kpi-sub">완료 기준 매출</div>
           </div>
         </div>
 
@@ -368,9 +368,28 @@
           <input type="date" class="form-input" style="width:auto;height:40px;font-size:13px" id="adminBookingDate" onchange="loadAllBookings()">
         </div>
 
-        <div class="data-card">
-          <div class="data-card-body overflow-x">
-            <table>
+        <div class="card" style="margin-bottom:20px">
+          <div class="card-header">
+            <div class="card-header-title"><i class="fas fa-calendar-check"></i>예약 관리</div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+              <button class="btn-csv" onclick="exportBookingsCSV()"><i class="fas fa-file-csv"></i> CSV</button>
+              <select class="form-select" style="width:auto;height:36px;font-size:13px" id="adminBookingStatus" onchange="loadAllBookings()">
+                <option value="">전체 상태</option>
+                <option value="pending">대기 중</option>
+                <option value="confirmed">확정</option>
+                <option value="in_progress">진행 중</option>
+                <option value="completed">완료</option>
+                <option value="cancelled">취소</option>
+              </select>
+              <input type="date" class="form-input" style="width:auto;height:36px;font-size:13px" id="adminBookingDate" onchange="loadAllBookings()">
+              <div class="search-bar" style="min-width:200px">
+                <i class="fas fa-search"></i>
+                <input type="text" id="bookingSearchInput" placeholder="예약번호, 고객명..." oninput="filterBookings()">
+              </div>
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
               <thead>
                 <tr>
                   <th>예약번호</th><th>고객</th><th>패키지</th><th>요트</th>
@@ -401,9 +420,16 @@
             <input type="text" id="customerSearchInput" placeholder="이름, 이메일, 연락처, 요트명..." oninput="searchCustomers()">
           </div>
         </div>
-        <div class="data-card">
-          <div class="data-card-body overflow-x">
-            <table>
+        <div class="card">
+          <div class="card-header">
+            <div class="card-header-title"><i class="fas fa-users"></i>고객 관리</div>
+            <div class="search-bar" style="min-width:220px">
+              <i class="fas fa-search"></i>
+              <input type="text" id="customerSearchInput" placeholder="이름, 이메일, 연락처, 요트명..." oninput="searchCustomers()">
+            </div>
+          </div>
+          <div class="admin-table-wrap">
+            <table class="admin-table">
               <thead>
                 <tr><th>이름</th><th>이메일</th><th>연락처</th><th>요트</th><th>예약수</th><th>멤버십</th><th>가입일</th></tr>
               </thead>

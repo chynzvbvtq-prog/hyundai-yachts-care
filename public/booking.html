@@ -780,16 +780,35 @@ async function submitBooking() {
 
   try {
     const extKeys = Object.keys(state.extras);
+    const scheduledDate = state.date
+      ? `${state.date.y}-${String(state.date.m+1).padStart(2,'0')}-${String(state.date.d).padStart(2,'0')}`
+      : null;
+    if (!scheduledDate || !state.time) {
+      showToast('날짜와 시간을 선택해주세요.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-calendar-check"></i>&nbsp; 예약 완료하기';
+      return;
+    }
+    if (!state.yachtName) {
+      showToast('요트 이름을 입력해주세요.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-calendar-check"></i>&nbsp; 예약 완료하기';
+      return;
+    }
     const payload = {
       package_type:     state.package,
+      package_id:       state.packageId || null,
       extra_services:   extKeys.join(','),
       yacht_name:       state.yachtName,
       yacht_model:      state.yachtModel,
-      yacht_length:     state.yachtLength,
+      yacht_length:     state.yachtLength ? Number(state.yachtLength) : null,
       marina:           state.yachtMarina,
+      marina_berth:     state.yachtMarina,
       notes:            state.yachtNotes,
-      scheduled_date:   state.date ? `${state.date.y}-${String(state.date.m+1).padStart(2,'0')}-${String(state.date.d).padStart(2,'0')}` : null,
+      special_requests: state.yachtNotes,
+      scheduled_date:   scheduledDate,
       scheduled_time:   state.time,
+      total_price:      calcTotal(),
       estimated_price:  calcTotal()
     };
     const res = await fetch('/api/bookings', {
