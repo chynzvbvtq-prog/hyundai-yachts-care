@@ -4,22 +4,40 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>로그인 | HYUNDAI YACHT CARE</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 <div class="auth-page">
+  <!-- Background decoration -->
+  <div style="position:absolute;inset:0;overflow:hidden;pointer-events:none">
+    <div style="position:absolute;width:600px;height:600px;border-radius:50%;background:rgba(201,169,97,0.05);top:-200px;right:-200px"></div>
+    <div style="position:absolute;width:400px;height:400px;border-radius:50%;background:rgba(255,255,255,0.03);bottom:-100px;left:-100px"></div>
+  </div>
+
   <div class="auth-card">
+    <!-- Logo -->
     <div class="auth-logo">
-      <div class="nav-logo" style="display:inline-flex">
-        <span class="logo-hyundai">HYUNDAI</span>
-        <span class="logo-yacht">YACHT CARE</span>
-      </div>
+      <a href="/" style="display:inline-flex;align-items:center;gap:10px;text-decoration:none">
+        <div style="width:36px;height:36px;background:rgba(0,45,86,0.08);border-radius:6px;display:flex;align-items:center;justify-content:center">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none">
+            <path d="M4 5 L4 19 M4 12 L20 12 M20 5 L20 19" stroke="#002D56" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <span class="auth-logo-main">HYUNDAI</span>
+          <span class="auth-logo-sub">YACHT CARE</span>
+        </div>
+      </a>
     </div>
+
     <h2 class="auth-title">로그인</h2>
     <p class="auth-subtitle">서비스 이용을 위해 로그인해주세요</p>
+
     <div id="loginAlert" class="alert"></div>
+
     <form onsubmit="handleLogin(event)">
       <div class="form-group">
         <label class="form-label">이메일 <span class="required">*</span></label>
@@ -29,7 +47,7 @@
         <label class="form-label">비밀번호 <span class="required">*</span></label>
         <div style="position:relative">
           <input type="password" class="form-input" id="password" placeholder="비밀번호 입력" required autocomplete="current-password">
-          <button type="button" onclick="togglePw()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:14px">
+          <button type="button" onclick="togglePw()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:14px;background:none;border:none;cursor:pointer">
             <i class="fas fa-eye" id="pwIcon"></i>
           </button>
         </div>
@@ -38,18 +56,22 @@
         <i class="fas fa-sign-in-alt"></i> 로그인
       </button>
     </form>
-    <div class="auth-divider">또는</div>
-    <div style="background:var(--bg-light);border-radius:8px;padding:16px 20px;font-size:13px;color:var(--text-medium)">
-      <strong style="display:block;margin-bottom:8px;color:var(--text-dark)">🔐 데모 계정</strong>
+
+    <hr class="auth-divider">
+
+    <div class="demo-box">
+      <strong><i class="fas fa-lock" style="color:var(--gold);margin-right:6px"></i>데모 계정</strong>
       <div>관리자: admin@hyundaiyacht.com / Admin1234!</div>
       <div style="margin-top:4px">고객: demo@hyundaiyacht.com / Demo1234!</div>
     </div>
+
     <div class="auth-footer">
       계정이 없으신가요? <a href="/register.html">회원가입</a>
       &nbsp;·&nbsp; <a href="/">홈으로</a>
     </div>
   </div>
 </div>
+
 <script>
 function togglePw() {
   const pw = document.getElementById('password');
@@ -57,17 +79,23 @@ function togglePw() {
   if (pw.type === 'password') { pw.type = 'text'; icon.className = 'fas fa-eye-slash'; }
   else { pw.type = 'password'; icon.className = 'fas fa-eye'; }
 }
+
 async function handleLogin(e) {
   e.preventDefault();
   const btn = document.getElementById('loginBtn');
-  const alert = document.getElementById('loginAlert');
+  const alertEl = document.getElementById('loginAlert');
+  alertEl.className = 'alert';
+  alertEl.style.display = 'none';
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 로그인 중...';
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: document.getElementById('email').value, password: document.getElementById('password').value })
+      body: JSON.stringify({
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
+      })
     });
     const data = await res.json();
     if (data.success) {
@@ -75,16 +103,16 @@ async function handleLogin(e) {
       localStorage.setItem('yachtUser', JSON.stringify(data.user));
       if (data.user.role === 'admin') { location.href = '/admin.html'; }
       else { location.href = new URLSearchParams(location.search).get('redirect') || '/dashboard.html'; }
-    } else { throw new Error(data.error); }
+    } else { throw new Error(data.error || '로그인에 실패했습니다.'); }
   } catch(err) {
-    alert.className = 'alert alert-error';
-    alert.style.display = 'block';
-    alert.textContent = err.message || '로그인에 실패했습니다.';
+    alertEl.className = 'alert error show';
+    alertEl.style.display = 'block';
+    alertEl.textContent = err.message || '로그인에 실패했습니다.';
     btn.disabled = false;
     btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> 로그인';
   }
 }
-// Already logged in
+
 const token = localStorage.getItem('yachtToken');
 const user = JSON.parse(localStorage.getItem('yachtUser') || 'null');
 if (token && user) { location.href = user.role === 'admin' ? '/admin.html' : '/dashboard.html'; }

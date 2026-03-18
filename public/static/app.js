@@ -1,184 +1,179 @@
+/* ================================================
+   HYUNDAI YACHT CARE — app.js
+   Main interaction module for all pages
+   ================================================ */
 
-/* ===== HYUNDAI YACHT CARE - app.js ===== */
-const API = '';
+// ── Auth helpers ──
+function getToken() { return localStorage.getItem('yachtToken'); }
+function getUser()  { try { return JSON.parse(localStorage.getItem('yachtUser')||'null'); } catch { return null; } }
 
-// ===== AUTH =====
-const Auth = {
-  getToken: () => localStorage.getItem('hy_token'),
-  getUser: () => { try { return JSON.parse(localStorage.getItem('hy_user')||'null'); } catch { return null; } },
-  setSession: (token, user) => { localStorage.setItem('hy_token', token); localStorage.setItem('hy_user', JSON.stringify(user)); },
-  clearSession: () => { localStorage.removeItem('hy_token'); localStorage.removeItem('hy_user'); },
-  isLoggedIn: () => !!localStorage.getItem('hy_token'),
-  isAdmin: () => { const u = Auth.getUser(); return u && u.role === 'admin'; }
-};
-
-// ===== API FETCH =====
-async function apiFetch(path, opts={}) {
-  const token = Auth.getToken();
-  const headers = { 'Content-Type': 'application/json', ...(token ? { Authorization: `Bearer ${token}` } : {}) };
-  const res = await fetch(API + path, { headers, ...opts });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) throw new Error(data.error || '오류가 발생했습니다.');
-  return data;
-}
-
-// ===== NAVBAR =====
-function initNavbar() {
-  const navbar = document.getElementById('navbar');
-  if (!navbar) return;
-  const onScroll = () => navbar.classList.toggle('scrolled', window.scrollY > 40);
+// ── Nav scroll ──
+(function initNavbar() {
+  const nav = document.getElementById('navbar');
+  if (!nav) return;
+  const onScroll = () => {
+    if (window.scrollY > 50) { nav.classList.add('scrolled'); nav.classList.remove('transparent'); }
+    else { nav.classList.remove('scrolled'); nav.classList.add('transparent'); }
+  };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  updateAuthNav();
-}
+  // Show/hide auth nav items
+  const token = getToken();
+  const user  = getUser();
+  const navAuth = document.getElementById('navAuth');
+  const navUser = document.getElementById('navUser');
+  if (token && user) {
+    if (navAuth) navAuth.style.display = 'none';
+    if (navUser) navUser.style.display = 'block';
+  }
+})();
+
+// ── Hamburger menu ──
 function toggleMenu() {
-  const menu = document.getElementById('navMenu');
-  const ham = document.getElementById('hamburger');
-  menu?.classList.toggle('open');
-  ham?.classList.toggle('active');
+  document.getElementById('navMenu')?.classList.toggle('open');
+  document.getElementById('hamburger')?.classList.toggle('open');
+  document.getElementById('menuOverlay')?.classList.toggle('active');
 }
 function closeMenu() {
   document.getElementById('navMenu')?.classList.remove('open');
-  document.getElementById('hamburger')?.classList.remove('active');
+  document.getElementById('hamburger')?.classList.remove('open');
+  document.getElementById('menuOverlay')?.classList.remove('active');
 }
-function updateAuthNav() {
-  const authItem = document.getElementById('authNavItem');
-  const dashItem = document.getElementById('dashboardNavItem');
-  const adminItem = document.getElementById('adminNavItem');
-  if (!authItem) return;
-  if (Auth.isLoggedIn()) {
-    authItem.style.display = 'none';
-    if (dashItem) dashItem.style.display = '';
-    if (adminItem && Auth.isAdmin()) adminItem.style.display = '';
-  } else {
-    authItem.style.display = '';
-    if (dashItem) dashItem.style.display = 'none';
-    if (adminItem) adminItem.style.display = 'none';
+
+// ── Loading overlay ──
+window.addEventListener('load', () => {
+  const overlay = document.getElementById('loadingOverlay');
+  if (overlay) {
+    setTimeout(() => overlay.classList.add('hidden'), 400);
   }
-}
+});
 
-// ===== SCROLL ANIMATION =====
-function initScrollAnimation() {
-  const els = document.querySelectorAll('.scroll-animate');
-  if (!els.length) return;
+// ── Scroll animations (fade-up) ──
+(function initScrollAnim() {
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
-  }, { threshold: 0.12 });
-  els.forEach(el => observer.observe(el));
-}
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.10 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+})();
 
-// ===== COUNTER ANIMATION =====
-function initCounters() {
-  const counters = document.querySelectorAll('.stat-number[data-target]');
-  if (!counters.length) return;
+// ── Hero counter animation ──
+(function initCounters() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
-      const el = e.target, target = +el.dataset.target, dur = 1800;
+      const el = e.target;
+      const target = parseInt(el.dataset.count, 10);
+      if (!target) return;
+      const dur = 1600;
       let start = null;
       const step = (ts) => {
         if (!start) start = ts;
         const prog = Math.min((ts - start) / dur, 1);
-        el.textContent = Math.floor(prog * target).toLocaleString();
+        const eased = 1 - Math.pow(1 - prog, 3);
+        el.textContent = Math.floor(eased * target).toLocaleString();
         if (prog < 1) requestAnimationFrame(step);
+        else el.textContent = target.toLocaleString();
       };
       requestAnimationFrame(step);
       observer.unobserve(el);
     });
   }, { threshold: 0.5 });
-  counters.forEach(c => observer.observe(c));
-}
+  document.querySelectorAll('[data-count]').forEach(el => observer.observe(el));
+})();
 
-// ===== FAQ =====
+// ── Particles ──
+(function initParticles() {
+  const container = document.getElementById('particles');
+  if (!container) return;
+  for (let i = 0; i < 28; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left:${Math.random()*100}%;
+      width:${Math.random()*2+1}px;
+      height:${Math.random()*2+1}px;
+      animation-duration:${Math.random()*12+8}s;
+      animation-delay:${Math.random()*8}s;
+    `;
+    container.appendChild(p);
+  }
+})();
+
+// ── FAQ accordion ──
 function toggleFaq(btn) {
   const item = btn.closest('.faq-item');
   const isOpen = item.classList.contains('open');
   document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
-  if (!isOpen) item.classList.add('open');
-}
-
-// ===== MODAL =====
-function showInquiryModal() {
-  document.getElementById('inquiryModal')?.classList.add('active');
-  document.body.style.overflow = 'hidden';
-}
-function closeInquiryModal(e) {
-  if (!e || e.target === e.currentTarget || e.type === 'click') {
-    document.getElementById('inquiryModal')?.classList.remove('active');
-    document.body.style.overflow = '';
+  if (!isOpen) {
+    item.classList.add('open');
+    const ans = item.querySelector('.faq-answer');
+    if (ans) ans.style.maxHeight = ans.scrollHeight + 'px';
   }
+  // Reset others
+  document.querySelectorAll('.faq-item:not(.open) .faq-answer').forEach(a => { a.style.maxHeight = '0'; });
 }
-function showModal(id) { document.getElementById(id)?.classList.add('active'); document.body.style.overflow='hidden'; }
-function closeModal(id) { document.getElementById(id)?.classList.remove('active'); document.body.style.overflow=''; }
-document.addEventListener('keydown', e => { if (e.key==='Escape') { document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active')); document.body.style.overflow=''; } });
 
-// ===== INQUIRY SUBMIT =====
+// ── Calculator ──
+function updateCalc() {
+  const pkg    = document.getElementById('calcPackage')?.value;
+  const length = parseFloat(document.getElementById('calcLength')?.value) || 0;
+  const extra  = parseInt(document.getElementById('calcExtra')?.value) || 0;
+  const loc    = parseInt(document.getElementById('calcLocation')?.value) || 0;
+  const amountEl = document.getElementById('calcAmount');
+  if (!amountEl) return;
+  if (!pkg) { amountEl.textContent = '패키지 선택 후 확인'; return; }
+  const base = { basic: 150000, premium: 380000, signature: 750000 }[pkg] || 0;
+  const lengthMult = length > 20 ? Math.max(1, 1 + (length - 20) / 30) : 1;
+  const total = Math.round((base * lengthMult) + extra + loc);
+  amountEl.textContent = total.toLocaleString() + '원';
+}
+
+// ── Inquiry form ──
 async function submitInquiry(e) {
   e.preventDefault();
-  const form = e.target, btn = document.getElementById('inquirySubmit');
-  const errEl = document.getElementById('inquiryError');
-  const fd = new FormData(form);
-  const body = Object.fromEntries(fd.entries());
-  btn.disabled = true; btn.innerHTML = '<span class="loading-spinner"></span> 접수 중...';
-  errEl.style.display = 'none';
+  const btn = document.getElementById('inqSubmitBtn');
+  const alertEl = document.getElementById('inquiryAlert');
+  alertEl.className = 'alert'; alertEl.style.display = 'none';
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 전송 중...';
   try {
-    await apiFetch('/api/inquiries', { method:'POST', body: JSON.stringify(body) });
-    form.reset();
-    closeInquiryModal();
-    showToast('문의가 접수되었습니다. 빠른 시일 내에 답변 드리겠습니다.', 'success');
+    const res = await fetch('/api/inquiries', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:    document.getElementById('inqName').value,
+        phone:   document.getElementById('inqPhone').value,
+        email:   document.getElementById('inqEmail').value,
+        subject: (document.getElementById('inqType')?.value || '') + ': ' + document.getElementById('inqSubject').value,
+        message: document.getElementById('inqMessage').value
+      })
+    });
+    const data = await res.json();
+    if (data.success) {
+      alertEl.className = 'alert success show'; alertEl.style.display = 'block';
+      alertEl.innerHTML = '<i class="fas fa-check-circle"></i> 문의가 접수되었습니다. 빠른 시일 내에 답변드리겠습니다.';
+      document.getElementById('inquiryForm').reset();
+      showToast('문의가 접수되었습니다', 'success');
+    } else { throw new Error(data.error); }
   } catch(err) {
-    errEl.textContent = err.message; errEl.style.display = 'block';
+    alertEl.className = 'alert error show'; alertEl.style.display = 'block';
+    alertEl.textContent = err.message || '문의 접수 중 오류가 발생했습니다.';
   } finally {
-    btn.disabled = false; btn.innerHTML = '<span>문의 접수하기</span>';
+    btn.disabled = false; btn.innerHTML = '<i class="fas fa-paper-plane"></i> 문의 보내기';
   }
 }
 
-// ===== TOAST =====
-function showToast(msg, type='info') {
-  let container = document.getElementById('toastContainer');
-  if (!container) {
-    container = document.createElement('div');
-    container.id = 'toastContainer';
-    container.style.cssText = 'position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:10px;';
-    document.body.appendChild(container);
-  }
-  const colors = { success:'#D1FAE5;color:#065F46', error:'#FEE2E2;color:#991B1B', info:'#DBEAFE;color:#1E40AF', warning:'#FEF3C7;color:#92400E' };
-  const toast = document.createElement('div');
-  toast.style.cssText = `background:${colors[type]||colors.info};padding:14px 20px;border-radius:8px;font-size:14px;font-weight:500;max-width:360px;box-shadow:0 4px 16px rgba(0,0,0,0.12);animation:fadeUp 0.3s ease;`;
-  toast.textContent = msg;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 4000);
+// ── Toast ──
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
-
-// ===== FORMAT =====
-function formatPrice(n) { return Number(n).toLocaleString('ko-KR') + '원'; }
-function formatDate(d) { if (!d) return '-'; return new Date(d).toLocaleDateString('ko-KR', { year:'numeric', month:'long', day:'numeric' }); }
-function formatDateTime(d) { if (!d) return '-'; return new Date(d).toLocaleString('ko-KR', { year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' }); }
-const statusLabels = { pending:'대기중', confirmed:'확정됨', in_progress:'진행중', completed:'완료됨', cancelled:'취소됨' };
-const payLabels = { unpaid:'미결제', paid:'결제완료', refunded:'환불됨' };
-function statusBadge(s) { return `<span class="badge badge-${s}">${statusLabels[s]||s}</span>`; }
-function payBadge(s) { return `<span class="badge badge-${s}">${payLabels[s]||s}</span>`; }
-
-// ===== TABS =====
-function switchTab(tabId, groupId) {
-  const group = document.getElementById(groupId || 'tabGroup');
-  if (!group) return;
-  group.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  group.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelector(`[data-tab="${tabId}"]`)?.classList.add('active');
-  document.getElementById(tabId)?.classList.add('active');
-}
-
-// ===== LOGOUT =====
-function logout() {
-  Auth.clearSession();
-  showToast('로그아웃 되었습니다.', 'info');
-  setTimeout(() => window.location.href = '/', 800);
-}
-
-// ===== INIT =====
-document.addEventListener('DOMContentLoaded', () => {
-  initNavbar();
-  initScrollAnimation();
-  initCounters();
-});

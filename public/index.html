@@ -7,30 +7,39 @@
   <meta name="description" content="현대요트의 프리미엄 케어서비스. 전문 기술진의 완벽한 요트 관리 서비스를 경험하세요.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
 
-<!-- Loading Overlay -->
+<!-- Loading -->
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loader"></div>
   <div class="loading-text">HYUNDAI YACHT CARE</div>
 </div>
 
-<!-- Menu Overlay -->
+<!-- Menu overlay -->
 <div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
-<!-- Navigation -->
+<!-- ── Navigation ── -->
 <nav class="navbar transparent" id="navbar">
   <div class="nav-container">
     <a href="/" class="nav-logo">
-      <span class="logo-hyundai">HYUNDAI</span>
-      <span class="logo-yacht">YACHT CARE</span>
+      <!-- Hyundai H-mark inspired SVG logo -->
+      <div class="logo-mark">
+        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="38" height="38" rx="4" fill="rgba(201,169,97,0.15)"/>
+          <path d="M8 10 L8 28 M8 19 L30 19 M30 10 L30 28" stroke="#C9A961" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="logo-text">
+        <span class="logo-hyundai">HYUNDAI</span>
+        <span class="logo-yacht">YACHT CARE</span>
+      </div>
     </a>
     <ul class="nav-menu" id="navMenu">
       <li><a href="#services" class="nav-link" onclick="closeMenu()">서비스</a></li>
@@ -54,7 +63,7 @@
   </div>
 </nav>
 
-<!-- Hero Section -->
+<!-- ── Hero ── -->
 <section class="hero" id="hero">
   <div class="hero-bg"></div>
   <div class="hero-particles" id="particles"></div>
@@ -80,24 +89,23 @@
         <i class="fas fa-play-circle"></i> 서비스 둘러보기
       </a>
     </div>
-  </div>
-
-  <div class="hero-stats fade-up delay-4">
-    <div class="hero-stat">
-      <div class="hero-stat-num" data-count="850">0</div>
-      <div class="hero-stat-label">완료 서비스</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num" data-count="98">0</div>
-      <div class="hero-stat-label">고객 만족도 %</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num" data-count="12">0</div>
-      <div class="hero-stat-label">전문 기술진</div>
-    </div>
-    <div class="hero-stat">
-      <div class="hero-stat-num" data-count="5">0</div>
-      <div class="hero-stat-label">서비스 연혁 년</div>
+    <div class="hero-stats fade-up delay-4">
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="850">0</div>
+        <div class="hero-stat-label">완료 서비스</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="98">0</div>
+        <div class="hero-stat-label">고객 만족도 %</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="12">0</div>
+        <div class="hero-stat-label">전문 기술진</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-num" data-count="5">0</div>
+        <div class="hero-stat-label">서비스 연혁 년</div>
+      </div>
     </div>
   </div>
 
@@ -107,14 +115,13 @@
       <path d="M0,60 C480,20 960,80 1440,60 L1440,80 L0,80 Z" fill="#F5F7FA"/>
     </svg>
   </div>
-
   <div class="hero-scroll" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">
     <div class="hero-scroll-line"></div>
     <span>SCROLL</span>
   </div>
 </section>
 
-<!-- Services Section -->
+<!-- ── Services ── -->
 <section class="services" id="services">
   <div class="container">
     <div class="section-header">
@@ -143,7 +150,7 @@
           <li><i class="fas fa-check-circle"></i> 엔진 외부 점검</li>
           <li><i class="fas fa-check-circle"></i> 서비스 완료 리포트</li>
         </ul>
-        <a href="/booking.html?package=basic" class="btn btn-full">예약하기</a>
+        <a href="/booking.html?package=basic" class="btn btn-outline-navy btn-full">예약하기</a>
       </div>
 
       <!-- Premium Care (Featured) -->
@@ -188,13 +195,13 @@
           <li><i class="fas fa-check-circle"></i> 24시간 긴급 출동 서비스</li>
           <li><i class="fas fa-check-circle"></i> 1년 정기 관리 프로그램</li>
         </ul>
-        <a href="/booking.html?package=signature" class="btn btn-full">예약하기</a>
+        <a href="/booking.html?package=signature" class="btn btn-outline-navy btn-full">예약하기</a>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Care Process -->
+<!-- ── Care Process ── -->
 <section class="process" id="process">
   <div class="container">
     <div class="section-header">
@@ -206,50 +213,35 @@
 
     <div class="process-grid">
       <div class="process-step fade-up delay-1">
-        <div class="process-num">
-          <i class="fas fa-clipboard-list"></i>
-          <span class="process-badge">01</span>
-        </div>
+        <div class="process-num"><i class="fas fa-clipboard-list"></i><span class="process-badge">01</span></div>
         <div class="process-content">
           <div class="process-title">상태 점검</div>
           <div class="process-desc">요트 전체 상태를 정밀 진단하고 서비스 계획을 수립합니다</div>
         </div>
       </div>
       <div class="process-step fade-up delay-2">
-        <div class="process-num">
-          <i class="fas fa-soap"></i>
-          <span class="process-badge">02</span>
-        </div>
+        <div class="process-num"><i class="fas fa-soap"></i><span class="process-badge">02</span></div>
         <div class="process-content">
           <div class="process-title">전문 세척</div>
           <div class="process-desc">친환경 전문 세제로 선체 안팎을 꼼꼼하게 세척합니다</div>
         </div>
       </div>
       <div class="process-step fade-up delay-3">
-        <div class="process-num">
-          <i class="fas fa-tools"></i>
-          <span class="process-badge">03</span>
-        </div>
+        <div class="process-num"><i class="fas fa-tools"></i><span class="process-badge">03</span></div>
         <div class="process-content">
           <div class="process-title">정밀 정비</div>
           <div class="process-desc">엔진, 전기, 기계 시스템을 정밀 점검하고 정비합니다</div>
         </div>
       </div>
       <div class="process-step fade-up delay-4">
-        <div class="process-num">
-          <i class="fas fa-shield-alt"></i>
-          <span class="process-badge">04</span>
-        </div>
+        <div class="process-num"><i class="fas fa-shield-alt"></i><span class="process-badge">04</span></div>
         <div class="process-content">
           <div class="process-title">보호 처리</div>
           <div class="process-desc">왁싱, 폴리싱, 코팅으로 선체를 보호하고 광택을 유지합니다</div>
         </div>
       </div>
       <div class="process-step fade-up delay-5">
-        <div class="process-num">
-          <i class="fas fa-file-alt"></i>
-          <span class="process-badge">05</span>
-        </div>
+        <div class="process-num"><i class="fas fa-file-alt"></i><span class="process-badge">05</span></div>
         <div class="process-content">
           <div class="process-title">완료 리포트</div>
           <div class="process-desc">상세한 서비스 완료 리포트와 다음 점검 일정을 제공합니다</div>
@@ -259,7 +251,7 @@
   </div>
 </section>
 
-<!-- Features Section -->
+<!-- ── Features ── -->
 <section class="features" id="features">
   <div class="container">
     <div class="section-header">
@@ -278,7 +270,7 @@
       <div class="feature-body">
         <span class="section-label">Certified Experts</span>
         <h3>국제 공인 자격증 보유<br>전문 기술진 직접 서비스</h3>
-        <p style="color:var(--text-medium);margin-top:12px">해양수산부 인증 및 국제 선박 관리 자격을 보유한 전문 기술진이 직접 서비스를 제공합니다. 요트의 모든 시스템을 완벽하게 이해하고 관리합니다.</p>
+        <p>해양수산부 인증 및 국제 선박 관리 자격을 보유한 전문 기술진이 직접 서비스를 제공합니다. 요트의 모든 시스템을 완벽하게 이해하고 관리합니다.</p>
         <ul class="feature-list">
           <li><i class="fas fa-check"></i> 해양수산부 인증 전문 기술진</li>
           <li><i class="fas fa-check"></i> 국제 선박 정비 자격 보유</li>
@@ -298,8 +290,8 @@
       </div>
       <div class="feature-body">
         <span class="section-label">Smart Management</span>
-        <h3>실시간 예약 & 서비스<br>이력 관리 시스템</h3>
-        <p style="color:var(--text-medium);margin-top:12px">온라인 예약부터 서비스 완료 리포트까지, 요트 관리의 모든 과정을 디지털로 관리할 수 있습니다. 언제 어디서나 요트 상태를 확인하세요.</p>
+        <h3>실시간 예약 &amp; 서비스<br>이력 관리 시스템</h3>
+        <p>온라인 예약부터 서비스 완료 리포트까지, 요트 관리의 모든 과정을 디지털로 관리할 수 있습니다. 언제 어디서나 요트 상태를 확인하세요.</p>
         <ul class="feature-list">
           <li><i class="fas fa-check"></i> 온라인 실시간 예약 시스템</li>
           <li><i class="fas fa-check"></i> 서비스 이력 데이터베이스</li>
@@ -320,7 +312,7 @@
       <div class="feature-body">
         <span class="section-label">Eco-Friendly</span>
         <h3>해양 환경을 생각하는<br>친환경 케어 솔루션</h3>
-        <p style="color:var(--text-medium);margin-top:12px">해양 생태계를 보호하는 친환경 세제와 공법을 사용합니다. 요트를 깨끗하게 유지하면서도 바다를 보호하는 책임감 있는 서비스를 제공합니다.</p>
+        <p>해양 생태계를 보호하는 친환경 세제와 공법을 사용합니다. 요트를 깨끗하게 유지하면서도 바다를 보호하는 책임감 있는 서비스를 제공합니다.</p>
         <ul class="feature-list">
           <li><i class="fas fa-check"></i> 해양 무해 친환경 세제 사용</li>
           <li><i class="fas fa-check"></i> 오폐수 친환경 처리 시스템</li>
@@ -333,14 +325,14 @@
   </div>
 </section>
 
-<!-- Calculator Section -->
+<!-- ── Calculator ── -->
 <section class="calculator" id="calculator">
   <div class="container">
     <div class="section-header">
       <span class="section-label">Estimate Calculator</span>
-      <h2 class="section-title fade-up" style="color:white">서비스 견적 계산기</h2>
+      <h2 class="section-title section-title-white fade-up">서비스 견적 계산기</h2>
       <div class="divider-gold"></div>
-      <p class="section-subtitle fade-up delay-1" style="color:rgba(255,255,255,0.7)">요트 크기와 서비스 유형을 선택하면 예상 견적을 즉시 확인할 수 있습니다.</p>
+      <p class="section-subtitle section-subtitle-white fade-up delay-1">요트 크기와 서비스 유형을 선택하면 예상 견적을 즉시 확인할 수 있습니다.</p>
     </div>
 
     <div class="calculator-wrap fade-up">
@@ -375,14 +367,12 @@
           </select>
         </div>
         <div class="calc-result-wrap">
-          <div class="calc-result" id="calcResult">
+          <div class="calc-result">
             <div>
               <div class="calc-result-label">예상 견적 (VAT 포함)</div>
               <div class="calc-result-note">* 실제 가격은 현장 점검 후 확정됩니다</div>
             </div>
-            <div>
-              <div class="calc-result-amount" id="calcAmount">패키지 선택 후 확인</div>
-            </div>
+            <div class="calc-result-amount" id="calcAmount">패키지 선택 후 확인</div>
           </div>
         </div>
       </div>
@@ -395,7 +385,7 @@
   </div>
 </section>
 
-<!-- Testimonials -->
+<!-- ── Testimonials ── -->
 <section class="testimonials" id="testimonials">
   <div class="container">
     <div class="section-header">
@@ -428,7 +418,7 @@
       </div>
       <div class="testimonial-card fade-up delay-3">
         <div class="testimonial-stars">★★★★★</div>
-        <p class="testimonial-text">"온라인 예약 시스템이 정말 편리합니다. 서비스 이력도 앱으로 바로 확인할 수 있어 요트 관리가 훨씬 체계적으로 되었습니다."</p>
+        <p class="testimonial-text">"온라인 예약 시스템이 정말 편리합니다. 서비스 이력도 바로 확인할 수 있어 요트 관리가 훨씬 체계적으로 되었습니다."</p>
         <div class="testimonial-author">
           <div class="testimonial-avatar">L</div>
           <div>
@@ -441,7 +431,7 @@
   </div>
 </section>
 
-<!-- FAQ Section -->
+<!-- ── FAQ ── -->
 <section class="faq" id="faq">
   <div class="container">
     <div class="section-header">
@@ -508,7 +498,7 @@
   </div>
 </section>
 
-<!-- Inquiry Section -->
+<!-- ── Inquiry ── -->
 <section class="inquiry" id="inquiry">
   <div class="container">
     <div class="inquiry-wrap">
@@ -550,7 +540,7 @@
 
       <div class="fade-up delay-2">
         <div class="card">
-          <h4 style="margin-bottom:20px;color:var(--primary-dark)">문의 남기기</h4>
+          <h4 style="margin-bottom:20px">문의 남기기</h4>
           <div id="inquiryAlert" class="alert"></div>
           <form id="inquiryForm" onsubmit="submitInquiry(event)">
             <div class="form-grid">
@@ -595,37 +585,36 @@
   </div>
 </section>
 
-<!-- Footer -->
+<!-- ── Footer ── -->
 <footer>
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-logo">
-          <div class="nav-logo">
-            <span class="logo-hyundai">HYUNDAI</span>
-            <span class="logo-yacht">YACHT CARE</span>
+          <div>
+            <div class="footer-logo-hyundai">HYUNDAI</div>
+            <div class="footer-logo-yacht">YACHT CARE</div>
           </div>
         </div>
-        <p class="footer-desc">고급 요트 소유자와 마리나 회원을 위한 프리미엄 케어 서비스. 전문 기술과 신뢰를 바탕으로 요트의 가치를 지킵니다.</p>
+        <p class="footer-desc">현대요트 케어서비스는 프리미엄 요트 전문 관리 서비스를 제공합니다. 전문 기술진이 직접 관리하는 완벽한 케어 솔루션으로 요트의 가치를 보존합니다.</p>
         <div class="footer-social">
-          <a href="#" class="social-btn"><i class="fab fa-instagram"></i></a>
-          <a href="#" class="social-btn"><i class="fab fa-facebook"></i></a>
-          <a href="#" class="social-btn"><i class="fab fa-youtube"></i></a>
-          <a href="#" class="social-btn"><i class="fab fa-kakao"></i></a>
+          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+          <a href="#" aria-label="Kakao"><i class="fas fa-comment"></i></a>
         </div>
       </div>
-      <div class="footer-col">
-        <h5>서비스</h5>
+      <div>
+        <div class="footer-title">서비스</div>
         <div class="footer-links">
-          <a href="#services">베이직 케어</a>
-          <a href="#services">프리미엄 케어</a>
-          <a href="#services">시그니처 케어</a>
+          <a href="/booking.html?package=basic">베이직 케어</a>
+          <a href="/booking.html?package=premium">프리미엄 케어</a>
+          <a href="/booking.html?package=signature">시그니처 케어</a>
           <a href="#calculator">견적 계산기</a>
-          <a href="/booking.html">예약하기</a>
         </div>
       </div>
-      <div class="footer-col">
-        <h5>고객 지원</h5>
+      <div>
+        <div class="footer-title">고객 지원</div>
         <div class="footer-links">
           <a href="/login.html">로그인</a>
           <a href="/register.html">회원가입</a>
@@ -634,239 +623,27 @@
           <a href="#inquiry">문의하기</a>
         </div>
       </div>
-      <div class="footer-col">
-        <h5>회사 정보</h5>
+      <div>
+        <div class="footer-title">회사 정보</div>
         <div class="footer-links">
           <a href="#">회사 소개</a>
-          <a href="#">이용약관</a>
           <a href="#">개인정보처리방침</a>
-          <a href="#">파트너십</a>
-          <a href="#">채용정보</a>
+          <a href="#">이용약관</a>
+          <a href="#">채용 안내</a>
         </div>
       </div>
     </div>
     <div class="footer-bottom">
-      <span>© 2025 <span class="footer-accent">Hyundai Yacht Care</span>. All rights reserved.</span>
-      <div class="footer-bottom-links">
-        <a href="#">이용약관</a>
+      <div class="footer-copyright">© 2024 Hyundai Yacht Care. All rights reserved.</div>
+      <div class="footer-legal">
         <a href="#">개인정보처리방침</a>
+        <a href="#">이용약관</a>
         <a href="#">사이트맵</a>
       </div>
     </div>
   </div>
 </footer>
 
-<script>
-// ===========================
-// Page Init
-// ===========================
-window.addEventListener('load', () => {
-  setTimeout(() => {
-    document.getElementById('loadingOverlay').classList.add('hide');
-  }, 800);
-  initParticles();
-  initScrollAnimations();
-  initCounters();
-  checkAuth();
-});
-
-// ===========================
-// Auth Check
-// ===========================
-function checkAuth() {
-  const token = localStorage.getItem('yachtToken');
-  const user = JSON.parse(localStorage.getItem('yachtUser') || 'null');
-  if (token && user) {
-    document.getElementById('navAuth').style.display = 'none';
-    document.getElementById('navUser').style.display = 'block';
-  }
-}
-
-// ===========================
-// Navigation
-// ===========================
-window.addEventListener('scroll', () => {
-  const nav = document.getElementById('navbar');
-  if (window.scrollY > 60) {
-    nav.classList.remove('transparent');
-    nav.classList.add('scrolled');
-  } else {
-    nav.classList.remove('scrolled');
-    nav.classList.add('transparent');
-  }
-});
-
-function toggleMenu() {
-  const menu = document.getElementById('navMenu');
-  const hamburger = document.getElementById('hamburger');
-  const overlay = document.getElementById('menuOverlay');
-  menu.classList.toggle('open');
-  hamburger.classList.toggle('open');
-  overlay.classList.toggle('active');
-}
-function closeMenu() {
-  document.getElementById('navMenu').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
-  document.getElementById('menuOverlay').classList.remove('active');
-}
-
-// ===========================
-// Particles
-// ===========================
-function initParticles() {
-  const container = document.getElementById('particles');
-  for (let i = 0; i < 20; i++) {
-    const p = document.createElement('div');
-    p.className = 'particle';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
-    p.style.animationDuration = (Math.random() * 15 + 10) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    container.appendChild(p);
-  }
-}
-
-// ===========================
-// Scroll Animations
-// ===========================
-function initScrollAnimations() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
-  document.querySelectorAll('.fade-up, .fade-in').forEach(el => observer.observe(el));
-}
-
-// ===========================
-// Counter Animation
-// ===========================
-function initCounters() {
-  const counters = document.querySelectorAll('[data-count]');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        const target = parseInt(e.target.dataset.count);
-        const suffix = e.target.dataset.suffix || '';
-        animateCount(e.target, 0, target, 1500, suffix);
-        observer.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  counters.forEach(c => observer.observe(c));
-}
-function animateCount(el, start, end, duration, suffix) {
-  const range = end - start;
-  const step = range / (duration / 16);
-  let current = start;
-  const timer = setInterval(() => {
-    current += step;
-    if (current >= end) { current = end; clearInterval(timer); }
-    el.textContent = Math.floor(current) + suffix;
-  }, 16);
-}
-
-// ===========================
-// Calculator
-// ===========================
-const pkgPrices = { basic: 150000, premium: 380000, signature: 750000 };
-const pkgPerMeter = { basic: 5000, premium: 12000, signature: 25000 };
-
-function updateCalc() {
-  const pkg = document.getElementById('calcPackage').value;
-  const length = parseFloat(document.getElementById('calcLength').value) || 0;
-  const extra = parseInt(document.getElementById('calcExtra').value) || 0;
-  const location = parseInt(document.getElementById('calcLocation').value) || 0;
-  
-  const el = document.getElementById('calcAmount');
-  if (!pkg) { el.textContent = '패키지 선택 후 확인'; return; }
-  
-  const base = pkgPrices[pkg];
-  const sizeAdd = length > 30 ? (length - 30) * pkgPerMeter[pkg] : 0;
-  const subtotal = base + sizeAdd + extra + location;
-  const total = Math.round(subtotal * 1.1); // VAT 10%
-  
-  el.textContent = total.toLocaleString() + '원';
-}
-
-// ===========================
-// FAQ
-// ===========================
-function toggleFaq(el) {
-  const item = el.parentElement;
-  const isOpen = item.classList.contains('open');
-  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
-  if (!isOpen) item.classList.add('open');
-}
-
-// ===========================
-// Inquiry Form
-// ===========================
-async function submitInquiry(e) {
-  e.preventDefault();
-  const btn = document.getElementById('inqSubmitBtn');
-  const alert = document.getElementById('inquiryAlert');
-  
-  btn.disabled = true;
-  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 전송 중...';
-  
-  const data = {
-    name: document.getElementById('inqName').value,
-    phone: document.getElementById('inqPhone').value,
-    email: document.getElementById('inqEmail').value,
-    inquiry_type: document.getElementById('inqType').value,
-    subject: document.getElementById('inqSubject').value,
-    message: document.getElementById('inqMessage').value
-  };
-  
-  try {
-    const res = await fetch('/api/inquiries', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
-    });
-    const result = await res.json();
-    
-    if (result.success) {
-      alert.className = 'alert alert-success';
-      alert.style.display = 'block';
-      alert.textContent = '문의가 성공적으로 접수되었습니다. 빠른 시일 내 답변 드리겠습니다.';
-      document.getElementById('inquiryForm').reset();
-      showToast('문의가 접수되었습니다!', 'success');
-    } else {
-      throw new Error(result.error);
-    }
-  } catch (err) {
-    alert.className = 'alert alert-error';
-    alert.style.display = 'block';
-    alert.textContent = err.message || '오류가 발생했습니다. 다시 시도해주세요.';
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = '<i class="fas fa-paper-plane"></i> 문의 보내기';
-  }
-}
-
-// ===========================
-// Toast
-// ===========================
-function showToast(msg, type = '') {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.className = 'toast ' + type + ' show';
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// Smooth scroll for anchor links
-document.querySelectorAll('a[href^="#"]').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    const id = a.getAttribute('href').slice(1);
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: 'smooth' });
-  });
-});
-</script>
+<script src="/static/app.js"></script>
 </body>
 </html>
