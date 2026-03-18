@@ -1778,3 +1778,165 @@ tbody tr:hover { background: var(--bg-light); }
   cursor: pointer;
 }
 @media (max-width: 960px) { .sidebar-mobile-toggle { display: flex; } }
+
+/* ══════════════════════════════════════════
+   BATCH 5 — Global Design Enhancements
+   ══════════════════════════════════════════ */
+
+/* ── Button hover micro-interactions ── */
+.btn {
+  position: relative; overflow: hidden;
+}
+.btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: rgba(255,255,255,0.08);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  pointer-events: none;
+}
+.btn:hover::after { opacity: 1; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--brand-red) 0%, var(--brand-red-dark) 100%);
+  box-shadow: 0 4px 16px rgba(157,29,34,0.30);
+  transition: var(--transition), box-shadow 0.25s ease, transform 0.2s ease;
+}
+.btn-primary:hover {
+  background: linear-gradient(135deg, var(--brand-red-light) 0%, var(--brand-red) 100%);
+  box-shadow: 0 8px 28px rgba(157,29,34,0.42);
+  transform: translateY(-2px);
+}
+.btn-primary:active { transform: translateY(0); box-shadow: 0 2px 8px rgba(157,29,34,0.25); }
+
+.btn-outline-navy {
+  transition: var(--transition), transform 0.2s ease;
+}
+.btn-outline-navy:hover { transform: translateY(-2px); }
+
+/* ── Section header underline animation ── */
+.divider-gold {
+  width: 48px; height: 3px;
+  background: linear-gradient(to right, var(--brand-red), var(--brand-red-light));
+  margin: 16px auto 0;
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+}
+.section-header:hover .divider-gold { width: 72px; }
+
+/* ── Feature list item hover ── */
+.feature-list li {
+  transition: var(--transition);
+  padding-left: 4px;
+}
+.feature-list li:hover {
+  padding-left: 10px;
+  color: var(--navy);
+}
+
+/* ── FAQ smooth expand ── */
+.faq-item {
+  transition: box-shadow 0.3s ease;
+  border-radius: var(--radius-md);
+}
+.faq-item.open {
+  box-shadow: var(--shadow-sm);
+}
+.faq-question {
+  transition: color 0.2s ease;
+}
+.faq-item.open .faq-question {
+  color: var(--brand-red);
+}
+
+/* ── Package card refined ── */
+.package-card {
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1),
+              box-shadow 0.3s cubic-bezier(.4,0,.2,1),
+              border-color 0.3s ease,
+              outline 0.15s ease;
+}
+.package-card:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--shadow-lg);
+}
+.package-card.featured:hover {
+  transform: translateY(-10px) scale(1.02);
+}
+
+/* ── Navbar scroll effect ── */
+.navbar.scrolled {
+  background: rgba(0,20,40,0.97) !important;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+}
+
+/* ── Trust bar icons scale ── */
+.trust-item i {
+  transition: transform 0.3s ease;
+}
+.trust-item:hover i {
+  transform: scale(1.2) rotate(-5deg);
+}
+
+/* ── Section consistent spacing ── */
+.services,
+.compare-section,
+.process,
+.features,
+.testimonials,
+.faq,
+.inquiry {
+  padding: 96px 0;
+}
+@media (max-width: 768px) {
+  .services,
+  .compare-section,
+  .process,
+  .features,
+  .testimonials,
+  .faq,
+  .inquiry { padding: 64px 0; }
+}
+
+/* ── Input focus ring ── */
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus,
+.calc-select:focus,
+.calc-input:focus {
+  outline: none;
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(157,29,34,0.12);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+/* ── Footer link hover ── */
+.footer-links a {
+  transition: color 0.2s ease, padding-left 0.2s ease;
+  display: block; padding: 3px 0;
+}
+.footer-links a:hover {
+  color: var(--brand-red) !important;
+  padding-left: 6px;
+}
+
+/* ── Mobile typography ── */
+@media (max-width: 480px) {
+  .section-title { font-size: clamp(22px, 6vw, 28px); }
+  .hero-title    { font-size: clamp(28px, 8vw, 40px); }
+  .package-price .price-amount { font-size: 26px; }
+  .calc-result-amount { font-size: 22px; }
+}
+
+/* ── Smooth image lazy-load placeholder ── */
+img[loading="lazy"] {
+  background: var(--bg-medium);
+  transition: opacity 0.4s ease;
+}
+
+/* ── Hover card lift (generic) ── */
+.card {
+  transition: var(--transition), transform 0.25s ease;
+}
+.card:hover { transform: translateY(-2px); }
