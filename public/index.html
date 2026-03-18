@@ -26,14 +26,24 @@
     }
     .hero-bg {
       position: absolute; inset: 0;
-      background:
-        linear-gradient(180deg, rgba(0,20,40,0.72) 0%, rgba(0,45,86,0.55) 50%, rgba(16,38,60,0.80) 100%),
-        url('https://images.unsplash.com/photo-1567899378494-47b22a2ae96a?w=1920&q=85&auto=format&fit=crop') center/cover no-repeat;
+      background: linear-gradient(160deg,
+        #001e38 0%,
+        #002D56 30%,
+        #0a3d6b 55%,
+        #10263C 75%,
+        #061421 100%
+      );
+    }
+    .hero-bg::before {
+      content:'';
+      position:absolute; inset:0;
+      background: radial-gradient(ellipse 80% 60% at 70% 35%, rgba(201,169,97,0.18), transparent 65%),
+                  radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,45,86,0.6), transparent 60%);
     }
     .hero-bg::after {
       content:'';
       position:absolute; inset:0;
-      background: radial-gradient(ellipse 70% 60% at 65% 40%, rgba(201,169,97,0.16), transparent 70%);
+      background: radial-gradient(ellipse 70% 60% at 65% 40%, rgba(201,169,97,0.10), transparent 70%);
     }
 
     /* Hero content - tighter on mobile */
