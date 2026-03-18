@@ -169,22 +169,30 @@ app.post('/api/init-db', async (c) => {
       "INSERT OR IGNORE INTO users (email, password_hash, name, phone, role, yacht_name, yacht_model, yacht_length, marina_berth, membership_type) VALUES ('demo@hyundaiyacht.com', 'demo_hash', '김민준', '010-1234-5678', 'customer', 'Sea Breeze', 'Hyundai Wando 470', 14.3, 'A-24', 'premium')"
     ).run()
     
-    // 슬롯 생성
-    const slots = [
-      ['2026-03-18','09:00'],['2026-03-18','13:00'],['2026-03-19','09:00'],['2026-03-19','13:00'],
-      ['2026-03-20','09:00'],['2026-03-21','09:00'],['2026-03-21','13:00'],['2026-03-22','09:00'],
-      ['2026-03-24','09:00'],['2026-03-24','13:00'],['2026-03-25','09:00'],['2026-03-26','09:00'],
-      ['2026-03-27','09:00'],['2026-03-28','09:00'],['2026-03-28','13:00'],['2026-03-31','09:00'],
-      ['2026-04-01','09:00'],['2026-04-02','09:00'],['2026-04-03','09:00'],['2026-04-04','09:00'],
-      ['2026-04-07','09:00'],['2026-04-07','13:00'],['2026-04-08','09:00'],['2026-04-09','09:00'],
-      ['2026-04-10','09:00'],['2026-04-11','09:00'],['2026-04-14','09:00'],['2026-04-15','09:00'],
-    ]
-    
-    for (const [d, t] of slots) {
-      await c.env.DB.prepare(
-        'INSERT OR IGNORE INTO available_slots (slot_date, slot_time, max_bookings) VALUES (?, ?, 3)'
-      ).bind(d, t).run()
+    // 슬롯 동적 생성 (오늘부터 10주, 평일+주말 09:00 / 13:00)
+    const slotToday = new Date()
+    slotToday.setHours(0, 0, 0, 0)
+    const slotTimes = ['09:00', '13:00']
+    let slotCreated = 0
+    for (let d = 0; d < 70; d++) {
+      const dt = new Date(slotToday)
+      dt.setDate(slotToday.getDate() + d)
+      const dow = dt.getDay()
+      if (dow === 0) continue // 일요일 제외
+      const dateStr = dt.toISOString().split('T')[0]
+      for (const t of slotTimes) {
+        const existing = await c.env.DB.prepare(
+          'SELECT id FROM available_slots WHERE slot_date=? AND slot_time=?'
+        ).bind(dateStr, t).first()
+        if (!existing) {
+          await c.env.DB.prepare(
+            'INSERT INTO available_slots (slot_date, slot_time, max_bookings, current_bookings, is_available) VALUES (?,?,3,0,1)'
+          ).bind(dateStr, t).run()
+          slotCreated++
+        }
+      }
     }
+    console.log(`슬롯 ${slotCreated}개 생성됨`)
     
     // 데모 예약 이력
     await c.env.DB.prepare(`

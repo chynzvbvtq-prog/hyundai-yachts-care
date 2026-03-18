@@ -10,9 +10,11 @@ userRoutes.get('/service-history', authMiddleware(), async (c) => {
     const user = c.get('user')
     
     const history = await c.env.DB.prepare(`
-      SELECT sh.*, b.booking_number, b.scheduled_date, b.yacht_name
+      SELECT sh.*, b.booking_number, b.scheduled_date, b.yacht_name, b.yacht_model,
+             sp.name as package_name
       FROM service_history sh
       JOIN bookings b ON sh.booking_id = b.id
+      LEFT JOIN service_packages sp ON b.package_id = sp.id
       WHERE sh.user_id = ?
       ORDER BY sh.completed_at DESC
     `).bind(user.userId).all()

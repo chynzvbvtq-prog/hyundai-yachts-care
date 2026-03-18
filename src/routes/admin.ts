@@ -164,11 +164,41 @@ adminRoutes.post('/service-history', async (c) => {
   }
 })
 
-// 가용 슬롯 관리
+// ─────────────────────────────────────────
+// 슬롯 관리 API
+// ─────────────────────────────────────────
+
+// 슬롯 목록 조회 (주간 범위)
+adminRoutes.get('/slots', async (c) => {
+  try {
+    const { from, to } = c.req.query()
+    let query = `
+      SELECT s.*,
+        (SELECT COUNT(*) FROM bookings b
+         WHERE b.scheduled_date = s.slot_date
+           AND b.scheduled_time = s.slot_time
+           AND b.status NOT IN ('cancelled')) as booked_count
+      FROM available_slots s
+      WHERE 1=1
+    `
+    const params: any[] = []
+    if (from) { query += ' AND slot_date >= ?'; params.push(from) }
+    if (to)   { query += ' AND slot_date <= ?'; params.push(to)   }
+    query += ' ORDER BY slot_date ASC, slot_time ASC'
+
+    const slots = await c.env.DB.prepare(query).bind(...params).all()
+    return c.json({ success: true, slots: slots.results })
+  } catch (e) {
+    return c.json({ error: '조회 중 오류가 발생했습니다.' }, 500)
+  }
+})
+
+// 단일 슬롯 추가
 adminRoutes.post('/slots', async (c) => {
   try {
     const { slot_date, slot_time, max_bookings = 3 } = await c.req.json()
-    
+    if (!slot_date || !slot_time) return c.json({ error: '날짜와 시간을 입력해주세요.' }, 400)
+
     await c.env.DB.prepare(`
       INSERT OR REPLACE INTO available_slots (slot_date, slot_time, max_bookings, current_bookings, is_available)
       VALUES (?, ?, ?, 0, 1)
@@ -177,6 +207,96 @@ adminRoutes.post('/slots', async (c) => {
     return c.json({ success: true, message: '슬롯이 추가되었습니다.' })
   } catch (e) {
     return c.json({ error: '추가 중 오류가 발생했습니다.' }, 500)
+  }
+})
+
+// 향후 N주 슬롯 일괄 자동 생성
+adminRoutes.post('/slots/generate', async (c) => {
+  try {
+    const { weeks = 8, times = ['09:00', '13:00'], max_bookings = 3, skip_weekends = false } = await c.req.json()
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    let created = 0
+
+    for (let d = 0; d < weeks * 7; d++) {
+      const date = new Date(today)
+      date.setDate(today.getDate() + d)
+      const dow = date.getDay() // 0=일, 6=토
+      if (skip_weekends && (dow === 0 || dow === 6)) continue
+
+      const dateStr = date.toISOString().split('T')[0]
+
+      for (const t of times) {
+        const existing = await c.env.DB.prepare(
+          'SELECT id FROM available_slots WHERE slot_date=? AND slot_time=?'
+        ).bind(dateStr, t).first()
+        if (!existing) {
+          await c.env.DB.prepare(
+            'INSERT INTO available_slots (slot_date, slot_time, max_bookings, current_bookings, is_available) VALUES (?,?,?,0,1)'
+          ).bind(dateStr, t, max_bookings).run()
+          created++
+        }
+      }
+    }
+
+    return c.json({ success: true, message: `${created}개 슬롯이 생성되었습니다.`, created })
+  } catch (e: any) {
+    return c.json({ error: e.message || '생성 중 오류가 발생했습니다.' }, 500)
+  }
+})
+
+// 슬롯 차단/활성화 토글
+adminRoutes.patch('/slots/:id', async (c) => {
+  try {
+    const id = c.req.param('id')
+    const { is_available, max_bookings } = await c.req.json()
+
+    await c.env.DB.prepare(`
+      UPDATE available_slots
+      SET is_available = COALESCE(?, is_available),
+          max_bookings = COALESCE(?, max_bookings)
+      WHERE id = ?
+    `).bind(
+      is_available !== undefined ? (is_available ? 1 : 0) : null,
+      max_bookings ?? null,
+      id
+    ).run()
+
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: '업데이트 중 오류가 발생했습니다.' }, 500)
+  }
+})
+
+// 슬롯 삭제 (예약 없는 경우만)
+adminRoutes.delete('/slots/:id', async (c) => {
+  try {
+    const id = c.req.param('id')
+    const slot = await c.env.DB.prepare('SELECT * FROM available_slots WHERE id=?').bind(id).first() as any
+    if (!slot) return c.json({ error: '슬롯을 찾을 수 없습니다.' }, 404)
+    if ((slot.current_bookings || 0) > 0) return c.json({ error: '예약이 있는 슬롯은 삭제할 수 없습니다.' }, 400)
+
+    await c.env.DB.prepare('DELETE FROM available_slots WHERE id=?').bind(id).run()
+    return c.json({ success: true })
+  } catch (e) {
+    return c.json({ error: '삭제 중 오류가 발생했습니다.' }, 500)
+  }
+})
+
+// 날짜 단위 슬롯 전체 차단
+adminRoutes.post('/slots/block-date', async (c) => {
+  try {
+    const { slot_date } = await c.req.json()
+    if (!slot_date) return c.json({ error: '날짜를 입력해주세요.' }, 400)
+
+    await c.env.DB.prepare(
+      "UPDATE available_slots SET is_available=0 WHERE slot_date=?"
+    ).bind(slot_date).run()
+
+    return c.json({ success: true, message: `${slot_date} 전체 슬롯이 차단되었습니다.` })
+  } catch (e) {
+    return c.json({ error: '차단 중 오류가 발생했습니다.' }, 500)
   }
 })
 

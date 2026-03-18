@@ -38,6 +38,54 @@
     }
     .chart-card canvas { max-height: 240px; }
 
+    /* ── 슬롯 관리 달력 ── */
+    .slot-calendar-wrap { display: grid; grid-template-columns: 1fr 340px; gap: 24px; }
+    @media (max-width: 1000px) { .slot-calendar-wrap { grid-template-columns: 1fr; } }
+
+    .slot-calendar { background:#fff; border-radius:var(--radius-md); border:1.5px solid var(--bg-medium); padding:24px; }
+    .slot-cal-nav { display:flex; align-items:center; justify-content:space-between; margin-bottom:18px; }
+    .slot-cal-title { font-family:'Montserrat',sans-serif; font-weight:700; font-size:15px; color:var(--navy); }
+    .slot-cal-btn { width:32px; height:32px; border-radius:50%; border:1.5px solid var(--bg-medium); background:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:13px; color:var(--navy); transition:var(--transition); }
+    .slot-cal-btn:hover { background:var(--navy); color:#fff; border-color:var(--navy); }
+    .slot-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    .slot-cal-dow { text-align:center; font-family:'Montserrat',sans-serif; font-size:11px; font-weight:600; color:var(--text-muted); padding:6px 0; }
+    .slot-cal-day {
+      aspect-ratio:1; border-radius:var(--radius-sm); cursor:pointer; font-size:13px; font-weight:500;
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px;
+      border:1.5px solid transparent; transition:var(--transition); position:relative;
+    }
+    .slot-cal-day:hover:not(.empty):not(.past) { border-color:var(--brand-red); background:rgba(157,29,34,0.04); }
+    .slot-cal-day.selected { border-color:var(--brand-red)!important; background:rgba(157,29,34,0.08)!important; }
+    .slot-cal-day.empty { cursor:default; pointer-events:none; }
+    .slot-cal-day.past  { opacity:0.35; cursor:default; pointer-events:none; }
+    .slot-cal-day.today .day-num { background:var(--navy); color:#fff; border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; }
+    .slot-cal-day .day-num { font-size:13px; font-weight:600; color:var(--navy); }
+    .slot-day-dots { display:flex; gap:2px; justify-content:center; }
+    .slot-dot { width:5px; height:5px; border-radius:50%; }
+    .slot-dot.active   { background:#16a34a; }
+    .slot-dot.blocked  { background:#dc2626; }
+
+    .slot-detail-panel { background:#fff; border-radius:var(--radius-md); border:1.5px solid var(--bg-medium); padding:24px; }
+    .slot-panel-title { font-family:'Montserrat',sans-serif; font-weight:700; font-size:13px; color:var(--navy); margin-bottom:16px; letter-spacing:0.05em; }
+    .slot-item { display:flex; align-items:center; gap:10px; padding:10px 12px; border-radius:var(--radius-sm); border:1.5px solid var(--bg-medium); margin-bottom:8px; transition:var(--transition); }
+    .slot-item:hover { border-color:rgba(157,29,34,0.3); }
+    .slot-time { font-family:'Montserrat',sans-serif; font-weight:700; font-size:14px; color:var(--navy); min-width:54px; }
+    .slot-status { flex:1; }
+    .slot-actions { display:flex; gap:6px; }
+    .slot-toggle-btn { height:28px; padding:0 10px; font-size:11px; border-radius:var(--radius-sm); cursor:pointer; font-family:'Montserrat',sans-serif; font-weight:600; transition:var(--transition); border:1.5px solid; }
+    .slot-toggle-btn.active   { background:rgba(22,163,74,0.08);  color:#16a34a; border-color:rgba(22,163,74,0.3); }
+    .slot-toggle-btn.active:hover { background:#16a34a; color:#fff; }
+    .slot-toggle-btn.blocked  { background:rgba(220,38,38,0.08);  color:#dc2626; border-color:rgba(220,38,38,0.3); }
+    .slot-toggle-btn.blocked:hover{ background:#dc2626; color:#fff; }
+    .slot-del-btn { height:28px; width:28px; display:flex; align-items:center; justify-content:center; border-radius:var(--radius-sm); border:1.5px solid var(--bg-medium); cursor:pointer; color:var(--text-muted); background:#fff; transition:var(--transition); font-size:12px; }
+    .slot-del-btn:hover { border-color:#dc2626; color:#dc2626; }
+
+    .slot-add-form { background:var(--bg-light); border-radius:var(--radius-sm); padding:16px; margin-top:16px; }
+    .slot-add-form .form-label { font-size:11px; }
+    .slot-gen-card { background:rgba(0,45,86,0.04); border:1.5px solid rgba(0,45,86,0.12); border-radius:var(--radius-md); padding:20px; margin-top:20px; }
+    .slot-gen-title { font-family:'Montserrat',sans-serif; font-weight:700; font-size:12px; color:var(--navy); letter-spacing:0.07em; text-transform:uppercase; margin-bottom:14px; }
+    .slot-gen-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
     /* ── 검색 바 ── */
     .search-bar {
       display: flex;
@@ -157,6 +205,9 @@
       <div class="sidebar-link" onclick="showTab('inquiries')" id="tab-inquiries">
         <i class="fas fa-comment-dots"></i> 문의 관리
         <span class="badge badge-red" id="pendingInqBadge" style="display:none;margin-left:auto"></span>
+      </div>
+      <div class="sidebar-link" onclick="showTab('slots')" id="tab-slots">
+        <i class="fas fa-calendar-alt"></i> 슬롯 관리
       </div>
       <div class="sidebar-nav-section">시스템</div>
       <div class="sidebar-link" onclick="initDB()">
@@ -360,6 +411,104 @@
                 <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">문의를 불러오는 중...</td></tr>
               </tbody>
             </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           Slots Tab
+      ══════════════════════════════════ -->
+      <div id="content-slots" style="display:none">
+        <div class="tab-section-header">
+          <span class="tab-section-desc">예약 가능 날짜와 시간대를 관리하세요</span>
+          <button class="btn btn-primary btn-sm" onclick="generateSlots()">
+            <i class="fas fa-magic"></i> 슬롯 자동 생성
+          </button>
+        </div>
+
+        <div class="slot-calendar-wrap">
+          <!-- 좌: 달력 -->
+          <div class="slot-calendar">
+            <div class="slot-cal-nav">
+              <button class="slot-cal-btn" onclick="moveCalMonth(-1)"><i class="fas fa-chevron-left"></i></button>
+              <span class="slot-cal-title" id="slotCalTitle"></span>
+              <button class="slot-cal-btn" onclick="moveCalMonth(1)"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="slot-cal-grid" id="slotCalGrid">
+              <div class="slot-cal-dow">일</div>
+              <div class="slot-cal-dow">월</div>
+              <div class="slot-cal-dow">화</div>
+              <div class="slot-cal-dow">수</div>
+              <div class="slot-cal-dow">목</div>
+              <div class="slot-cal-dow">금</div>
+              <div class="slot-cal-dow">토</div>
+            </div>
+            <div style="display:flex;gap:14px;margin-top:16px;font-size:12px;color:var(--text-light)">
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#16a34a;margin-right:4px"></span>활성</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#dc2626;margin-right:4px"></span>차단</span>
+              <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--bg-medium);margin-right:4px"></span>없음</span>
+            </div>
+          </div>
+
+          <!-- 우: 선택일 슬롯 상세 + 추가 패널 -->
+          <div>
+            <div class="slot-detail-panel">
+              <div class="slot-panel-title" id="slotPanelTitle"><i class="fas fa-mouse-pointer" style="margin-right:6px"></i>날짜를 클릭하세요</div>
+              <div id="slotDetailList">
+                <div style="color:var(--text-muted);font-size:13px;text-align:center;padding:24px 0">달력에서 날짜를 선택하면<br>해당 일의 슬롯을 관리할 수 있습니다</div>
+              </div>
+
+              <!-- 슬롯 추가 폼 -->
+              <div class="slot-add-form" id="slotAddForm" style="display:none">
+                <div class="slot-panel-title" style="margin-bottom:12px"><i class="fas fa-plus" style="margin-right:6px;color:var(--brand-red)"></i>슬롯 추가</div>
+                <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
+                  <div class="form-group" style="margin:0;flex:1;min-width:100px">
+                    <label class="form-label">시간</label>
+                    <input type="time" class="form-input" id="newSlotTime" value="09:00" style="height:36px">
+                  </div>
+                  <div class="form-group" style="margin:0;width:80px">
+                    <label class="form-label">최대</label>
+                    <input type="number" class="form-input" id="newSlotMax" value="3" min="1" max="10" style="height:36px">
+                  </div>
+                  <button class="btn btn-primary btn-sm" style="height:36px;margin-bottom:0" onclick="addSlot()">추가</button>
+                </div>
+              </div>
+
+              <!-- 날짜 전체 차단 버튼 -->
+              <div id="slotBlockDateArea" style="display:none;margin-top:12px">
+                <button class="btn btn-outline-navy btn-sm" onclick="blockDate()" style="width:100%;border-color:rgba(220,38,38,0.3);color:#dc2626">
+                  <i class="fas fa-ban"></i> 이 날짜 전체 차단
+                </button>
+              </div>
+            </div>
+
+            <!-- 자동 생성 설정 카드 -->
+            <div class="slot-gen-card">
+              <div class="slot-gen-title"><i class="fas fa-wand-magic-sparkles" style="margin-right:6px"></i>자동 생성 설정</div>
+              <div class="slot-gen-grid">
+                <div class="form-group" style="margin:0">
+                  <label class="form-label">생성 주수</label>
+                  <select class="form-select" id="genWeeks" style="height:36px;font-size:13px">
+                    <option value="4">4주</option>
+                    <option value="8" selected>8주</option>
+                    <option value="12">12주</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin:0">
+                  <label class="form-label">시간대</label>
+                  <select class="form-select" id="genTimes" style="height:36px;font-size:13px">
+                    <option value="both" selected>09:00 + 13:00</option>
+                    <option value="morning">09:00만</option>
+                    <option value="afternoon">13:00만</option>
+                  </select>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;margin-top:12px">
+                <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+                  <input type="checkbox" id="genSkipWeekends"> 토요일 제외
+                </label>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -989,17 +1138,18 @@ function exportBookingsCSV() {
    탭 전환
 ══════════════════════════════════════════════════ */
 function showTab(tab) {
-  ['stats','bookings','customers','inquiries'].forEach(t => {
+  ['stats','bookings','customers','inquiries','slots'].forEach(t => {
     document.getElementById('content-' + t).style.display = 'none';
     document.getElementById('tab-' + t)?.classList.remove('active');
   });
   document.getElementById('content-' + tab).style.display = 'block';
   document.getElementById('tab-'     + tab)?.classList.add('active');
-  const titles = { stats:'통계 대시보드', bookings:'예약 관리', customers:'고객 관리', inquiries:'문의 관리' };
+  const titles = { stats:'통계 대시보드', bookings:'예약 관리', customers:'고객 관리', inquiries:'문의 관리', slots:'슬롯 관리' };
   document.getElementById('pageTitle').textContent = titles[tab] || tab;
   if (tab === 'bookings')  loadAllBookings();
   if (tab === 'customers') loadCustomers();
   if (tab === 'inquiries') loadInquiries();
+  if (tab === 'slots')     initSlotCalendar();
 }
 
 /* ══════════════════════════════════════════════════
@@ -1046,6 +1196,239 @@ function showToast(msg, type = '') {
   t.classList.add('show');
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.classList.remove('show'), 3200);
+}
+
+/* ══════════════════════════════════════════════════
+   슬롯 관리 달력
+══════════════════════════════════════════════════ */
+let slotCalYear  = new Date().getFullYear();
+let slotCalMonth = new Date().getMonth(); // 0-indexed
+let slotMap      = {};          // { 'YYYY-MM-DD': [slot, ...] }
+let selectedDate = null;
+
+async function initSlotCalendar() {
+  slotCalYear  = new Date().getFullYear();
+  slotCalMonth = new Date().getMonth();
+  await fetchSlotsForMonth();
+  renderSlotCalendar();
+}
+
+async function fetchSlotsForMonth() {
+  const y  = slotCalYear;
+  const m  = slotCalMonth;
+  const from = `${y}-${String(m + 1).padStart(2, '0')}-01`;
+  // 해당 월의 마지막 날
+  const lastDay = new Date(y, m + 1, 0).getDate();
+  const to = `${y}-${String(m + 1).padStart(2, '0')}-${String(lastDay).padStart(2, '0')}`;
+  try {
+    const data = await apiGet(`/api/admin/slots?from=${from}&to=${to}`);
+    slotMap = {};
+    (data.slots || []).forEach(s => {
+      if (!slotMap[s.slot_date]) slotMap[s.slot_date] = [];
+      slotMap[s.slot_date].push(s);
+    });
+  } catch(e) { console.error(e); }
+}
+
+function renderSlotCalendar() {
+  const y = slotCalYear;
+  const m = slotCalMonth;
+  document.getElementById('slotCalTitle').textContent =
+    `${y}년 ${m + 1}월`;
+
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const firstDow = new Date(y, m, 1).getDay(); // 0=일
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+  const grid = document.getElementById('slotCalGrid');
+  // 요일 헤더만 남기고 날짜 셀 제거
+  const existingDays = grid.querySelectorAll('.slot-cal-day, .slot-cal-empty');
+  existingDays.forEach(el => el.remove());
+
+  // 빈 칸 채우기
+  for (let i = 0; i < firstDow; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'slot-cal-day empty slot-cal-empty';
+    grid.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dateStr = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const thisDate = new Date(y, m, d);
+    const isPast   = thisDate < today;
+    const isToday  = thisDate.getTime() === today.getTime();
+
+    const cell = document.createElement('div');
+    cell.className = 'slot-cal-day' + (isPast ? ' past' : '') + (isToday ? ' today' : '');
+    if (selectedDate === dateStr) cell.classList.add('selected');
+
+    // 날짜 번호
+    const numSpan = document.createElement('span');
+    numSpan.className = 'day-num';
+    numSpan.textContent = d;
+    cell.appendChild(numSpan);
+
+    // 슬롯 점 표시
+    const slots = slotMap[dateStr] || [];
+    if (slots.length > 0) {
+      const dots = document.createElement('div');
+      dots.className = 'slot-day-dots';
+      slots.forEach(s => {
+        const dot = document.createElement('span');
+        dot.className = 'slot-dot ' + (s.is_available ? 'active' : 'blocked');
+        dots.appendChild(dot);
+      });
+      cell.appendChild(dots);
+    }
+
+    if (!isPast) {
+      cell.addEventListener('click', () => selectDate(dateStr));
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function selectDate(dateStr) {
+  selectedDate = dateStr;
+  // 선택 표시 갱신
+  document.querySelectorAll('.slot-cal-day.selected').forEach(el => el.classList.remove('selected'));
+  const cells = document.querySelectorAll('.slot-cal-day');
+  cells.forEach(cell => {
+    if (cell.querySelector('.day-num')?.textContent ===
+        String(parseInt(dateStr.split('-')[2])).toString() &&
+        !cell.classList.contains('empty') && !cell.classList.contains('past')) {
+      // 더 정확히 찾기 위해 데이터 속성 없이도 처리
+    }
+  });
+  renderSlotCalendar(); // 재렌더로 selected 반영
+
+  // 패널 업데이트
+  const [y, mo, d] = dateStr.split('-');
+  document.getElementById('slotPanelTitle').innerHTML =
+    `<i class="fas fa-calendar-day" style="margin-right:6px;color:var(--brand-red)"></i>${y}년 ${parseInt(mo)}월 ${parseInt(d)}일 슬롯`;
+  document.getElementById('slotAddForm').style.display = 'block';
+  document.getElementById('slotBlockDateArea').style.display = 'block';
+
+  const slots = slotMap[dateStr] || [];
+  const list  = document.getElementById('slotDetailList');
+  if (!slots.length) {
+    list.innerHTML = '<div style="color:var(--text-muted);font-size:13px;text-align:center;padding:16px 0">이 날짜에 등록된 슬롯이 없습니다</div>';
+  } else {
+    list.innerHTML = slots.map(s => {
+      const booked  = s.booked_count || s.current_bookings || 0;
+      const avail   = s.is_available ? '활성' : '차단';
+      const btnCls  = s.is_available ? 'active' : 'blocked';
+      return `
+        <div class="slot-item" id="slot-item-${s.id}">
+          <span class="slot-time">${s.slot_time}</span>
+          <span class="slot-status">
+            <span style="font-size:12px;color:var(--text-medium)">${booked}/${s.max_bookings}예약</span>
+            <br><span style="font-size:11px;color:var(--text-muted)">${avail}</span>
+          </span>
+          <div class="slot-actions">
+            <button class="slot-toggle-btn ${btnCls}" onclick="toggleSlot(${s.id}, ${s.is_available ? 0 : 1})">
+              ${s.is_available ? '차단' : '활성화'}
+            </button>
+            <button class="slot-del-btn" onclick="deleteSlot(${s.id}, ${booked})" title="삭제">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+}
+
+function moveCalMonth(dir) {
+  slotCalMonth += dir;
+  if (slotCalMonth < 0) { slotCalMonth = 11; slotCalYear--; }
+  if (slotCalMonth > 11){ slotCalMonth = 0;  slotCalYear++; }
+  fetchSlotsForMonth().then(() => renderSlotCalendar());
+}
+
+async function addSlot() {
+  if (!selectedDate) { showToast('날짜를 먼저 선택해주세요.', 'error'); return; }
+  const time = document.getElementById('newSlotTime').value;
+  const max  = parseInt(document.getElementById('newSlotMax').value) || 3;
+  if (!time) { showToast('시간을 입력해주세요.', 'error'); return; }
+  try {
+    const data = await apiPost('/api/admin/slots', { slot_date: selectedDate, slot_time: time, max_bookings: max });
+    if (data.success) {
+      showToast('슬롯이 추가되었습니다.', 'success');
+      await fetchSlotsForMonth();
+      renderSlotCalendar();
+      selectDate(selectedDate);
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '추가 실패', 'error'); }
+}
+
+async function toggleSlot(id, newAvail) {
+  try {
+    const data = await apiPatch('/api/admin/slots/' + id, { is_available: newAvail });
+    if (data.success) {
+      showToast(newAvail ? '슬롯이 활성화되었습니다.' : '슬롯이 차단되었습니다.', 'success');
+      await fetchSlotsForMonth();
+      renderSlotCalendar();
+      if (selectedDate) selectDate(selectedDate);
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '업데이트 실패', 'error'); }
+}
+
+async function deleteSlot(id, booked) {
+  if (booked > 0) { showToast('예약이 있는 슬롯은 삭제할 수 없습니다.', 'error'); return; }
+  if (!confirm('이 슬롯을 삭제하시겠습니까?')) return;
+  try {
+    const token = localStorage.getItem('yachtToken');
+    const res = await fetch('/api/admin/slots/' + id, {
+      method: 'DELETE',
+      headers: { 'Authorization': 'Bearer ' + token }
+    });
+    const data = await res.json();
+    if (data.success) {
+      showToast('슬롯이 삭제되었습니다.', 'success');
+      await fetchSlotsForMonth();
+      renderSlotCalendar();
+      if (selectedDate) selectDate(selectedDate);
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '삭제 실패', 'error'); }
+}
+
+async function blockDate() {
+  if (!selectedDate) return;
+  if (!confirm(`${selectedDate}의 모든 슬롯을 차단하시겠습니까?`)) return;
+  try {
+    const data = await apiPost('/api/admin/slots/block-date', { slot_date: selectedDate });
+    if (data.success) {
+      showToast(data.message || '차단 완료', 'success');
+      await fetchSlotsForMonth();
+      renderSlotCalendar();
+      selectDate(selectedDate);
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '차단 실패', 'error'); }
+}
+
+async function generateSlots() {
+  const weeks  = parseInt(document.getElementById('genWeeks').value) || 8;
+  const timeSel = document.getElementById('genTimes').value;
+  const skipWknd = document.getElementById('genSkipWeekends').checked;
+  const times = timeSel === 'morning' ? ['09:00'] : timeSel === 'afternoon' ? ['13:00'] : ['09:00', '13:00'];
+
+  if (!confirm(`오늘부터 ${weeks}주 슬롯을 자동 생성합니다. 계속하시겠습니까?`)) return;
+  try {
+    const data = await apiPost('/api/admin/slots/generate', {
+      weeks,
+      times,
+      max_bookings: 3,
+      skip_weekends: skipWknd
+    });
+    if (data.success) {
+      showToast(data.message || `슬롯 생성 완료`, 'success');
+      await fetchSlotsForMonth();
+      renderSlotCalendar();
+      if (selectedDate) selectDate(selectedDate);
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '생성 실패', 'error'); }
 }
 </script>
 </body>

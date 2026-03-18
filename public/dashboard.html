@@ -8,6 +8,65 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
+  <style>
+    /* ── 서비스 이력 카드 ── */
+    .history-card {
+      background: #fff;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--bg-medium);
+      padding: 24px 28px;
+      margin-bottom: 16px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .history-card:hover { border-color: var(--brand-red); box-shadow: var(--shadow-sm); }
+    .history-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+    .history-card-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+    .history-card-date { font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--text-light); }
+    .history-card-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 10px; }
+    .history-meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-medium); }
+    .history-meta-item i { color: var(--brand-red); width: 14px; }
+    .history-desc { font-size: 14px; color: var(--text-medium); line-height: 1.7; }
+    .history-parts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .history-part-tag {
+      display: inline-block; padding: 3px 10px;
+      background: rgba(0,45,86,0.06); border-radius: 99px;
+      font-size: 12px; color: var(--navy); font-family: 'Montserrat', sans-serif;
+    }
+    .history-next-date {
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-top: 12px; padding: 6px 12px;
+      background: rgba(157,29,34,0.06); border-radius: var(--radius-sm);
+      font-size: 13px; color: var(--brand-red); font-weight: 600;
+    }
+    /* ── 정기점검 카드 ── */
+    .maintenance-card {
+      background: #fff; border-radius: var(--radius-md);
+      border: 1.5px solid var(--bg-medium); padding: 24px;
+      transition: var(--transition); border-left: 4px solid var(--brand-red);
+    }
+    .maintenance-card:hover { box-shadow: var(--shadow-sm); }
+    .maintenance-card.urgent { border-left-color: #dc2626; }
+    .maintenance-card.overdue { border-left-color: #9ca3af; opacity: 0.7; }
+    .maintenance-badge-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .maintenance-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .maintenance-due { font-size: 13px; color: var(--text-medium); margin-bottom: 4px; }
+    .maintenance-notes { font-size: 13px; color: var(--text-light); }
+    .days-badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 99px;
+      font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+    }
+    .days-badge.soon    { background: rgba(245,158,11,0.12); color: #b45309; }
+    .days-badge.urgent  { background: rgba(220,38,38,0.12);  color: #dc2626; }
+    .days-badge.ok      { background: rgba(22,163,74,0.10);   color: #16a34a; }
+    .days-badge.overdue { background: rgba(107,114,128,0.12); color: #6b7280; }
+    /* ── 이력 상세 모달 ── */
+    .history-modal-section { margin-bottom: 20px; }
+    .history-modal-label { font-size: 11px; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
+    .history-modal-value { font-size: 14px; color: var(--navy); font-weight: 600; }
+    .history-modal-text { font-size: 14px; color: var(--text-medium); line-height: 1.7; background: var(--bg-light); padding: 14px 16px; border-radius: var(--radius-sm); white-space: pre-wrap; }
+  </style>
 </head>
 <body>
 
@@ -173,16 +232,10 @@
       <!-- History Tab -->
       <div id="content-history" style="display:none">
         <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">완료된 서비스 내역을 확인하세요</p>
-        <div class="data-card">
-          <div class="data-card-body overflow-x">
-            <table>
-              <thead>
-                <tr><th>서비스 일자</th><th>서비스 유형</th><th>요트</th><th>담당 기술진</th><th>다음 점검</th></tr>
-              </thead>
-              <tbody id="historyTable">
-                <tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-light)">서비스 이력이 없습니다</td></tr>
-              </tbody>
-            </table>
+        <div id="historyCardList">
+          <div style="text-align:center;padding:40px;color:var(--text-light)">
+            <i class="fas fa-history" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>
+            서비스 이력을 불러오는 중...
           </div>
         </div>
       </div>
@@ -250,6 +303,15 @@
       </div>
 
     </div>
+  </div>
+</div>
+
+<!-- ══ 서비스 이력 상세 모달 ══ -->
+<div class="modal-overlay" id="modalHistory" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" onclick="event.stopPropagation()" style="position:relative;max-width:580px">
+    <button class="modal-close" onclick="document.getElementById('modalHistory').classList.remove('open')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-clipboard-list" style="color:var(--brand-red);margin-right:8px"></i>서비스 이력 상세</div>
+    <div id="historyModalContent"></div>
   </div>
 </div>
 
@@ -404,42 +466,140 @@ async function loadHistory() {
   try {
     const res = await fetch('/api/users/service-history', {headers:{'Authorization':'Bearer '+token}});
     const data = await res.json();
-    const tbody = document.getElementById('historyTable');
+    const container = document.getElementById('historyCardList');
     if (!data.success || !data.history?.length) {
-      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--text-light)">서비스 이력이 없습니다</td></tr>';
+      container.innerHTML = `<div style="text-align:center;padding:48px;color:var(--text-light)">
+        <i class="fas fa-history" style="font-size:36px;color:var(--bg-medium);display:block;margin-bottom:14px"></i>
+        서비스 이력이 없습니다
+      </div>`;
       return;
     }
-    tbody.innerHTML = data.history.map(h => `
-      <tr>
-        <td>${h.completed_at?.split('T')[0]||'-'}</td>
-        <td>${h.service_type}</td>
-        <td>${h.yacht_name||'-'}</td>
-        <td>${h.technician_name||'-'}</td>
-        <td>${h.next_service_date||'-'}</td>
-      </tr>
-    `).join('');
-  } catch(e) {}
+    container.innerHTML = data.history.map((h, idx) => {
+      const parts = h.parts_used ? (typeof h.parts_used === 'string' ? h.parts_used.split(',') : h.parts_used) : [];
+      const partsHtml = parts.length
+        ? `<div class="history-parts">${parts.map(p => `<span class="history-part-tag">${p.trim()}</span>`).join('')}</div>`
+        : '';
+      const nextDate = h.next_service_date
+        ? `<div class="history-next-date"><i class="fas fa-calendar-alt"></i>다음 점검 권장일: <strong>${h.next_service_date}</strong></div>`
+        : '';
+      return `
+        <div class="history-card" onclick="openHistoryModal(${idx})" data-idx="${idx}">
+          <div class="history-card-header">
+            <div>
+              <div class="history-card-title">${h.service_type || h.package_name || '서비스'}</div>
+              <div class="history-card-date"><i class="fas fa-calendar-check" style="margin-right:5px;color:var(--brand-red)"></i>${h.completed_at?.split('T')[0] || '-'}</div>
+            </div>
+            <span class="badge badge-green">완료</span>
+          </div>
+          <div class="history-card-meta">
+            ${h.technician_name ? `<span class="history-meta-item"><i class="fas fa-user-cog"></i>담당: ${h.technician_name}</span>` : ''}
+            ${h.yacht_name ? `<span class="history-meta-item"><i class="fas fa-anchor"></i>${h.yacht_name}</span>` : ''}
+          </div>
+          ${h.description ? `<div class="history-desc">${h.description.length > 80 ? h.description.substring(0,80)+'…' : h.description}</div>` : ''}
+          ${partsHtml}
+          ${nextDate}
+        </div>
+      `;
+    }).join('');
+    // 전역에 이력 데이터 저장
+    window._historyData = data.history;
+  } catch(e) { console.error(e); }
+}
+
+function openHistoryModal(idx) {
+  const h = window._historyData?.[idx];
+  if (!h) return;
+  const parts = h.parts_used ? (typeof h.parts_used === 'string' ? h.parts_used.split(',') : h.parts_used) : [];
+  const partsHtml = parts.length
+    ? parts.map(p => `<span class="history-part-tag">${p.trim()}</span>`).join(' ')
+    : '<span style="color:var(--text-muted)">-</span>';
+
+  document.getElementById('historyModalContent').innerHTML = `
+    <div class="history-modal-section">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+        <div>
+          <div class="history-modal-label">서비스 유형</div>
+          <div class="history-modal-value">${h.service_type || h.package_name || '-'}</div>
+        </div>
+        <div>
+          <div class="history-modal-label">완료 일자</div>
+          <div class="history-modal-value">${h.completed_at?.split('T')[0] || '-'}</div>
+        </div>
+        <div>
+          <div class="history-modal-label">담당 기술자</div>
+          <div class="history-modal-value">${h.technician_name || '-'}</div>
+        </div>
+        <div>
+          <div class="history-modal-label">요트</div>
+          <div class="history-modal-value">${h.yacht_name || '-'}</div>
+        </div>
+      </div>
+    </div>
+    ${h.description ? `
+      <div class="history-modal-section">
+        <div class="history-modal-label">작업 내용</div>
+        <div class="history-modal-text">${h.description}</div>
+      </div>
+    ` : ''}
+    <div class="history-modal-section">
+      <div class="history-modal-label">사용 부품 / 소모품</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">${partsHtml}</div>
+    </div>
+    ${h.notes ? `
+      <div class="history-modal-section">
+        <div class="history-modal-label">특이사항 / 권고 메모</div>
+        <div class="history-modal-text">${h.notes}</div>
+      </div>
+    ` : ''}
+    ${h.next_service_date ? `
+      <div class="history-next-date" style="width:fit-content">
+        <i class="fas fa-calendar-alt"></i>
+        다음 점검 권장일: <strong>${h.next_service_date}</strong>
+      </div>
+    ` : ''}
+    <div style="margin-top:24px;text-align:right">
+      <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 다음 서비스 예약</a>
+    </div>
+  `;
+  document.getElementById('modalHistory').classList.add('open');
 }
 
 function renderMaintenanceCards(schedule) {
   const container = document.getElementById('maintenanceCards');
   if (!schedule.length) {
-    container.innerHTML = '<div class="data-card" style="padding:40px;text-align:center;color:var(--text-light)"><i class="fas fa-tools" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>예정된 정기 점검이 없습니다</div>';
+    container.innerHTML = `<div class="data-card" style="padding:40px;text-align:center;color:var(--text-light);grid-column:1/-1">
+      <i class="fas fa-tools" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>
+      예정된 정기 점검이 없습니다
+    </div>`;
     return;
   }
-  container.innerHTML = schedule.map(m => `
-    <div class="data-card" style="border-left:4px solid var(--brand-red)">
-      <div style="padding:24px">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-          <span class="badge ${m.priority==='urgent'?'badge-red':'badge-gold'}">${m.priority==='urgent'?'긴급':'일반'}</span>
-          <span style="font-size:12px;color:var(--text-light)">${m.due_date}</span>
+  const today = new Date(); today.setHours(0,0,0,0);
+  container.innerHTML = schedule.map(m => {
+    const dueDate = new Date(m.due_date);
+    const diff = Math.ceil((dueDate - today) / (1000*60*60*24));
+    let badgeCls, badgeLabel;
+    if (diff < 0)       { badgeCls='overdue'; badgeLabel='기한 초과'; }
+    else if (diff <= 7) { badgeCls='urgent';  badgeLabel=`D-${diff}`; }
+    else if (diff <= 30){ badgeCls='soon';    badgeLabel=`D-${diff}`; }
+    else                { badgeCls='ok';      badgeLabel=`D-${diff}`; }
+
+    const cardCls = diff < 0 ? 'maintenance-card overdue' : diff <= 7 ? 'maintenance-card urgent' : 'maintenance-card';
+
+    return `
+      <div class="${cardCls}">
+        <div class="maintenance-badge-wrap">
+          <span class="badge ${diff<=7&&diff>=0?'badge-red':diff<=30&&diff>=0?'badge-gold':'badge-navy'}">${m.service_type||'정기 점검'}</span>
+          <span class="days-badge ${badgeCls}"><i class="fas fa-clock"></i>${badgeLabel}</span>
         </div>
-        <h4 style="font-size:16px;margin-bottom:8px">${m.maintenance_type}</h4>
-        <p style="font-size:14px;color:var(--text-medium)">${m.description||''}</p>
-        <a href="/booking.html" class="btn btn-outline-navy btn-sm" style="margin-top:16px">예약하기</a>
+        <div class="maintenance-title">${m.service_type||'정기 점검'}</div>
+        <div class="maintenance-due"><i class="fas fa-calendar-alt" style="color:var(--brand-red);margin-right:6px"></i>점검 예정일: <strong>${m.due_date}</strong></div>
+        ${m.notes ? `<div class="maintenance-notes" style="margin-top:8px"><i class="fas fa-info-circle" style="margin-right:5px"></i>${m.notes}</div>` : ''}
+        <a href="/booking.html" class="btn btn-outline-navy btn-sm" style="margin-top:16px;display:inline-flex">
+          <i class="fas fa-calendar-plus"></i> 예약하기
+        </a>
       </div>
-    </div>
-  `).join('');
+    `;
+  }).join('');
 }
 
 async function updateProfile(e) {
