@@ -37,13 +37,13 @@
     .hero-bg::before {
       content:'';
       position:absolute; inset:0;
-      background: radial-gradient(ellipse 80% 60% at 70% 35%, rgba(201,169,97,0.18), transparent 65%),
+      background: radial-gradient(ellipse 80% 60% at 70% 35%, rgba(157,29,34,0.12), transparent 65%),
                   radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,45,86,0.6), transparent 60%);
     }
     .hero-bg::after {
       content:'';
       position:absolute; inset:0;
-      background: radial-gradient(ellipse 70% 60% at 65% 40%, rgba(201,169,97,0.10), transparent 70%);
+      background: radial-gradient(ellipse 70% 60% at 65% 40%, rgba(157,29,34,0.08), transparent 70%);
     }
 
     /* Hero content - tighter on mobile */
@@ -58,7 +58,7 @@
       opacity:0.04;
       pointer-events:none;
     }
-    .hero-deco-1 { top:-80px; right:-80px; font-size:500px; color:#C9A961; }
+    .hero-deco-1 { top:-80px; right:-80px; font-size:500px; color:#9D1D22; }
     .hero-deco-2 { bottom:60px; left:-60px; font-size:320px; color:#fff; }
 
     /* Feature visual — navy gradient with SVG pattern overlay */
@@ -75,7 +75,7 @@
     .feature-visual-bg::before {
       content:'';
       position:absolute; inset:0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C9A961' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239D1D22' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
     }
     .feature-visual-inner {
       position:relative; z-index:1;
@@ -86,15 +86,15 @@
     }
     .feature-visual-icon {
       width:90px; height:90px;
-      background:rgba(201,169,97,0.15);
-      border:2px solid rgba(201,169,97,0.4);
+      background:rgba(157,29,34,0.10);
+      border:2px solid rgba(157,29,34,0.35);
       border-radius:var(--radius-md);
       display:flex; align-items:center; justify-content:center;
-      font-size:38px; color:var(--gold);
+      font-size:38px; color:var(--brand-red);
       transition:var(--transition);
     }
     .feature-visual:hover .feature-visual-icon {
-      background:rgba(201,169,97,0.25);
+      background:rgba(157,29,34,0.20);
       transform:scale(1.08);
     }
     .feature-visual-stats {
@@ -105,7 +105,7 @@
     }
     .feature-visual-stat-num {
       font-family:'Montserrat',sans-serif;
-      font-size:22px; font-weight:700; color:var(--gold); line-height:1;
+      font-size:22px; font-weight:700; color:var(--brand-red); line-height:1;
     }
     .feature-visual-stat-label {
       font-size:11px; color:rgba(255,255,255,0.55); margin-top:4px;
@@ -125,17 +125,17 @@
     .cta-banner::before {
       content:'';
       position:absolute; inset:0;
-      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23C9A961' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E") repeat;
+      background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%239D1D22' fill-opacity='0.04' fill-rule='evenodd'/%3E%3C/svg%3E") repeat;
     }
     .cta-banner::after {
       content:'';
       position:absolute; inset:0;
-      background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(201,169,97,0.12), transparent);
+      background: radial-gradient(ellipse 60% 80% at 20% 50%, rgba(157,29,34,0.08), transparent);
     }
     .cta-banner .container { position:relative; z-index:1; }
     .cta-banner-label {
       font-family:'Montserrat',sans-serif; font-size:11px; font-weight:700;
-      letter-spacing:0.22em; text-transform:uppercase; color:var(--gold);
+      letter-spacing:0.22em; text-transform:uppercase; color:var(--brand-red);
       margin-bottom:18px; display:block;
     }
     .cta-banner h2 {
@@ -166,7 +166,7 @@
       display: flex; align-items: center; gap: 12px;
       font-size: 14px; font-weight: 600; color: var(--navy);
     }
-    .trust-item i { font-size: 20px; color: var(--gold); }
+    .trust-item i { font-size: 20px; color: var(--brand-red); }
 
     /* Section alternation */
     .services     { background: var(--bg-light); }
@@ -180,7 +180,7 @@
     /* Enhanced testimonial card */
     .testimonial-quote {
       font-size: 56px; line-height: 1;
-      color: var(--gold); opacity: 0.3;
+      color: var(--brand-red); opacity: 0.3;
       font-family: Georgia, serif;
       margin-bottom: -20px;
     }
@@ -206,7 +206,7 @@
         position: absolute;
         top: 38px; right: -1px;
         width: 50%; height: 2px;
-        background: linear-gradient(to right, var(--gold), rgba(201,169,97,0.2));
+        background: linear-gradient(to right, var(--brand-red), rgba(157,29,34,0.2));
       }
       .process-step-h:last-child::after { display: none; }
       .process-step-h::before {
@@ -214,7 +214,7 @@
         position: absolute;
         top: 38px; left: -1px;
         width: 50%; height: 2px;
-        background: linear-gradient(to right, rgba(201,169,97,0.2), var(--gold));
+        background: linear-gradient(to right, rgba(157,29,34,0.2), var(--brand-red));
       }
       .process-step-h:first-child::before { display: none; }
       .process-num-h {
@@ -231,13 +231,13 @@
       }
       .process-step-h:hover .process-num-h {
         background: var(--navy); border-color: var(--navy);
-        color: var(--gold); box-shadow: var(--shadow-md);
+        color: var(--brand-red); box-shadow: var(--shadow-md);
         transform: scale(1.08);
       }
       .process-badge-h {
         position: absolute; bottom: -5px; right: -5px;
         width: 24px; height: 24px;
-        background: var(--gold); color: var(--navy);
+        background: var(--brand-red); color: var(--white);
         font-family:'Montserrat',sans-serif; font-size:9px; font-weight:700;
         border-radius: 50%;
         display: flex; align-items: center; justify-content: center;
@@ -268,15 +268,9 @@
 <nav class="navbar transparent" id="navbar">
   <div class="nav-container">
     <a href="/" class="nav-logo">
-      <div class="logo-mark">
-        <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <rect width="38" height="38" rx="4" fill="rgba(201,169,97,0.15)"/>
-          <path d="M8 10 L8 28 M8 19 L30 19 M30 10 L30 28" stroke="#C9A961" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
       <div class="logo-text">
-        <span class="logo-hyundai">HYUNDAI</span>
-        <span class="logo-yacht">YACHT CARE</span>
+        <span class="logo-hyundai">Hyundai Yachts</span>
+        <span class="logo-yacht">YOUR DREAM WE MAKE</span>
       </div>
     </a>
     <ul class="nav-menu" id="navMenu">
@@ -389,7 +383,7 @@
     <div class="packages-grid">
       <!-- Basic Care -->
       <div class="package-card fade-up delay-1">
-        <div class="package-icon"><i class="fas fa-anchor" style="color:var(--gold)"></i></div>
+        <div class="package-icon"><i class="fas fa-anchor" style="color:var(--brand-red)"></i></div>
         <div class="package-name">Basic Care</div>
         <h3 class="package-title">베이직 케어</h3>
         <p class="package-desc">기본적인 외부 세척과 점검으로 요트의 청결함을 유지합니다.</p>
@@ -411,7 +405,7 @@
       <!-- Premium Care (Featured) -->
       <div class="package-card featured fade-up delay-2">
         <div class="package-badge">인기</div>
-        <div class="package-icon"><i class="fas fa-star" style="color:var(--gold)"></i></div>
+        <div class="package-icon"><i class="fas fa-star" style="color:var(--brand-red)"></i></div>
         <div class="package-name">Premium Care</div>
         <h3 class="package-title">프리미엄 케어</h3>
         <p class="package-desc">내외부 종합 케어로 요트의 완벽한 상태를 유지합니다.</p>
@@ -433,7 +427,7 @@
 
       <!-- Signature Care -->
       <div class="package-card fade-up delay-3">
-        <div class="package-icon"><i class="fas fa-crown" style="color:var(--gold)"></i></div>
+        <div class="package-icon"><i class="fas fa-crown" style="color:var(--brand-red)"></i></div>
         <div class="package-name">Signature Care</div>
         <h3 class="package-title">시그니처 케어</h3>
         <p class="package-desc">최고급 자재와 전담 기술진이 제공하는 VIP 케어 서비스입니다.</p>
@@ -653,7 +647,7 @@
 
 <!-- ── Calculator ── -->
 <section class="calculator" id="calculator">
-  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 75% 50%,rgba(201,169,97,.10),transparent);pointer-events:none"></div>
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 70% at 75% 50%,rgba(157,29,34,.08),transparent);pointer-events:none"></div>
   <div class="container" style="position:relative;z-index:1">
     <div class="section-header">
       <span class="section-label">Estimate Calculator</span>
@@ -766,7 +760,7 @@
 <div class="cta-banner">
   <div class="container">
     <span class="cta-banner-label fade-up">Limited Offer</span>
-    <h2 class="fade-up delay-1">지금 예약하시면 <span style="color:var(--gold)">첫 서비스 15% 할인</span></h2>
+    <h2 class="fade-up delay-1">지금 예약하시면 <span style="color:var(--brand-red)">첫 서비스 15% 할인</span></h2>
     <p class="fade-up delay-2">신규 고객 한정 혜택. 프리미엄 케어 이상 패키지에 적용됩니다.</p>
     <div class="cta-banner-btns fade-up delay-3">
       <a href="/booking.html" class="btn btn-primary btn-lg">
@@ -939,15 +933,9 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <div class="footer-logo">
-          <!-- Logo mark -->
-          <svg class="footer-logo-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="36" height="36" rx="4" fill="rgba(201,169,97,0.15)"/>
-            <path d="M7 9 L7 27 M7 18 L29 18 M29 9 L29 27" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          <div>
-            <div class="footer-logo-hyundai">HYUNDAI</div>
-            <div class="footer-logo-yacht">YACHT CARE</div>
-          </div>
+          <div class="footer-logo-hyundai">Hyundai Yachts</div>
+          <div class="footer-logo-yacht">YOUR DREAM WE MAKE</div>
+        </div>
         </div>
         <p class="footer-desc">현대요트 케어서비스는 프리미엄 요트 전문 관리 서비스를 제공합니다. 전문 기술진이 직접 관리하는 완벽한 케어 솔루션으로 요트의 가치를 보존합니다.</p>
         <div class="footer-social">

@@ -17,15 +17,9 @@
   <!-- ── Sidebar ── -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
-      <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none">
-        <svg viewBox="0 0 34 34" fill="none" width="34" height="34" style="flex-shrink:0">
-          <rect width="34" height="34" rx="4" fill="rgba(201,169,97,0.15)"/>
-          <path d="M7 9 L7 25 M7 17 L27 17 M27 9 L27 25" stroke="#C9A961" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        <div>
-          <span class="sidebar-logo-main">HYUNDAI</span>
-          <span class="sidebar-logo-sub">YACHT CARE</span>
-        </div>
+      <a href="/" style="display:flex;flex-direction:column;gap:3px;text-decoration:none">
+        <span class="sidebar-logo-main">Hyundai Yachts</span>
+        <span class="sidebar-logo-sub">YOUR DREAM WE MAKE</span>
       </a>
     </div>
 
@@ -115,7 +109,7 @@
         <!-- Next Booking -->
         <div class="data-card">
           <div class="data-card-header">
-            <div class="data-card-title"><i class="fas fa-calendar-day" style="color:var(--gold);margin-right:8px"></i>다음 예약</div>
+            <div class="data-card-title"><i class="fas fa-calendar-day" style="color:var(--brand-red);margin-right:8px"></i>다음 예약</div>
             <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
           </div>
           <div class="data-card-body" id="nextBookingCard" style="padding:28px">
@@ -129,8 +123,8 @@
         <!-- Recent Bookings -->
         <div class="data-card">
           <div class="data-card-header">
-            <div class="data-card-title"><i class="fas fa-history" style="color:var(--gold);margin-right:8px"></i>최근 예약</div>
-            <a href="#" onclick="showTab('bookings')" style="font-size:13px;color:var(--gold);font-weight:600">전체 보기 →</a>
+            <div class="data-card-title"><i class="fas fa-history" style="color:var(--brand-red);margin-right:8px"></i>최근 예약</div>
+            <a href="#" onclick="showTab('bookings')" style="font-size:13px;color:var(--brand-red);font-weight:600">전체 보기 →</a>
           </div>
           <div class="data-card-body overflow-x">
             <table>
@@ -226,7 +220,7 @@
               </div>
 
               <div style="border-top:1px solid var(--bg-medium);margin:24px 0 20px;padding-top:20px">
-                <h4 style="margin-bottom:20px;font-size:16px"><i class="fas fa-ship" style="color:var(--gold);margin-right:8px"></i>요트 정보</h4>
+                <h4 style="margin-bottom:20px;font-size:16px"><i class="fas fa-ship" style="color:var(--brand-red);margin-right:8px"></i>요트 정보</h4>
                 <div class="form-grid">
                   <div class="form-group">
                     <label class="form-label">요트 이름</label>
@@ -354,18 +348,18 @@ function renderNextBooking() {
     <div style="display:flex;align-items:center;gap:28px;flex-wrap:wrap">
       <div style="background:var(--navy);color:white;border-radius:var(--radius-md);padding:20px 28px;text-align:center;min-width:100px">
         <div style="font-size:11px;letter-spacing:0.1em;opacity:0.6;font-family:'Montserrat',sans-serif">${parts[1]}월</div>
-        <div style="font-family:'Montserrat',sans-serif;font-size:36px;font-weight:800;line-height:1;color:var(--gold)">${parts[2]}</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:36px;font-weight:800;line-height:1;color:var(--brand-red)">${parts[2]}</div>
         <div style="font-size:12px;opacity:0.6">${upcoming.scheduled_time}</div>
       </div>
       <div style="flex:1;min-width:200px">
         <div style="font-size:11px;color:var(--text-light);margin-bottom:6px;font-family:'Montserrat',sans-serif;letter-spacing:0.08em">예약 번호: ${upcoming.booking_number}</div>
         <div style="font-size:18px;font-weight:700;color:var(--navy);margin-bottom:8px">${upcoming.package_name||'개별 서비스'}</div>
-        <div style="font-size:14px;color:var(--text-medium);margin-bottom:4px"><i class="fas fa-anchor" style="color:var(--gold);width:16px"></i> ${upcoming.yacht_name}</div>
-        <div style="font-size:14px;color:var(--text-medium)"><i class="fas fa-map-marker-alt" style="color:var(--gold);width:16px"></i> ${upcoming.marina_berth||'위치 미지정'}</div>
+        <div style="font-size:14px;color:var(--text-medium);margin-bottom:4px"><i class="fas fa-anchor" style="color:var(--brand-red);width:16px"></i> ${upcoming.yacht_name}</div>
+        <div style="font-size:14px;color:var(--text-medium)"><i class="fas fa-map-marker-alt" style="color:var(--brand-red);width:16px"></i> ${upcoming.marina_berth||'위치 미지정'}</div>
       </div>
       <div style="text-align:right">
         ${statusBadge(upcoming.status)}
-        <div style="font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;color:var(--gold);margin-top:8px">${Number(upcoming.total_price).toLocaleString()}원</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:22px;font-weight:700;color:var(--brand-red);margin-top:8px">${Number(upcoming.total_price).toLocaleString()}원</div>
       </div>
     </div>
   `;
@@ -434,7 +428,7 @@ function renderMaintenanceCards(schedule) {
     return;
   }
   container.innerHTML = schedule.map(m => `
-    <div class="data-card" style="border-left:4px solid var(--gold)">
+    <div class="data-card" style="border-left:4px solid var(--brand-red)">
       <div style="padding:24px">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
           <span class="badge ${m.priority==='urgent'?'badge-red':'badge-gold'}">${m.priority==='urgent'?'긴급':'일반'}</span>

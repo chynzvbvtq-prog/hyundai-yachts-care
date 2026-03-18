@@ -32,13 +32,13 @@
     .auth-brand::before {
       content:'';
       position:absolute; inset:0;
-      background: radial-gradient(ellipse 80% 60% at 70% 35%, rgba(201,169,97,0.15), transparent 65%),
+      background: radial-gradient(ellipse 80% 60% at 70% 35%, rgba(157,29,34,0.15), transparent 65%),
                   radial-gradient(ellipse 50% 40% at 10% 80%, rgba(0,20,40,0.6), transparent 60%);
     }
     .auth-brand::after {
       content:'';
       position:absolute; inset:0;
-      background: radial-gradient(ellipse 60% 60% at 60% 40%, rgba(201,169,97,0.12), transparent);
+      background: radial-gradient(ellipse 60% 60% at 60% 40%, rgba(157,29,34,0.12), transparent);
     }
     .auth-brand-content { position:relative; z-index:1; text-align:center; }    .auth-brand-logo {
       display:flex; align-items:center; gap:14px; justify-content:center;
@@ -58,7 +58,7 @@
     .auth-brand-stat { text-align:center; }
     .auth-brand-stat-num {
       font-family:'Montserrat',sans-serif; font-size:26px; font-weight:700;
-      color:var(--gold); line-height:1; margin-bottom:4px;
+      color:var(--brand-red); line-height:1; margin-bottom:4px;
     }
     .auth-brand-stat-label { font-size:12px; color:rgba(255,255,255,0.5); }
 
@@ -86,17 +86,11 @@
   <!-- Left: Brand panel -->
   <div class="auth-brand">
     <div class="auth-brand-content">
-      <div class="auth-brand-logo">
-        <svg viewBox="0 0 44 44" fill="none" width="44" height="44">
-          <rect width="44" height="44" rx="5" fill="rgba(201,169,97,0.15)"/>
-          <path d="M9 11 L9 33 M9 22 L35 22 M35 11 L35 33" stroke="#C9A961" stroke-width="3.5" stroke-linecap="round"/>
-        </svg>
-        <div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:22px;font-weight:800;letter-spacing:.14em;color:#fff">HYUNDAI</div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:10px;font-weight:500;letter-spacing:.35em;color:var(--gold)">YACHT CARE</div>
-        </div>
+      <div class="auth-brand-logo" style="display:flex;flex-direction:column;gap:4px;margin-bottom:32px;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;letter-spacing:-.01em;color:#fff">Hyundai Yachts</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(192,54,61,0.9)">YOUR DREAM WE MAKE</div>
       </div>
-      <h2 class="auth-brand-title">요트의 가치를<br><span style="color:var(--gold)">완벽하게</span> 보존합니다</h2>
+      <h2 class="auth-brand-title">요트의 가치를<br><span style="color:rgba(192,54,61,0.9)">완벽하게</span> 보존합니다</h2>
       <p class="auth-brand-sub">현대요트 케어서비스에 로그인하여 프리미엄 요트 관리 서비스를 이용하세요.</p>
       <div class="auth-brand-stats">
         <div class="auth-brand-stat">
@@ -119,16 +113,9 @@
   <div class="auth-form-side">
     <div class="auth-form-inner">
 
-      <a href="/" class="auth-form-logo">
-        <div style="width:34px;height:34px;background:rgba(0,45,86,0.08);border-radius:5px;display:flex;align-items:center;justify-content:center">
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
-            <path d="M4 5 L4 19 M4 12 L20 12 M20 5 L20 19" stroke="#002D56" stroke-width="2.5" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;letter-spacing:.12em;color:var(--navy)">HYUNDAI</div>
-          <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:500;letter-spacing:.3em;color:var(--gold)">YACHT CARE</div>
-        </div>
+      <a href="/" class="auth-form-logo" style="display:flex;flex-direction:column;gap:3px;text-decoration:none;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--brand-dark)">Hyundai Yachts</div>
+        <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--brand-red)">YOUR DREAM WE MAKE</div>
       </a>
 
       <h2 class="auth-form-title">로그인</h2>
@@ -158,7 +145,7 @@
       <hr class="auth-divider">
 
       <div class="demo-box">
-        <strong><i class="fas fa-lock" style="color:var(--gold);margin-right:6px"></i>데모 계정</strong>
+        <strong><i class="fas fa-lock" style="color:var(--brand-red);margin-right:6px"></i>데모 계정</strong>
         <div>관리자: admin@hyundaiyacht.com / Admin1234!</div>
         <div style="margin-top:4px">고객: demo@hyundaiyacht.com / Demo1234!</div>
       </div>
