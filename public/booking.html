@@ -12,6 +12,7 @@
 <body>
 
 <div class="toast" id="toast"></div>
+<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
 <!-- Navigation -->
 <nav class="navbar scrolled" id="navbar">
@@ -37,7 +38,6 @@
     <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
 </nav>
-<div class="menu-overlay" id="menuOverlay" onclick="closeMenu()"></div>
 
 <!-- Page Header -->
 <div class="page-header">
@@ -49,11 +49,11 @@
 </div>
 
 <!-- Booking Body -->
-<section style="background:var(--bg-light);padding:60px 0 100px">
+<section style="background:var(--bg-light);padding:60px 0 120px">
   <div class="container">
 
     <!-- Progress Bar -->
-    <div class="progress-bar" id="progressBar" style="max-width:700px;margin:0 auto 48px">
+    <div class="progress-bar" id="progressBar" style="max-width:720px;margin:0 auto 56px">
       <div class="progress-step active" id="pStep1" onclick="state.currentStep>1&&goStep(1)">
         <div class="progress-dot">1</div>
         <div class="progress-label">패키지 선택</div>
@@ -73,124 +73,180 @@
     </div>
 
     <div class="booking-wrap">
-      <!-- Main Form Area -->
+      <!-- ── Main Form ── -->
       <div>
 
-        <!-- Step 1: Package -->
+        <!-- STEP 1: Package Selection -->
         <div class="booking-step active" id="step1">
-          <div class="card">
-            <div class="step-title">서비스 패키지 선택</div>
-            <p style="color:var(--text-light);font-size:15px;margin-bottom:28px;margin-top:-12px">원하시는 케어 패키지를 선택해주세요</p>
+          <div class="step-title">
+            <span style="display:inline-flex;align-items:center;gap:10px">
+              <span style="width:30px;height:30px;background:var(--navy);color:var(--gold);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px">1</span>
+              서비스 패키지를 선택하세요
+            </span>
+          </div>
 
-            <div class="package-select-grid">
-              <div class="pkg-option" data-pkg="basic" data-price="150000" data-name="베이직 케어" onclick="selectPkg(this)">
-                <div class="pkg-option-check"><i class="fas fa-check"></i></div>
-                <div style="font-size:24px;margin-bottom:12px">⚓</div>
-                <div class="pkg-option-name">Basic Care</div>
-                <div class="pkg-option-title">베이직 케어</div>
-                <div class="pkg-option-price">150,000원~</div>
-                <div class="pkg-option-desc">기본 외부 세척과 안전 점검</div>
-              </div>
-              <div class="pkg-option" data-pkg="premium" data-price="380000" data-name="프리미엄 케어" onclick="selectPkg(this)">
-                <div class="pkg-option-check"><i class="fas fa-check"></i></div>
-                <div style="font-size:24px;margin-bottom:12px">⭐</div>
-                <div class="pkg-option-name">Premium Care</div>
-                <div class="pkg-option-title">프리미엄 케어</div>
-                <div class="pkg-option-price">380,000원~</div>
-                <div class="pkg-option-desc">내외부 종합 케어 서비스</div>
-              </div>
-              <div class="pkg-option" data-pkg="signature" data-price="750000" data-name="시그니처 케어" onclick="selectPkg(this)">
-                <div class="pkg-option-check"><i class="fas fa-check"></i></div>
-                <div style="font-size:24px;margin-bottom:12px">👑</div>
-                <div class="pkg-option-name">Signature Care</div>
-                <div class="pkg-option-title">시그니처 케어</div>
-                <div class="pkg-option-price">750,000원~</div>
-                <div class="pkg-option-desc">VIP 전담 케어 서비스</div>
-              </div>
+          <div class="package-select-grid" style="margin-bottom:32px">
+            <div class="pkg-option" id="pkg-basic" onclick="selectPackage('basic')">
+              <div class="pkg-option-check"><i class="fas fa-check"></i></div>
+              <div style="font-size:28px;color:var(--gold);margin-bottom:12px"><i class="fas fa-anchor"></i></div>
+              <div class="pkg-option-name">Basic Care</div>
+              <div class="pkg-option-title">베이직 케어</div>
+              <div class="pkg-option-price">150,000<span style="font-size:13px;font-weight:400;color:var(--text-medium)">원~</span></div>
+              <div class="pkg-option-desc">외부 세척, 기본 점검, 서비스 리포트</div>
             </div>
+            <div class="pkg-option" id="pkg-premium" onclick="selectPackage('premium')" style="position:relative">
+              <div style="position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;letter-spacing:.08em;padding:3px 14px;border-radius:0 0 8px 8px;font-family:'Montserrat',sans-serif">인기</div>
+              <div class="pkg-option-check"><i class="fas fa-check"></i></div>
+              <div style="font-size:28px;color:var(--gold);margin-bottom:12px;margin-top:8px"><i class="fas fa-star"></i></div>
+              <div class="pkg-option-name">Premium Care</div>
+              <div class="pkg-option-title">프리미엄 케어</div>
+              <div class="pkg-option-price">380,000<span style="font-size:13px;font-weight:400;color:var(--text-medium)">원~</span></div>
+              <div class="pkg-option-desc">내외부 종합 케어, 왁싱·폴리싱, 엔진 정밀 점검</div>
+            </div>
+            <div class="pkg-option" id="pkg-signature" onclick="selectPackage('signature')">
+              <div class="pkg-option-check"><i class="fas fa-check"></i></div>
+              <div style="font-size:28px;color:var(--gold);margin-bottom:12px"><i class="fas fa-crown"></i></div>
+              <div class="pkg-option-name">Signature Care</div>
+              <div class="pkg-option-title">시그니처 케어</div>
+              <div class="pkg-option-price">750,000<span style="font-size:13px;font-weight:400;color:var(--text-medium)">원~</span></div>
+              <div class="pkg-option-desc">VIP 전담 기술진, 나노코팅, 수중 점검, 연간 관리</div>
+            </div>
+          </div>
 
-            <div style="margin-top:28px">
-              <label class="form-label" style="margin-bottom:14px;display:block"><i class="fas fa-plus-circle" style="color:var(--gold);margin-right:6px"></i>추가 서비스</label>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px" id="extraServices">
-                <label style="display:flex;align-items:center;gap:10px;padding:14px 16px;border:1.5px solid var(--bg-medium);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:14px">
-                  <input type="checkbox" class="extra-cb" data-price="100000" value="nano_coating" onchange="updateSummary()">
-                  나노 코팅 <strong style="color:var(--gold);margin-left:auto">+100,000원</strong>
-                </label>
-                <label style="display:flex;align-items:center;gap:10px;padding:14px 16px;border:1.5px solid var(--bg-medium);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:14px">
-                  <input type="checkbox" class="extra-cb" data-price="150000" value="underwater_check" onchange="updateSummary()">
-                  수중 점검 <strong style="color:var(--gold);margin-left:auto">+150,000원</strong>
-                </label>
-                <label style="display:flex;align-items:center;gap:10px;padding:14px 16px;border:1.5px solid var(--bg-medium);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:14px">
-                  <input type="checkbox" class="extra-cb" data-price="80000" value="interior_clean" onchange="updateSummary()">
-                  실내 전문 청소 <strong style="color:var(--gold);margin-left:auto">+80,000원</strong>
-                </label>
-                <label style="display:flex;align-items:center;gap:10px;padding:14px 16px;border:1.5px solid var(--bg-medium);border-radius:var(--radius-sm);cursor:pointer;transition:all 0.2s;font-size:14px">
-                  <input type="checkbox" class="extra-cb" data-price="50000" value="site_visit" onchange="updateSummary()">
-                  출장 서비스 <strong style="color:var(--gold);margin-left:auto">+50,000원</strong>
-                </label>
+          <!-- Extra Services -->
+          <div class="booking-section-title"><i class="fas fa-plus-circle"></i> 추가 서비스 선택 (선택)</div>
+          <div class="extra-services-grid">
+            <label class="extra-service-item" id="extra-nano" onclick="toggleExtra('nano',100000,this)">
+              <div class="extra-service-check"><i class="fas fa-check"></i></div>
+              <div>
+                <div class="extra-service-name"><i class="fas fa-shield-alt" style="color:var(--gold);margin-right:6px"></i> 나노 코팅</div>
+                <div class="extra-service-price">+100,000원</div>
               </div>
-            </div>
+            </label>
+            <label class="extra-service-item" id="extra-underwater" onclick="toggleExtra('underwater',150000,this)">
+              <div class="extra-service-check"><i class="fas fa-check"></i></div>
+              <div>
+                <div class="extra-service-name"><i class="fas fa-water" style="color:var(--gold);margin-right:6px"></i> 수중 선체 점검</div>
+                <div class="extra-service-price">+150,000원</div>
+              </div>
+            </label>
+            <label class="extra-service-item" id="extra-interior" onclick="toggleExtra('interior',80000,this)">
+              <div class="extra-service-check"><i class="fas fa-check"></i></div>
+              <div>
+                <div class="extra-service-name"><i class="fas fa-home" style="color:var(--gold);margin-right:6px"></i> 실내 전문 청소</div>
+                <div class="extra-service-price">+80,000원</div>
+              </div>
+            </label>
+            <label class="extra-service-item" id="extra-visit" onclick="toggleExtra('visit',50000,this)">
+              <div class="extra-service-check"><i class="fas fa-check"></i></div>
+              <div>
+                <div class="extra-service-name"><i class="fas fa-map-marker-alt" style="color:var(--gold);margin-right:6px"></i> 현장 방문 서비스</div>
+                <div class="extra-service-price">+50,000원</div>
+              </div>
+            </label>
+          </div>
 
-            <div class="step-buttons">
-              <button class="btn btn-primary" onclick="validateStep1()">
-                다음 단계 <i class="fas fa-arrow-right"></i>
-              </button>
-            </div>
+          <div class="step-buttons">
+            <button class="btn btn-primary btn-lg" onclick="goStep(2)">
+              다음 단계 <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </div>
 
-        <!-- Step 2: Yacht Info -->
+        <!-- STEP 2: Yacht Info -->
         <div class="booking-step" id="step2">
-          <div class="card">
-            <div class="step-title">요트 정보 입력</div>
-            <p style="color:var(--text-light);font-size:15px;margin-bottom:28px;margin-top:-12px">서비스를 위한 요트 정보를 입력해주세요</p>
-            <div class="form-grid">
+          <div class="step-title">
+            <span style="display:inline-flex;align-items:center;gap:10px">
+              <span style="width:30px;height:30px;background:var(--navy);color:var(--gold);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px">2</span>
+              요트 정보를 입력하세요
+            </span>
+          </div>
+
+          <div style="background:var(--white);border-radius:var(--radius-md);padding:32px;box-shadow:var(--shadow-sm);border:1px solid var(--bg-medium)">
+            <div class="booking-section-title"><i class="fas fa-ship"></i> 기본 정보</div>
+            <div class="form-grid" style="margin-bottom:20px">
               <div class="form-group">
                 <label class="form-label">요트 이름 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="yachtName" placeholder="예: 블루오션" required>
+                <input type="text" class="form-input" id="yachtName" placeholder="My Yacht" required>
               </div>
               <div class="form-group">
                 <label class="form-label">요트 모델</label>
-                <input type="text" class="form-input" id="yachtModel" placeholder="예: Beneteau Oceanis 40.1">
+                <input type="text" class="form-input" id="yachtModel" placeholder="예: Sunseeker 50">
+              </div>
+            </div>
+
+            <div class="form-grid" style="margin-bottom:20px">
+              <div class="form-group">
+                <label class="form-label">요트 길이 (피트) <span class="required">*</span></label>
+                <input type="number" class="form-input" id="yachtLength" placeholder="예: 42" min="15" max="200" required oninput="updateSummary()">
               </div>
               <div class="form-group">
-                <label class="form-label">요트 길이 (ft) <span class="required">*</span></label>
-                <input type="number" class="form-input" id="yachtLength" placeholder="예: 42" min="20" max="120" oninput="updateSummary()" required>
-              </div>
-              <div class="form-group">
-                <label class="form-label">계류 위치</label>
-                <select class="form-select" id="marinaBerth">
-                  <option value="">마리나를 선택하세요</option>
-                  <option>부산 수영만 요트경기장</option>
-                  <option>부산 김해 마리나</option>
-                  <option>거제 옥포 마리나</option>
-                  <option>여수 엑스포 마리나</option>
-                  <option>통영 마리나</option>
-                  <option>제주 중문 마리나</option>
-                  <option>기타</option>
+                <label class="form-label">요트 종류</label>
+                <select class="form-select" id="yachtType">
+                  <option value="sailing">세일링 요트</option>
+                  <option value="motor">모터 요트</option>
+                  <option value="power">파워보트</option>
+                  <option value="catamaran">카타마란</option>
+                  <option value="other">기타</option>
                 </select>
               </div>
             </div>
+
+            <div class="booking-section-title" style="margin-top:8px"><i class="fas fa-map-marker-alt"></i> 마리나 위치</div>
             <div class="form-group">
-              <label class="form-label">특별 요청 사항</label>
-              <textarea class="form-textarea" id="specialReq" placeholder="특별히 신경 써주실 부분이나 요청 사항을 입력해주세요" rows="3"></textarea>
+              <label class="form-label">마리나 선택 <span class="required">*</span></label>
+              <select class="form-select" id="yachtMarina" required onchange="updateSummary()">
+                <option value="">마리나를 선택하세요</option>
+                <optgroup label="부산">
+                  <option value="수영만 마리나">수영만 마리나</option>
+                  <option value="해운대 요트클럽">해운대 요트클럽</option>
+                </optgroup>
+                <optgroup label="경남">
+                  <option value="거제 마리나">거제 마리나 리조트</option>
+                  <option value="통영 마리나">통영 마리나</option>
+                </optgroup>
+                <optgroup label="전남">
+                  <option value="여수 마리나">여수 마리나</option>
+                </optgroup>
+                <optgroup label="제주">
+                  <option value="제주 중문 마리나">제주 중문 마리나</option>
+                  <option value="제주 서귀포 마리나">서귀포 마리나</option>
+                </optgroup>
+                <option value="기타 (협의)">기타 지역 (별도 협의)</option>
+              </select>
             </div>
-            <div class="step-buttons">
-              <button class="btn btn-outline-navy" onclick="goStep(1)"><i class="fas fa-arrow-left"></i> 이전</button>
-              <button class="btn btn-primary" onclick="validateStep2()">다음 단계 <i class="fas fa-arrow-right"></i></button>
+
+            <div class="booking-section-title" style="margin-top:8px"><i class="fas fa-comment-alt"></i> 요청 사항</div>
+            <div class="form-group">
+              <label class="form-label">특이 사항 / 요청 사항</label>
+              <textarea class="form-textarea" id="yachtNotes" placeholder="요트 상태나 특별한 요청 사항이 있으면 입력해 주세요." rows="4"></textarea>
             </div>
+          </div>
+
+          <div class="step-buttons">
+            <button class="btn btn-outline-navy" onclick="goStep(1)">
+              <i class="fas fa-arrow-left"></i> 이전
+            </button>
+            <button class="btn btn-primary btn-lg" onclick="goStep(3)">
+              다음 단계 <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </div>
 
-        <!-- Step 3: Date & Time -->
+        <!-- STEP 3: Date & Time -->
         <div class="booking-step" id="step3">
-          <div class="card">
-            <div class="step-title">날짜 및 시간 선택</div>
-            <p style="color:var(--text-light);font-size:15px;margin-bottom:28px;margin-top:-12px">원하시는 서비스 날짜와 시간을 선택해주세요</p>
+          <div class="step-title">
+            <span style="display:inline-flex;align-items:center;gap:10px">
+              <span style="width:30px;height:30px;background:var(--navy);color:var(--gold);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px">3</span>
+              날짜 &amp; 시간을 선택하세요
+            </span>
+          </div>
 
+          <div style="background:var(--white);border-radius:var(--radius-md);padding:32px;box-shadow:var(--shadow-sm);border:1px solid var(--bg-medium)">
+            <div class="booking-section-title"><i class="fas fa-calendar-alt"></i> 서비스 날짜</div>
             <div class="calendar-header">
               <button class="calendar-nav" onclick="changeMonth(-1)"><i class="fas fa-chevron-left"></i></button>
-              <div class="calendar-month" id="calTitle"></div>
+              <div class="calendar-month" id="calMonth">2025년 3월</div>
               <button class="calendar-nav" onclick="changeMonth(1)"><i class="fas fa-chevron-right"></i></button>
             </div>
             <div class="calendar-grid" id="calGrid">
@@ -203,88 +259,183 @@
               <div class="calendar-day-name">토</div>
             </div>
 
-            <div style="margin-top:28px">
-              <label class="form-label" style="margin-bottom:12px;display:block"><i class="fas fa-clock" style="color:var(--gold);margin-right:6px"></i>시간 선택</label>
-              <div class="time-slots" id="timeGrid">
-                <div class="time-slot" onclick="selectTime(this,'09:00')">09:00</div>
-                <div class="time-slot" onclick="selectTime(this,'10:00')">10:00</div>
-                <div class="time-slot" onclick="selectTime(this,'11:00')">11:00</div>
-                <div class="time-slot" onclick="selectTime(this,'13:00')">13:00</div>
-                <div class="time-slot" onclick="selectTime(this,'14:00')">14:00</div>
-                <div class="time-slot" onclick="selectTime(this,'15:00')">15:00</div>
-                <div class="time-slot" onclick="selectTime(this,'16:00')">16:00</div>
-                <div class="time-slot disabled">만석</div>
-              </div>
+            <div class="booking-section-title" style="margin-top:28px"><i class="fas fa-clock"></i> 서비스 시작 시간</div>
+            <div class="time-slots" id="timeSlots">
+              <div class="time-slot" onclick="selectTime('09:00')">09:00</div>
+              <div class="time-slot" onclick="selectTime('10:00')">10:00</div>
+              <div class="time-slot" onclick="selectTime('11:00')">11:00</div>
+              <div class="time-slot disabled">12:00</div>
+              <div class="time-slot" onclick="selectTime('13:00')">13:00</div>
+              <div class="time-slot" onclick="selectTime('14:00')">14:00</div>
+              <div class="time-slot" onclick="selectTime('15:00')">15:00</div>
+              <div class="time-slot" onclick="selectTime('16:00')">16:00</div>
             </div>
+            <p style="font-size:12px;color:var(--text-light);margin-top:10px"><i class="fas fa-info-circle" style="color:var(--gold);margin-right:4px"></i> 회색 슬롯은 예약 마감된 시간입니다.</p>
+          </div>
 
-            <div class="step-buttons">
-              <button class="btn btn-outline-navy" onclick="goStep(2)"><i class="fas fa-arrow-left"></i> 이전</button>
-              <button class="btn btn-primary" onclick="validateStep3()">다음 단계 <i class="fas fa-arrow-right"></i></button>
-            </div>
+          <div class="step-buttons">
+            <button class="btn btn-outline-navy" onclick="goStep(2)">
+              <i class="fas fa-arrow-left"></i> 이전
+            </button>
+            <button class="btn btn-primary btn-lg" onclick="goStep(4)">
+              최종 확인 <i class="fas fa-arrow-right"></i>
+            </button>
           </div>
         </div>
 
-        <!-- Step 4: Confirm -->
+        <!-- STEP 4: Confirmation -->
         <div class="booking-step" id="step4">
-          <div class="card">
-            <div class="step-title">예약 최종 확인</div>
-            <p style="color:var(--text-light);font-size:15px;margin-bottom:28px;margin-top:-12px">예약 정보를 확인하고 예약을 완료하세요</p>
+          <div class="step-title">
+            <span style="display:inline-flex;align-items:center;gap:10px">
+              <span style="width:30px;height:30px;background:var(--navy);color:var(--gold);border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-family:'Montserrat',sans-serif;font-weight:700;font-size:14px">4</span>
+              예약 내용을 확인하세요
+            </span>
+          </div>
 
-            <div id="confirmDetails" style="background:var(--bg-light);border-radius:var(--radius-md);padding:24px;margin-bottom:24px"></div>
-
-            <div id="loginRequired" style="display:none;background:rgba(201,169,97,0.08);border:1px solid rgba(201,169,97,0.3);border-radius:var(--radius-sm);padding:16px 20px;margin-bottom:20px;font-size:14px;color:var(--navy)">
-              <i class="fas fa-lock" style="color:var(--gold);margin-right:8px"></i>
-              예약을 완료하려면 로그인이 필요합니다.
-              <a href="/login.html" style="color:var(--gold);font-weight:700;margin-left:4px">로그인하기 →</a>
+          <!-- Summary boxes -->
+          <div class="confirm-box">
+            <div class="confirm-box-title">서비스 패키지</div>
+            <div class="confirm-row">
+              <span class="confirm-label">패키지</span>
+              <span class="confirm-value" id="cfmPackage">-</span>
             </div>
-
-            <div id="bookingAlert" class="alert"></div>
-
-            <div class="step-buttons">
-              <button class="btn btn-outline-navy" onclick="goStep(3)"><i class="fas fa-arrow-left"></i> 이전</button>
-              <button class="btn btn-primary btn-lg" onclick="submitBooking()" id="confirmBtn">
-                <i class="fas fa-calendar-check"></i> 예약 완료하기
-              </button>
+            <div class="confirm-row">
+              <span class="confirm-label">추가 서비스</span>
+              <span class="confirm-value" id="cfmExtras">없음</span>
             </div>
+          </div>
+
+          <div class="confirm-box">
+            <div class="confirm-box-title">요트 정보</div>
+            <div class="confirm-row">
+              <span class="confirm-label">요트 이름</span>
+              <span class="confirm-value" id="cfmYachtName">-</span>
+            </div>
+            <div class="confirm-row">
+              <span class="confirm-label">크기</span>
+              <span class="confirm-value" id="cfmYachtLen">-</span>
+            </div>
+            <div class="confirm-row">
+              <span class="confirm-label">마리나</span>
+              <span class="confirm-value" id="cfmMarina">-</span>
+            </div>
+          </div>
+
+          <div class="confirm-box">
+            <div class="confirm-box-title">일정</div>
+            <div class="confirm-row">
+              <span class="confirm-label">날짜</span>
+              <span class="confirm-value" id="cfmDate">-</span>
+            </div>
+            <div class="confirm-row">
+              <span class="confirm-label">시작 시간</span>
+              <span class="confirm-value" id="cfmTime">-</span>
+            </div>
+          </div>
+
+          <div class="confirm-box" style="background:rgba(201,169,97,0.06);border-color:rgba(201,169,97,0.25)">
+            <div class="confirm-total-row">
+              <div class="confirm-total-label">예상 총 금액 (VAT 포함)</div>
+              <div class="confirm-total-amount" id="cfmTotal">-</div>
+            </div>
+            <p style="font-size:12px;color:var(--text-light);text-align:right;margin-top:4px">* 실제 금액은 현장 점검 후 확정됩니다</p>
+          </div>
+
+          <!-- Login prompt (shown if not logged in) -->
+          <div class="login-prompt" id="loginPromptBox" style="display:none">
+            <h4><i class="fas fa-lock" style="color:var(--gold);margin-right:8px"></i> 예약하려면 로그인이 필요합니다</h4>
+            <p>로그인 후 예약을 완료하거나, 비회원으로 문의를 남기실 수 있습니다.</p>
+            <div class="login-prompt-btns">
+              <a href="/login.html?redirect=/booking.html" class="btn btn-primary">
+                <i class="fas fa-sign-in-alt"></i> 로그인
+              </a>
+              <a href="/register.html" class="btn btn-outline">
+                <i class="fas fa-user-plus"></i> 회원가입
+              </a>
+            </div>
+          </div>
+
+          <div class="step-buttons">
+            <button class="btn btn-outline-navy" onclick="goStep(3)">
+              <i class="fas fa-arrow-left"></i> 이전
+            </button>
+            <button class="btn btn-primary btn-lg" id="submitBtn" onclick="submitBooking()">
+              <i class="fas fa-calendar-check"></i>&nbsp; 예약 완료하기
+            </button>
+          </div>
+
+          <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:16px">
+            <i class="fas fa-shield-alt" style="color:var(--gold);margin-right:4px"></i>
+            예약 확정 후 24시간 이내 담당자가 연락드립니다.
+          </p>
+        </div>
+
+        <!-- STEP 5: Success -->
+        <div class="booking-step" id="step5" style="text-align:center;padding:60px 20px">
+          <div style="width:80px;height:80px;background:rgba(10,138,90,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;font-size:36px;color:#0a8a5a">
+            <i class="fas fa-check"></i>
+          </div>
+          <h2 style="color:var(--navy);margin-bottom:12px">예약이 접수되었습니다!</h2>
+          <p style="color:var(--text-medium);margin-bottom:36px">24시간 이내 담당자가 확인 후 연락드리겠습니다.<br>마이페이지에서 예약 현황을 확인하실 수 있습니다.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="/dashboard.html" class="btn btn-navy">
+              <i class="fas fa-user"></i> 마이페이지
+            </a>
+            <a href="/" class="btn btn-outline-navy">
+              <i class="fas fa-home"></i> 홈으로
+            </a>
           </div>
         </div>
 
       </div>
 
-      <!-- Summary Sidebar -->
+      <!-- ── Sidebar Summary ── -->
       <div>
         <div class="booking-summary">
-          <div class="summary-title"><i class="fas fa-receipt" style="color:var(--gold);margin-right:8px"></i>예약 요약</div>
-          <div class="summary-item">
+          <div class="summary-title">
+            <i class="fas fa-receipt" style="color:var(--gold);margin-right:8px"></i> 예약 요약
+          </div>
+
+          <div class="summary-item" id="sumPackage">
             <span class="summary-item-label">패키지</span>
-            <span class="summary-item-value" id="sumPackage">선택 전</span>
+            <span class="summary-item-value" style="color:var(--text-muted)">선택 전</span>
           </div>
-          <div class="summary-item">
-            <span class="summary-item-label">요트 이름</span>
-            <span class="summary-item-value" id="sumYacht">입력 전</span>
-          </div>
-          <div class="summary-item">
+          <div class="summary-item" id="sumSize">
             <span class="summary-item-label">요트 크기</span>
-            <span class="summary-item-value" id="sumLength">-</span>
+            <span class="summary-item-value" style="color:var(--text-muted)">미입력</span>
           </div>
-          <div class="summary-item">
-            <span class="summary-item-label">예약 일시</span>
-            <span class="summary-item-value" id="sumDateTime">선택 전</span>
+          <div class="summary-item" id="sumDate">
+            <span class="summary-item-label">날짜</span>
+            <span class="summary-item-value" style="color:var(--text-muted)">선택 전</span>
           </div>
-          <div class="summary-item">
-            <span class="summary-item-label">계류 위치</span>
-            <span class="summary-item-value" id="sumMarina">-</span>
+          <div class="summary-item" id="sumTime">
+            <span class="summary-item-label">시간</span>
+            <span class="summary-item-value" style="color:var(--text-muted)">선택 전</span>
           </div>
-          <div class="summary-item" id="sumExtrasRow" style="display:none">
-            <span class="summary-item-label">추가 서비스</span>
-            <span class="summary-item-value" id="sumExtras">-</span>
+          <div class="summary-item" id="sumMarina">
+            <span class="summary-item-label">마리나</span>
+            <span class="summary-item-value" style="color:var(--text-muted)">선택 전</span>
           </div>
+
+          <div id="sumExtrasBlock" style="display:none">
+            <div class="summary-item">
+              <span class="summary-item-label">추가 서비스</span>
+              <span></span>
+            </div>
+            <div id="sumExtrasList" style="padding-left:12px;margin-bottom:8px"></div>
+          </div>
+
           <div class="summary-total">
-            <span class="summary-total-label">예상 견적 (VAT 포함)</span>
-            <span class="summary-total-price" id="sumTotal">-</span>
+            <div class="summary-total-label">예상 합계</div>
+            <div class="summary-total-price" id="sumTotal">-</div>
           </div>
-          <div style="margin-top:16px;font-size:12px;color:var(--text-light);text-align:center">
-            <i class="fas fa-info-circle" style="color:var(--gold)"></i> 최종 금액은 현장 확인 후 확정됩니다
+          <p style="font-size:11px;color:var(--text-muted);margin-top:8px;text-align:right">VAT 10% 포함</p>
+
+          <div style="margin-top:20px;padding:14px;background:var(--bg-light);border-radius:var(--radius-sm)">
+            <div style="font-size:12px;color:var(--text-medium);line-height:1.7">
+              <i class="fas fa-info-circle" style="color:var(--gold);margin-right:5px"></i>
+              서비스 48시간 전까지 무료 취소·변경 가능합니다.
+            </div>
           </div>
         </div>
       </div>
@@ -292,265 +443,291 @@
   </div>
 </section>
 
-<!-- Minimal Footer -->
-<footer>
+<!-- Footer (minimal) -->
+<footer style="background:var(--navy);padding:32px 0;text-align:center">
   <div class="container">
-    <div class="footer-bottom">
-      <span class="footer-copyright">© 2024 Hyundai Yacht Care. All rights reserved.</span>
-      <a href="/" style="color:rgba(255,255,255,0.5);font-size:13px">← 홈으로 돌아가기</a>
+    <div style="font-family:'Montserrat',sans-serif;font-size:15px;font-weight:700;letter-spacing:.12em;color:var(--white)">
+      HYUNDAI <span style="color:var(--gold)">YACHT CARE</span>
     </div>
+    <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:8px">© 2025 Hyundai Yacht Care. All rights reserved.</div>
   </div>
 </footer>
 
+<script src="/static/app.js"></script>
 <script>
 // ── State ──
-let state = {
-  package: null, packageName: null, packagePrice: 0,
-  extras: [], extrasPrice: 0,
-  yachtName:'', yachtModel:'', yachtLength:0, marinaBerth:'', specialReq:'',
-  date: null, time: null, currentStep: 1
+const state = {
+  currentStep: 1,
+  package: null,
+  extras: {},
+  yachtName: '', yachtLength: 0, yachtModel: '', yachtMarina: '', yachtNotes: '',
+  date: null,
+  time: null,
+  cal: { year: new Date().getFullYear(), month: new Date().getMonth() }
 };
-let calYear, calMonth;
 
-window.addEventListener('load', () => {
-  checkAuth();
-  initCalendar();
-  const pkg = new URLSearchParams(location.search).get('package');
-  if (pkg) { const card = document.querySelector('[data-pkg="'+pkg+'"]'); if (card) selectPkg(card); }
-});
+const pkgData = {
+  basic:     { label:'베이직 케어',    price:150000 },
+  premium:   { label:'프리미엄 케어',  price:380000 },
+  signature: { label:'시그니처 케어',  price:750000 }
+};
+const extraData = {
+  nano:       { label:'나노 코팅',       price:100000 },
+  underwater: { label:'수중 선체 점검',   price:150000 },
+  interior:   { label:'실내 전문 청소',   price:80000  },
+  visit:      { label:'현장 방문 서비스', price:50000  }
+};
 
-function checkAuth() {
-  const token = localStorage.getItem('yachtToken');
-  const user = JSON.parse(localStorage.getItem('yachtUser')||'null');
-  if (token && user) {
-    document.getElementById('navAuth').style.display='none';
-    document.getElementById('navUser').style.display='block';
+// Pre-select from URL
+const urlPkg = new URLSearchParams(location.search).get('package');
+if (urlPkg && pkgData[urlPkg]) {
+  state.package = urlPkg;
+  document.getElementById('pkg-' + urlPkg)?.classList.add('selected');
+}
+
+// ── Package selection ──
+function selectPackage(pkg) {
+  state.package = pkg;
+  document.querySelectorAll('.pkg-option').forEach(el => el.classList.remove('selected'));
+  document.getElementById('pkg-' + pkg).classList.add('selected');
+  updateSummary();
+}
+
+// ── Extra toggle ──
+function toggleExtra(key, price, el) {
+  el.classList.toggle('selected');
+  if (el.classList.contains('selected')) {
+    state.extras[key] = price;
+  } else {
+    delete state.extras[key];
   }
+  updateSummary();
 }
 
-function toggleMenu() {
-  document.getElementById('navMenu').classList.toggle('open');
-  document.getElementById('hamburger').classList.toggle('open');
-  document.getElementById('menuOverlay').classList.toggle('active');
-}
-function closeMenu() {
-  document.getElementById('navMenu').classList.remove('open');
-  document.getElementById('hamburger').classList.remove('open');
-  document.getElementById('menuOverlay').classList.remove('active');
-}
-
-// ── Steps ──
+// ── Step navigation ──
 function goStep(n) {
-  state.currentStep = n;
-  document.querySelectorAll('.booking-step').forEach(el => el.classList.remove('active'));
-  document.getElementById('step'+n).classList.add('active');
-  // Update progress
-  for (let i=1;i<=4;i++) {
-    const s = document.getElementById('pStep'+i);
-    s.classList.remove('active','done');
-    if (i < n) s.classList.add('done');
-    if (i === n) s.classList.add('active');
+  // Validation
+  if (n === 2 && !state.package) {
+    showToast('패키지를 선택해주세요.', 'error'); return;
   }
-  if (n===4) renderConfirm();
-  window.scrollTo({top:0,behavior:'smooth'});
-}
+  if (n === 3) {
+    if (!document.getElementById('yachtName').value.trim()) {
+      showToast('요트 이름을 입력해주세요.', 'error'); return;
+    }
+    if (!document.getElementById('yachtLength').value) {
+      showToast('요트 길이를 입력해주세요.', 'error'); return;
+    }
+    if (!document.getElementById('yachtMarina').value) {
+      showToast('마리나를 선택해주세요.', 'error'); return;
+    }
+    state.yachtName   = document.getElementById('yachtName').value;
+    state.yachtModel  = document.getElementById('yachtModel').value;
+    state.yachtLength = parseInt(document.getElementById('yachtLength').value);
+    state.yachtMarina = document.getElementById('yachtMarina').value;
+    state.yachtNotes  = document.getElementById('yachtNotes').value;
+  }
+  if (n === 4) {
+    if (!state.date) { showToast('날짜를 선택해주세요.', 'error'); return; }
+    if (!state.time) { showToast('시간을 선택해주세요.', 'error'); return; }
+    renderConfirmation();
+  }
 
-function validateStep1() {
-  if (!state.package) { showToast('패키지를 선택해주세요','error'); return; }
-  goStep(2);
-}
-function validateStep2() {
-  if (!document.getElementById('yachtName').value.trim()) { showToast('요트 이름을 입력해주세요','error'); return; }
-  if (!document.getElementById('yachtLength').value) { showToast('요트 길이를 입력해주세요','error'); return; }
-  state.yachtName = document.getElementById('yachtName').value;
-  state.yachtModel = document.getElementById('yachtModel').value;
-  state.yachtLength = parseFloat(document.getElementById('yachtLength').value);
-  state.marinaBerth = document.getElementById('marinaBerth').value;
-  state.specialReq = document.getElementById('specialReq').value;
-  updateSummary();
-  goStep(3);
-}
-function validateStep3() {
-  if (!state.date) { showToast('날짜를 선택해주세요','error'); return; }
-  if (!state.time) { showToast('시간을 선택해주세요','error'); return; }
-  goStep(4);
-}
-
-// ── Package Selection ──
-function selectPkg(el) {
-  document.querySelectorAll('.pkg-option').forEach(c => c.classList.remove('selected'));
-  el.classList.add('selected');
-  state.package = el.dataset.pkg;
-  state.packageName = el.dataset.name;
-  state.packagePrice = parseInt(el.dataset.price);
-  updateSummary();
-}
-
-// ── Extras ──
-function getExtrasPrice() {
-  let total = 0;
-  document.querySelectorAll('.extra-cb:checked').forEach(cb => { total += parseInt(cb.dataset.price); });
-  return total;
-}
-
-// ── Summary ──
-function updateSummary() {
-  document.getElementById('sumPackage').textContent = state.packageName || '선택 전';
-  document.getElementById('sumYacht').textContent = state.yachtName || '입력 전';
-  document.getElementById('sumLength').textContent = state.yachtLength ? state.yachtLength + 'ft' : '-';
-  document.getElementById('sumDateTime').textContent =
-    state.date && state.time ? state.date + ' ' + state.time : '선택 전';
-  document.getElementById('sumMarina').textContent = state.marinaBerth || '-';
-  const extras = [];
-  document.querySelectorAll('.extra-cb:checked').forEach(cb => extras.push(cb.value.replace('_',' ')));
-  const extrasRow = document.getElementById('sumExtrasRow');
-  if (extras.length) {
-    extrasRow.style.display = 'flex';
-    document.getElementById('sumExtras').textContent = extras.join(', ');
-  } else { extrasRow.style.display = 'none'; }
-  const extrasPrice = getExtrasPrice();
-  const lengthMult = state.yachtLength ? Math.max(1, (state.yachtLength - 20) / 20) : 1;
-  const total = state.packagePrice ? Math.round((state.packagePrice + extrasPrice) * lengthMult) : 0;
-  document.getElementById('sumTotal').textContent = total ? total.toLocaleString() + '원' : '-';
+  state.currentStep = n;
+  document.querySelectorAll('.booking-step').forEach((el,i) => el.classList.toggle('active', i+1 === n));
+  document.querySelectorAll('.progress-step').forEach((el,i) => {
+    el.classList.toggle('active', i+1 === n);
+    el.classList.toggle('done', i+1 < n);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // ── Calendar ──
-function initCalendar() {
-  const now = new Date();
-  calYear = now.getFullYear();
-  calMonth = now.getMonth();
-  renderCalendar();
-}
-function changeMonth(d) { calMonth += d; if (calMonth > 11) { calMonth=0; calYear++; } if (calMonth < 0) { calMonth=11; calYear--; } renderCalendar(); }
-function renderCalendar() {
-  document.getElementById('calTitle').textContent = calYear + '년 ' + (calMonth+1) + '월';
+function buildCalendar() {
+  const { year, month } = state.cal;
+  const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  document.getElementById('calMonth').textContent = year + '년 ' + months[month];
+
   const grid = document.getElementById('calGrid');
-  const days = grid.querySelectorAll('.calendar-day');
-  days.forEach(d => d.remove());
-  const first = new Date(calYear, calMonth, 1).getDay();
-  const total = new Date(calYear, calMonth+1, 0).getDate();
-  const now = new Date(); now.setHours(0,0,0,0);
-  for (let i=0;i<first;i++) {
-    const el = document.createElement('div');
-    el.className = 'calendar-day empty';
-    grid.appendChild(el);
+  // Keep header row
+  const dayNames = Array.from(grid.querySelectorAll('.calendar-day-name'));
+  grid.innerHTML = '';
+  dayNames.forEach(d => grid.appendChild(d));
+
+  const today = new Date();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    const empty = document.createElement('div');
+    empty.className = 'calendar-day empty';
+    grid.appendChild(empty);
   }
-  for (let d=1;d<=total;d++) {
-    const date = new Date(calYear, calMonth, d);
-    const el = document.createElement('div');
-    el.className = 'calendar-day';
-    el.textContent = d;
-    const dateStr = calYear+'-'+String(calMonth+1).padStart(2,'0')+'-'+String(d).padStart(2,'0');
-    if (date < now || date.getDay()===0) { el.classList.add('disabled'); }
-    else {
-      if (date.toDateString()===new Date().toDateString()) el.classList.add('today');
-      if (state.date===dateStr) el.classList.add('selected');
-      el.onclick = () => selectDate(el, dateStr);
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dayEl = document.createElement('div');
+    dayEl.className = 'calendar-day';
+    dayEl.textContent = d;
+    const thisDate = new Date(year, month, d);
+    const isToday = (d === today.getDate() && month === today.getMonth() && year === today.getFullYear());
+    const isPast  = thisDate < new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const isSun   = thisDate.getDay() === 0;
+
+    if (isPast || isSun) {
+      dayEl.classList.add('disabled');
+    } else {
+      if (isToday) dayEl.classList.add('today');
+      if (state.date && state.date.d === d && state.date.m === month && state.date.y === year) dayEl.classList.add('selected');
+      dayEl.onclick = () => {
+        state.date = { y: year, m: month, d };
+        buildCalendar();
+        updateSummary();
+      };
     }
-    grid.appendChild(el);
+    grid.appendChild(dayEl);
   }
 }
-function selectDate(el, dateStr) {
-  document.querySelectorAll('.calendar-day.selected').forEach(d=>d.classList.remove('selected'));
-  el.classList.add('selected');
-  state.date = dateStr;
-  updateSummary();
+
+function changeMonth(dir) {
+  state.cal.month += dir;
+  if (state.cal.month < 0) { state.cal.month = 11; state.cal.year--; }
+  if (state.cal.month > 11) { state.cal.month = 0; state.cal.year++; }
+  buildCalendar();
 }
-function selectTime(el, t) {
-  if (el.classList.contains('disabled')) return;
-  document.querySelectorAll('.time-slot.selected').forEach(s=>s.classList.remove('selected'));
-  el.classList.add('selected');
+
+function selectTime(t) {
   state.time = t;
+  document.querySelectorAll('.time-slot:not(.disabled)').forEach(el => {
+    el.classList.toggle('selected', el.textContent.trim() === t);
+  });
   updateSummary();
 }
 
-// ── Confirm ──
-function renderConfirm() {
-  const extrasPrice = getExtrasPrice();
-  const lengthMult = state.yachtLength ? Math.max(1,(state.yachtLength-20)/20) : 1;
-  const total = Math.round((state.packagePrice + extrasPrice) * lengthMult);
-  document.getElementById('confirmDetails').innerHTML = `
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-      <div>
-        <div style="font-size:12px;color:var(--text-light);margin-bottom:4px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase">패키지</div>
-        <div style="font-weight:700;color:var(--navy)">${state.packageName}</div>
-      </div>
-      <div>
-        <div style="font-size:12px;color:var(--text-light);margin-bottom:4px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase">요트</div>
-        <div style="font-weight:700;color:var(--navy)">${state.yachtName} (${state.yachtLength}ft)</div>
-      </div>
-      <div>
-        <div style="font-size:12px;color:var(--text-light);margin-bottom:4px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase">예약 일시</div>
-        <div style="font-weight:700;color:var(--navy)">${state.date} ${state.time}</div>
-      </div>
-      <div>
-        <div style="font-size:12px;color:var(--text-light);margin-bottom:4px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase">위치</div>
-        <div style="font-weight:700;color:var(--navy)">${state.marinaBerth||'-'}</div>
-      </div>
-    </div>
-    <div style="border-top:1px solid var(--bg-medium);margin-top:20px;padding-top:18px;display:flex;justify-content:space-between;align-items:center">
-      <span style="font-size:14px;font-weight:600;color:var(--navy)">예상 견적 (VAT 포함)</span>
-      <span style="font-family:'Montserrat',sans-serif;font-size:24px;font-weight:700;color:var(--gold)">${total.toLocaleString()}원</span>
-    </div>
-  `;
-  const token = localStorage.getItem('yachtToken');
-  if (!token) {
-    document.getElementById('loginRequired').style.display = 'block';
-    document.getElementById('confirmBtn').disabled = true;
+// ── Summary ──
+function calcTotal() {
+  if (!state.package) return 0;
+  const base = pkgData[state.package].price;
+  const len  = state.yachtLength || parseInt(document.getElementById('yachtLength')?.value) || 30;
+  const m    = len <= 30 ? 1 : len <= 45 ? 1.3 : len <= 60 ? 1.6 : 2.0;
+  let total  = base * m;
+  Object.values(state.extras).forEach(p => total += p);
+  return Math.round(total * 1.1 / 1000) * 1000;
+}
+
+function updateSummary() {
+  const pkg = state.package;
+  const total = calcTotal();
+  const marina = document.getElementById('yachtMarina')?.value || state.yachtMarina;
+  const lenEl  = document.getElementById('yachtLength');
+  const len    = lenEl ? lenEl.value : state.yachtLength;
+
+  setSumItem('sumPackage', '패키지', pkg ? pkgData[pkg].label : '선택 전');
+  setSumItem('sumSize', '요트 크기', len ? len + ' ft' : '미입력');
+  setSumItem('sumDate', '날짜', state.date ? formatDate(state.date) : '선택 전');
+  setSumItem('sumTime', '시간', state.time || '선택 전');
+  setSumItem('sumMarina', '마리나', marina || '선택 전');
+
+  const extKeys = Object.keys(state.extras);
+  const extBlock = document.getElementById('sumExtrasBlock');
+  const extList  = document.getElementById('sumExtrasList');
+  if (extKeys.length > 0) {
+    extBlock.style.display = 'block';
+    extList.innerHTML = extKeys.map(k => `
+      <div class="summary-item" style="padding:4px 0">
+        <span class="summary-item-label" style="font-size:13px">+ ${extraData[k].label}</span>
+        <span class="summary-item-value" style="font-size:13px">+${extraData[k].price.toLocaleString()}원</span>
+      </div>`).join('');
+  } else {
+    extBlock.style.display = 'none';
   }
+
+  document.getElementById('sumTotal').textContent = total > 0 ? total.toLocaleString('ko-KR') + ' 원' : '-';
+}
+
+function setSumItem(id, label, value) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const isDefault = ['선택 전','미입력'].includes(value);
+  el.querySelector('.summary-item-value').textContent = value;
+  el.querySelector('.summary-item-value').style.color = isDefault ? 'var(--text-muted)' : 'var(--navy)';
+}
+
+function formatDate(d) {
+  const months = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+  const days   = ['일','월','화','수','목','금','토'];
+  const date   = new Date(d.y, d.m, d.d);
+  return `${d.y}.${String(d.m+1).padStart(2,'0')}.${String(d.d).padStart(2,'0')} (${days[date.getDay()]})`;
+}
+
+// ── Confirmation render ──
+function renderConfirmation() {
+  const pkg = state.package;
+  const extKeys = Object.keys(state.extras);
+
+  document.getElementById('cfmPackage').textContent  = pkg ? pkgData[pkg].label : '-';
+  document.getElementById('cfmExtras').textContent   = extKeys.length > 0 ? extKeys.map(k => extraData[k].label).join(', ') : '없음';
+  document.getElementById('cfmYachtName').textContent = state.yachtName || '-';
+  document.getElementById('cfmYachtLen').textContent  = state.yachtLength ? state.yachtLength + ' ft' : '-';
+  document.getElementById('cfmMarina').textContent    = state.yachtMarina || '-';
+  document.getElementById('cfmDate').textContent      = state.date ? formatDate(state.date) : '-';
+  document.getElementById('cfmTime').textContent      = state.time || '-';
+  document.getElementById('cfmTotal').textContent     = calcTotal().toLocaleString('ko-KR') + ' 원';
+
+  // Show login prompt if not logged in
+  const isLoggedIn = !!localStorage.getItem('yachtToken');
+  document.getElementById('loginPromptBox').style.display = isLoggedIn ? 'none' : 'block';
+  document.getElementById('submitBtn').style.display = isLoggedIn ? 'flex' : 'none';
 }
 
 // ── Submit ──
 async function submitBooking() {
+  const btn = document.getElementById('submitBtn');
   const token = localStorage.getItem('yachtToken');
-  if (!token) { showToast('로그인이 필요합니다','error'); return; }
-  const btn = document.getElementById('confirmBtn');
-  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 예약 처리 중...';
-  const alertEl = document.getElementById('bookingAlert');
-  alertEl.className='alert'; alertEl.style.display='none';
+  if (!token) { showToast('로그인이 필요합니다.', 'error'); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 처리 중...';
+
   try {
-    const extrasPrice = getExtrasPrice();
-    const lengthMult = state.yachtLength ? Math.max(1,(state.yachtLength-20)/20) : 1;
-    const total = Math.round((state.packagePrice + extrasPrice) * lengthMult);
-    const extras = [];
-    document.querySelectorAll('.extra-cb:checked').forEach(cb => extras.push(cb.value));
+    const extKeys = Object.keys(state.extras);
+    const payload = {
+      package_type:     state.package,
+      extra_services:   extKeys.join(','),
+      yacht_name:       state.yachtName,
+      yacht_model:      state.yachtModel,
+      yacht_length:     state.yachtLength,
+      marina:           state.yachtMarina,
+      notes:            state.yachtNotes,
+      scheduled_date:   state.date ? `${state.date.y}-${String(state.date.m+1).padStart(2,'0')}-${String(state.date.d).padStart(2,'0')}` : null,
+      scheduled_time:   state.time,
+      estimated_price:  calcTotal()
+    };
     const res = await fetch('/api/bookings', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-      body: JSON.stringify({
-        package_id: state.package==='basic'?1:state.package==='premium'?2:3,
-        yacht_name: state.yachtName,
-        yacht_model: state.yachtModel,
-        yacht_length: state.yachtLength,
-        marina_berth: state.marinaBerth,
-        service_date: state.date,
-        service_time: state.time,
-        notes: state.specialReq,
-        extra_services: extras,
-        total_price: total
-      })
+      method: 'POST',
+      headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+token },
+      body: JSON.stringify(payload)
     });
     const data = await res.json();
     if (data.success) {
-      alertEl.className='alert success show'; alertEl.style.display='block';
-      alertEl.innerHTML = `<i class="fas fa-check-circle"></i> 예약이 완료되었습니다! 예약번호: <strong>${data.booking_number||''}</strong>`;
-      btn.innerHTML = '<i class="fas fa-check"></i> 예약 완료';
-      showToast('예약이 완료되었습니다!','success');
-      setTimeout(()=>{ location.href='/dashboard.html'; }, 2000);
-    } else { throw new Error(data.error); }
+      goStep(5);
+    } else {
+      throw new Error(data.error || '예약 처리 중 오류가 발생했습니다.');
+    }
   } catch(err) {
-    alertEl.className='alert error show'; alertEl.style.display='block';
-    alertEl.textContent = err.message || '예약 처리 중 오류가 발생했습니다.';
-    btn.disabled=false; btn.innerHTML='<i class="fas fa-calendar-check"></i> 예약 완료하기';
+    showToast(err.message, 'error');
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-calendar-check"></i>&nbsp; 예약 완료하기';
   }
 }
 
-function showToast(msg, type='') {
+function showToast(msg, type) {
   const t = document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(type?' '+type:'');
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' ' + type : '');
+  setTimeout(() => t.className = 'toast', 3000);
 }
+
+// ── Init ──
+buildCalendar();
+updateSummary();
 </script>
 </body>
 </html>
