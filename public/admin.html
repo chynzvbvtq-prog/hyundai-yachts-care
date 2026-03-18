@@ -8,6 +8,126 @@
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── 차트 카드 ── */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 900px) { .chart-grid { grid-template-columns: 1fr; } }
+    .chart-card {
+      background: #fff;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--bg-medium);
+      padding: 24px 28px;
+    }
+    .chart-card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--navy);
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chart-card canvas { max-height: 240px; }
+
+    /* ── 검색 바 ── */
+    .search-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #fff;
+      border: 1.5px solid var(--bg-medium);
+      border-radius: var(--radius-md);
+      padding: 0 16px;
+      height: 44px;
+      flex: 1;
+      max-width: 340px;
+      transition: var(--transition);
+    }
+    .search-bar:focus-within { border-color: var(--brand-red); box-shadow: 0 0 0 3px rgba(157,29,34,0.10); }
+    .search-bar i { color: var(--text-muted); font-size: 14px; }
+    .search-bar input { border: none; outline: none; font-size: 14px; flex: 1; background: transparent; color: var(--text-dark); }
+
+    /* ── 문의/서비스이력 모달 개선 ── */
+    .modal-wide { max-width: 640px; }
+    .inq-meta { display: flex; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
+    .inq-meta-item { display: flex; flex-direction: column; gap: 3px; }
+    .inq-meta-label { font-size: 11px; font-family: 'Montserrat',sans-serif; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+    .inq-meta-value { font-size: 14px; font-weight: 600; color: var(--navy); }
+    .inq-message-box {
+      background: var(--bg-light);
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-medium);
+      margin-bottom: 20px;
+      white-space: pre-wrap;
+    }
+    .inq-answer-box {
+      background: rgba(157,29,34,0.04);
+      border-left: 3px solid var(--brand-red);
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      padding: 14px 16px;
+      font-size: 14px;
+      color: var(--text-medium);
+      line-height: 1.7;
+      margin-bottom: 16px;
+      white-space: pre-wrap;
+    }
+
+    /* ── 완료 처리 모달 ── */
+    .complete-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 600px) { .complete-form-grid { grid-template-columns: 1fr; } }
+
+    /* ── stat-icon 색상 ── */
+    .stat-icon.gold   { background: rgba(157,29,34,0.10); color: var(--brand-red); }
+    .stat-icon.navy   { background: rgba(0,45,86,0.10);   color: var(--navy); }
+    .stat-icon.blue   { background: rgba(37,99,235,0.10); color: #2563eb; }
+    .stat-icon.green  { background: rgba(22,163,74,0.10); color: #16a34a; }
+
+    /* ── 필터 툴바 ── */
+    .table-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .table-toolbar .form-select,
+    .table-toolbar .form-input { height: 40px; font-size: 13px; padding: 0 12px; width: auto; }
+
+    /* ── CSV 버튼 ── */
+    .btn-csv {
+      display: inline-flex; align-items: center; gap: 7px;
+      height: 40px; padding: 0 18px;
+      background: #fff; border: 1.5px solid var(--bg-medium);
+      border-radius: var(--radius-sm);
+      font-size: 13px; font-weight: 600; color: var(--navy);
+      cursor: pointer; transition: var(--transition);
+      font-family: 'Montserrat', sans-serif;
+    }
+    .btn-csv:hover { border-color: var(--brand-red); color: var(--brand-red); }
+
+    /* ── 탭 헤더 ── */
+    .tab-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .tab-section-desc { font-size: 14px; color: var(--text-medium); }
+  </style>
 </head>
 <body>
 
@@ -36,6 +156,7 @@
       </div>
       <div class="sidebar-link" onclick="showTab('inquiries')" id="tab-inquiries">
         <i class="fas fa-comment-dots"></i> 문의 관리
+        <span class="badge badge-red" id="pendingInqBadge" style="display:none;margin-left:auto"></span>
       </div>
       <div class="sidebar-nav-section">시스템</div>
       <div class="sidebar-link" onclick="initDB()">
@@ -71,11 +192,14 @@
 
     <div class="dash-content">
 
-      <!-- Stats Tab -->
+      <!-- ══════════════════════════════════
+           Stats Tab
+      ══════════════════════════════════ -->
       <div id="content-stats">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:32px">서비스 운영 현황을 한눈에 확인하세요</p>
+        <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">서비스 운영 현황을 한눈에 확인하세요</p>
 
-        <div class="stats-grid">
+        <!-- KPI 카드 -->
+        <div class="stats-grid" style="margin-bottom:28px">
           <div class="stat-card">
             <div class="stat-icon gold" style="float:right"><i class="fas fa-calendar-check"></i></div>
             <div class="stat-label">전체 예약</div>
@@ -102,73 +226,136 @@
           </div>
         </div>
 
-        <!-- Today's Schedule -->
-        <div class="data-card">
-          <div class="data-card-header">
-            <div class="data-card-title"><i class="fas fa-calendar-day" style="color:var(--brand-red);margin-right:8px"></i>오늘 예약 일정</div>
-            <span style="font-size:12px;color:var(--text-light)" id="todayDate"></span>
+        <!-- 차트 영역 -->
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-card-title"><i class="fas fa-chart-line" style="color:var(--brand-red)"></i>월별 예약 & 매출 추이</div>
+            <canvas id="chartMonthly"></canvas>
           </div>
-          <div class="data-card-body overflow-x">
-            <table>
-              <thead><tr><th>시간</th><th>고객명</th><th>서비스</th><th>요트</th><th>마리나</th><th>상태</th><th>관리</th></tr></thead>
-              <tbody id="todayBookingsTable">
-                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">오늘 예약이 없습니다</td></tr>
-              </tbody>
-            </table>
+          <div class="chart-card">
+            <div class="chart-card-title"><i class="fas fa-chart-pie" style="color:var(--navy)"></i>패키지별 예약 점유율</div>
+            <canvas id="chartPackage"></canvas>
+          </div>
+        </div>
+
+        <!-- 두 번째 차트 행 -->
+        <div class="chart-grid">
+          <div class="chart-card">
+            <div class="chart-card-title"><i class="fas fa-chart-bar" style="color:var(--brand-red)"></i>예약 상태 현황</div>
+            <canvas id="chartStatus"></canvas>
+          </div>
+          <div class="chart-card" style="display:flex;flex-direction:column;justify-content:center">
+            <div class="chart-card-title"><i class="fas fa-calendar-day" style="color:var(--navy)"></i>오늘 예약 일정</div>
+            <div style="font-size:12px;color:var(--text-light);margin-bottom:12px" id="todayDate"></div>
+            <div id="todayBookingsList" style="display:flex;flex-direction:column;gap:10px">
+              <div style="color:var(--text-muted);font-size:14px;text-align:center;padding:20px 0">오늘 예약이 없습니다</div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- Bookings Tab -->
+      <!-- ══════════════════════════════════
+           Bookings Tab
+      ══════════════════════════════════ -->
       <div id="content-bookings" style="display:none">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px">
-          <p style="color:var(--text-medium);font-size:15px">모든 예약을 관리하고 상태를 업데이트하세요</p>
-          <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <select class="form-select" style="width:auto;height:40px" id="adminBookingStatus" onchange="loadAllBookings()">
-              <option value="">전체 상태</option>
-              <option value="pending">대기 중</option>
-              <option value="confirmed">확정</option>
-              <option value="in_progress">진행 중</option>
-              <option value="completed">완료</option>
-              <option value="cancelled">취소</option>
-            </select>
-            <input type="date" class="form-input" style="width:auto;height:40px" id="adminBookingDate" onchange="loadAllBookings()">
+        <div class="tab-section-header">
+          <span class="tab-section-desc">모든 예약을 관리하고 상태를 업데이트하세요</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <button class="btn-csv" onclick="exportBookingsCSV()"><i class="fas fa-file-csv"></i> CSV 내보내기</button>
           </div>
         </div>
+
+        <!-- 필터 툴바 -->
+        <div class="table-toolbar">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="bookingSearchInput" placeholder="예약번호, 고객명, 요트명..." oninput="filterBookings()">
+          </div>
+          <select class="form-select" style="width:auto;height:40px;font-size:13px" id="adminBookingStatus" onchange="loadAllBookings()">
+            <option value="">전체 상태</option>
+            <option value="pending">대기 중</option>
+            <option value="confirmed">확정</option>
+            <option value="in_progress">진행 중</option>
+            <option value="completed">완료</option>
+            <option value="cancelled">취소</option>
+          </select>
+          <input type="date" class="form-input" style="width:auto;height:40px;font-size:13px" id="adminBookingDate" onchange="loadAllBookings()">
+        </div>
+
         <div class="data-card">
           <div class="data-card-body overflow-x">
             <table>
-              <thead><tr><th>예약번호</th><th>고객</th><th>패키지</th><th>요트</th><th>일시</th><th>상태</th><th>금액</th><th>관리</th></tr></thead>
+              <thead>
+                <tr>
+                  <th>예약번호</th><th>고객</th><th>패키지</th><th>요트</th>
+                  <th>일시</th><th>상태</th><th>금액</th><th>관리</th>
+                </tr>
+              </thead>
               <tbody id="adminBookingsTable">
                 <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-light)">예약을 불러오는 중...</td></tr>
               </tbody>
             </table>
           </div>
-        </div>
-      </div>
-
-      <!-- Customers Tab -->
-      <div id="content-customers" style="display:none">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">등록된 고객 목록을 관리하세요</p>
-        <div class="data-card">
-          <div class="data-card-body overflow-x">
-            <table>
-              <thead><tr><th>이름</th><th>이메일</th><th>연락처</th><th>요트</th><th>멤버십</th><th>가입일</th></tr></thead>
-              <tbody id="customersTable">
-                <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-light)">고객 정보를 불러오는 중...</td></tr>
-              </tbody>
-            </table>
+          <div style="padding:12px 20px;font-size:13px;color:var(--text-muted);border-top:1px solid var(--bg-medium)">
+            총 <span id="bookingCount" style="font-weight:700;color:var(--navy)">0</span>건
           </div>
         </div>
       </div>
 
-      <!-- Inquiries Tab -->
-      <div id="content-inquiries" style="display:none">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">고객 문의를 확인하고 답변하세요</p>
+      <!-- ══════════════════════════════════
+           Customers Tab
+      ══════════════════════════════════ -->
+      <div id="content-customers" style="display:none">
+        <div class="tab-section-header">
+          <span class="tab-section-desc">등록된 고객 목록을 관리하세요</span>
+        </div>
+        <div class="table-toolbar">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="customerSearchInput" placeholder="이름, 이메일, 연락처, 요트명..." oninput="searchCustomers()">
+          </div>
+        </div>
         <div class="data-card">
           <div class="data-card-body overflow-x">
             <table>
-              <thead><tr><th>일시</th><th>고객명</th><th>이메일</th><th>유형</th><th>제목</th><th>상태</th><th>관리</th></tr></thead>
+              <thead>
+                <tr><th>이름</th><th>이메일</th><th>연락처</th><th>요트</th><th>예약수</th><th>멤버십</th><th>가입일</th></tr>
+              </thead>
+              <tbody id="customersTable">
+                <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">고객 정보를 불러오는 중...</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div style="padding:12px 20px;font-size:13px;color:var(--text-muted);border-top:1px solid var(--bg-medium)">
+            총 <span id="customerCount" style="font-weight:700;color:var(--navy)">0</span>명
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════
+           Inquiries Tab
+      ══════════════════════════════════ -->
+      <div id="content-inquiries" style="display:none">
+        <div class="tab-section-header">
+          <span class="tab-section-desc">고객 문의를 확인하고 답변하세요</span>
+        </div>
+        <div class="table-toolbar">
+          <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" id="inqSearchInput" placeholder="이름, 이메일, 제목..." oninput="searchInquiries()">
+          </div>
+          <select class="form-select" style="width:auto;height:40px;font-size:13px" id="inqStatusFilter" onchange="searchInquiries()">
+            <option value="">전체</option>
+            <option value="pending">대기 중</option>
+            <option value="answered">답변완료</option>
+          </select>
+        </div>
+        <div class="data-card">
+          <div class="data-card-body overflow-x">
+            <table>
+              <thead>
+                <tr><th>일시</th><th>고객명</th><th>이메일</th><th>유형</th><th>제목</th><th>상태</th><th>관리</th></tr>
+              </thead>
               <tbody id="inquiriesTable">
                 <tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">문의를 불러오는 중...</td></tr>
               </tbody>
@@ -177,14 +364,17 @@
         </div>
       </div>
 
-    </div>
-  </div>
-</div>
+    </div><!-- /dash-content -->
+  </div><!-- /dash-main -->
+</div><!-- /dash-layout -->
 
-<!-- Modal -->
-<div class="modal-overlay" id="modal" onclick="closeModal(event)">
+
+<!-- ══════════════════════════════════
+     모달 1: 예약 상태 변경
+══════════════════════════════════ -->
+<div class="modal-overlay" id="modalBooking" onclick="closeModal('modalBooking',event)">
   <div class="modal" onclick="event.stopPropagation()" style="position:relative">
-    <button class="modal-close" onclick="document.getElementById('modal').classList.remove('open')"><i class="fas fa-times"></i></button>
+    <button class="modal-close" onclick="closeModalById('modalBooking')"><i class="fas fa-times"></i></button>
     <div class="modal-title">예약 상태 변경</div>
     <input type="hidden" id="modalBookingId">
     <div class="form-group">
@@ -202,213 +392,660 @@
       <textarea class="form-textarea" id="modalNotes" rows="3" placeholder="메모 입력..."></textarea>
     </div>
     <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
-      <button class="btn btn-outline-navy" onclick="document.getElementById('modal').classList.remove('open')">취소</button>
+      <button class="btn btn-outline-navy" onclick="closeModalById('modalBooking')">취소</button>
       <button class="btn btn-primary" onclick="updateBookingStatus()">저장</button>
     </div>
   </div>
 </div>
 
+
+<!-- ══════════════════════════════════
+     모달 2: 서비스 완료 처리 + 이력 작성
+══════════════════════════════════ -->
+<div class="modal-overlay" id="modalComplete" onclick="closeModal('modalComplete',event)">
+  <div class="modal modal-wide" onclick="event.stopPropagation()" style="position:relative">
+    <button class="modal-close" onclick="closeModalById('modalComplete')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-clipboard-check" style="color:var(--brand-red);margin-right:8px"></i>서비스 완료 처리</div>
+    <p style="font-size:13px;color:var(--text-medium);margin-bottom:20px">완료 처리 시 서비스 이력이 자동으로 등록됩니다.</p>
+    <input type="hidden" id="completeBookingId">
+
+    <div class="complete-form-grid">
+      <div class="form-group">
+        <label class="form-label">담당 기술자 <span class="required">*</span></label>
+        <input type="text" class="form-input" id="completeTechnician" placeholder="예: 박기술 선임">
+      </div>
+      <div class="form-group">
+        <label class="form-label">다음 점검 권장일</label>
+        <input type="date" class="form-input" id="completeNextDate">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">작업 내용 <span class="required">*</span></label>
+      <textarea class="form-textarea" id="completeDescription" rows="3" placeholder="수행한 작업 내용을 입력하세요..."></textarea>
+    </div>
+    <div class="form-group">
+      <label class="form-label">사용 부품 / 소모품</label>
+      <input type="text" class="form-input" id="completeParts" placeholder="예: 엔진 오일 5L, 오일 필터, 연료 필터">
+    </div>
+    <div class="form-group">
+      <label class="form-label">특이사항 / 권고 메모</label>
+      <textarea class="form-textarea" id="completeNotes" rows="2" placeholder="고객에게 전달할 특이사항을 입력하세요..."></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-outline-navy" onclick="closeModalById('modalComplete')">취소</button>
+      <button class="btn btn-primary" onclick="completeBooking()"><i class="fas fa-check"></i> 완료 처리</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════
+     모달 3: 문의 상세 & 답변
+══════════════════════════════════ -->
+<div class="modal-overlay" id="modalInquiry" onclick="closeModal('modalInquiry',event)">
+  <div class="modal modal-wide" onclick="event.stopPropagation()" style="position:relative">
+    <button class="modal-close" onclick="closeModalById('modalInquiry')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-comment-dots" style="color:var(--brand-red);margin-right:8px"></i>문의 상세</div>
+    <input type="hidden" id="inqModalId">
+
+    <div class="inq-meta" id="inqModalMeta"></div>
+
+    <div style="font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px">문의 내용</div>
+    <div class="inq-message-box" id="inqModalMessage"></div>
+
+    <div id="inqAnswerArea" style="display:none">
+      <div style="font-size:12px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--brand-red);margin-bottom:8px">기존 답변</div>
+      <div class="inq-answer-box" id="inqModalAnswer"></div>
+    </div>
+
+    <div class="form-group" id="inqReplyArea">
+      <label class="form-label">답변 작성 <span class="required">*</span></label>
+      <textarea class="form-textarea" id="inqReplyText" rows="5" placeholder="고객에게 보낼 답변을 입력하세요..."></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-outline-navy" onclick="closeModalById('modalInquiry')">닫기</button>
+      <button class="btn btn-primary" onclick="submitInquiryAnswer()"><i class="fas fa-paper-plane"></i> 답변 등록</button>
+    </div>
+  </div>
+</div>
+
+
 <script>
+/* ══════════════════════════════════════════════════
+   전역 상태
+══════════════════════════════════════════════════ */
+let allBookingsData = [];
+let chartMonthly = null;
+let chartPackage = null;
+let chartStatus  = null;
+
+/* ══════════════════════════════════════════════════
+   초기화
+══════════════════════════════════════════════════ */
 window.addEventListener('load', () => {
   const token = localStorage.getItem('yachtToken');
-  const user = JSON.parse(localStorage.getItem('yachtUser')||'null');
-  if (!token || !user) { location.href='/login.html'; return; }
-  if (user.role !== 'admin') { location.href='/dashboard.html'; return; }
-  document.getElementById('adminName').textContent = user.name;
+  const user  = JSON.parse(localStorage.getItem('yachtUser') || 'null');
+  if (!token || !user)        { location.href = '/login.html'; return; }
+  if (user.role !== 'admin')  { location.href = '/dashboard.html'; return; }
+  document.getElementById('adminName').textContent  = user.name;
   document.getElementById('adminEmail').textContent = user.email;
-  const now = new Date();
-  document.getElementById('todayDate').textContent = now.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  document.getElementById('todayDate').textContent  =
+    new Date().toLocaleDateString('ko-KR', {year:'numeric',month:'long',day:'numeric'});
   loadStats();
+  loadCharts();
   loadTodayBookings();
 });
 
+/* ── API 헬퍼 ── */
 async function apiGet(path) {
   const token = localStorage.getItem('yachtToken');
-  const res = await fetch(path, {headers:{'Authorization':'Bearer '+token}});
+  const res   = await fetch(path, { headers: { 'Authorization': 'Bearer ' + token } });
+  return res.json();
+}
+async function apiPost(path, body) {
+  const token = localStorage.getItem('yachtToken');
+  const res   = await fetch(path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify(body)
+  });
   return res.json();
 }
 async function apiPatch(path, body) {
   const token = localStorage.getItem('yachtToken');
-  const res = await fetch(path, {
-    method:'PATCH',
-    headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
-    body:JSON.stringify(body)
+  const res   = await fetch(path, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+    body: JSON.stringify(body)
   });
   return res.json();
 }
 
+/* ══════════════════════════════════════════════════
+   통계 KPI
+══════════════════════════════════════════════════ */
 async function loadStats() {
   try {
     const data = await apiGet('/api/admin/stats');
     if (data.success) {
       const s = data.stats;
-      document.getElementById('statTotalBookings').textContent = s.total_bookings;
+      document.getElementById('statTotalBookings').textContent  = s.total_bookings;
       document.getElementById('statPendingBookings').textContent = s.pending_bookings;
-      document.getElementById('statTotalUsers').textContent = s.total_users;
-      document.getElementById('statRevenue').textContent = Number(s.total_revenue).toLocaleString()+'원';
+      document.getElementById('statTotalUsers').textContent     = s.total_users;
+      document.getElementById('statRevenue').textContent        = Number(s.total_revenue).toLocaleString() + '원';
     }
   } catch(e) {}
 }
 
+/* ══════════════════════════════════════════════════
+   차트
+══════════════════════════════════════════════════ */
+async function loadCharts() {
+  try {
+    const data = await apiGet('/api/admin/stats/monthly');
+    if (!data.success) return;
+
+    /* 1) 월별 예약 & 매출 (혼합 차트) */
+    const months   = data.monthly.map(r => r.month);
+    const bookings = data.monthly.map(r => r.booking_count);
+    const revenue  = data.monthly.map(r => r.revenue / 10000); // 만원 단위
+
+    if (chartMonthly) chartMonthly.destroy();
+    chartMonthly = new Chart(document.getElementById('chartMonthly'), {
+      type: 'bar',
+      data: {
+        labels: months,
+        datasets: [
+          {
+            label: '예약 건수',
+            data: bookings,
+            backgroundColor: 'rgba(157,29,34,0.80)',
+            borderRadius: 5,
+            yAxisID: 'y1',
+            order: 2
+          },
+          {
+            label: '매출 (만원)',
+            data: revenue,
+            type: 'line',
+            borderColor: '#002D56',
+            backgroundColor: 'rgba(0,45,86,0.08)',
+            borderWidth: 2.5,
+            pointRadius: 4,
+            pointBackgroundColor: '#002D56',
+            fill: true,
+            tension: 0.4,
+            yAxisID: 'y2',
+            order: 1
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        interaction: { mode: 'index', intersect: false },
+        plugins: { legend: { labels: { font: { family: 'Montserrat', size: 11 }, boxWidth: 12 } } },
+        scales: {
+          y1: { type: 'linear', position: 'left',  beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          y2: { type: 'linear', position: 'right', beginAtZero: true, ticks: { font: { size: 11 } }, grid: { display: false } }
+        }
+      }
+    });
+
+    /* 2) 패키지 점유율 파이 차트 */
+    const pkgLabels = data.byPackage.map(r => r.package_name);
+    const pkgCounts = data.byPackage.map(r => r.count);
+    const pkgColors = ['#9D1D22', '#002D56', '#1B3A6B', '#595757', '#8A8888'];
+
+    if (chartPackage) chartPackage.destroy();
+    chartPackage = new Chart(document.getElementById('chartPackage'), {
+      type: 'doughnut',
+      data: {
+        labels: pkgLabels,
+        datasets: [{
+          data: pkgCounts,
+          backgroundColor: pkgColors.slice(0, pkgLabels.length),
+          borderWidth: 2,
+          borderColor: '#fff'
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '62%',
+        plugins: {
+          legend: { position: 'bottom', labels: { font: { family: 'Montserrat', size: 11 }, boxWidth: 12, padding: 14 } }
+        }
+      }
+    });
+
+    /* 3) 예약 상태 현황 막대 차트 */
+    const statusMap   = { pending:'대기 중', confirmed:'확정', in_progress:'진행 중', completed:'완료', cancelled:'취소' };
+    const statusColor = { pending:'#F59E0B', confirmed:'#002D56', in_progress:'#2563eb', completed:'#16a34a', cancelled:'#9ca3af' };
+    const stLabels = data.byStatus.map(r => statusMap[r.status] || r.status);
+    const stCounts = data.byStatus.map(r => r.count);
+    const stColors = data.byStatus.map(r => statusColor[r.status] || '#9ca3af');
+
+    if (chartStatus) chartStatus.destroy();
+    chartStatus = new Chart(document.getElementById('chartStatus'), {
+      type: 'bar',
+      data: {
+        labels: stLabels,
+        datasets: [{
+          label: '예약 건수',
+          data: stCounts,
+          backgroundColor: stColors,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1, font: { size: 11 } }, grid: { color: 'rgba(0,0,0,0.05)' } },
+          x: { ticks: { font: { family: 'Montserrat', size: 11 } } }
+        }
+      }
+    });
+
+  } catch(e) { console.error('Chart error:', e); }
+}
+
+/* ══════════════════════════════════════════════════
+   오늘 예약
+══════════════════════════════════════════════════ */
 async function loadTodayBookings() {
   try {
     const today = new Date().toISOString().split('T')[0];
-    const data = await apiGet('/api/admin/bookings?date='+today+'&limit=20');
-    const tbody = document.getElementById('todayBookingsTable');
+    const data  = await apiGet('/api/admin/bookings?date=' + today + '&limit=20');
+    const el    = document.getElementById('todayBookingsList');
     if (!data.bookings?.length) return;
-    tbody.innerHTML = data.bookings.map(b=>`
-      <tr>
-        <td><strong style="font-family:'Montserrat',sans-serif">${b.scheduled_time}</strong></td>
-        <td style="font-weight:600">${b.user_name||'-'}</td>
-        <td>${b.package_name||'-'}</td>
-        <td>${b.yacht_name}</td>
-        <td>${b.marina_berth||'-'}</td>
-        <td>${statusBadge(b.status)}</td>
-        <td><button class="btn btn-sm btn-outline-navy" onclick="openModal(${b.id},'${b.status}','')">변경</button></td>
-      </tr>
+    el.innerHTML = data.bookings.map(b => `
+      <div style="display:flex;align-items:center;gap:14px;padding:10px 14px;background:var(--bg-light);border-radius:var(--radius-sm)">
+        <div style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:700;color:var(--navy);min-width:46px">${b.scheduled_time}</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:13px">${b.user_name || '-'}</div>
+          <div style="font-size:12px;color:var(--text-light)">${b.package_name || '-'} · ${b.yacht_name}</div>
+        </div>
+        ${statusBadge(b.status)}
+        <button class="btn btn-sm btn-outline-navy" style="padding:0 10px;height:30px;font-size:12px" onclick="openModal(${b.id},'${b.status}','')">수정</button>
+      </div>
     `).join('');
   } catch(e) {}
 }
 
+/* ══════════════════════════════════════════════════
+   예약 관리 탭
+══════════════════════════════════════════════════ */
 async function loadAllBookings() {
   const status = document.getElementById('adminBookingStatus').value;
-  const date = document.getElementById('adminBookingDate').value;
-  let url = '/api/admin/bookings?limit=50';
-  if (status) url += '&status='+status;
-  if (date) url += '&date='+date;
+  const date   = document.getElementById('adminBookingDate').value;
+  let url = '/api/admin/bookings?limit=100';
+  if (status) url += '&status=' + status;
+  if (date)   url += '&date='   + date;
   try {
     const data = await apiGet(url);
-    const tbody = document.getElementById('adminBookingsTable');
-    if (!data.bookings?.length) {
-      tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-light)">예약이 없습니다</td></tr>';
-      return;
-    }
-    tbody.innerHTML = data.bookings.map(b=>`
-      <tr>
-        <td><span style="font-family:Montserrat;font-size:12px;font-weight:700;color:var(--navy)">${b.booking_number}</span></td>
-        <td>
-          <div style="font-weight:600;color:var(--navy)">${b.user_name||'-'}</div>
-          <div style="font-size:12px;color:var(--text-light)">${b.user_phone||''}</div>
-        </td>
-        <td>${b.package_name||'-'}</td>
-        <td>${b.yacht_name}</td>
-        <td>${b.scheduled_date}<br><span style="font-size:12px;color:var(--text-light)">${b.scheduled_time}</span></td>
-        <td>${statusBadge(b.status)}</td>
-        <td style="font-family:Montserrat;font-weight:700">${Number(b.total_price).toLocaleString()}원</td>
-        <td><button class="btn btn-sm btn-outline-navy" onclick="openModal(${b.id},'${b.status}','${(b.admin_notes||'').replace(/'/g,"\\'")}')">수정</button></td>
-      </tr>
-    `).join('');
+    allBookingsData = data.bookings || [];
+    document.getElementById('bookingSearchInput').value = '';
+    renderBookingsTable(allBookingsData);
   } catch(e) {}
+}
+
+function filterBookings() {
+  const q = document.getElementById('bookingSearchInput').value.toLowerCase();
+  if (!q) { renderBookingsTable(allBookingsData); return; }
+  const filtered = allBookingsData.filter(b =>
+    (b.booking_number || '').toLowerCase().includes(q) ||
+    (b.user_name      || '').toLowerCase().includes(q) ||
+    (b.yacht_name     || '').toLowerCase().includes(q) ||
+    (b.package_name   || '').toLowerCase().includes(q)
+  );
+  renderBookingsTable(filtered);
+}
+
+function renderBookingsTable(list) {
+  const tbody = document.getElementById('adminBookingsTable');
+  document.getElementById('bookingCount').textContent = list.length;
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--text-light)">예약이 없습니다</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(b => `
+    <tr>
+      <td><span style="font-family:Montserrat;font-size:12px;font-weight:700;color:var(--navy)">${b.booking_number}</span></td>
+      <td>
+        <div style="font-weight:600;color:var(--navy)">${b.user_name || '-'}</div>
+        <div style="font-size:12px;color:var(--text-light)">${b.user_phone || ''}</div>
+      </td>
+      <td>${b.package_name || '-'}</td>
+      <td>${b.yacht_name}</td>
+      <td>${b.scheduled_date}<br><span style="font-size:12px;color:var(--text-light)">${b.scheduled_time}</span></td>
+      <td>${statusBadge(b.status)}</td>
+      <td style="font-family:Montserrat;font-weight:700">${Number(b.total_price).toLocaleString()}원</td>
+      <td>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-outline-navy" onclick="openModal(${b.id},'${b.status}','${(b.admin_notes||'').replace(/'/g,"\\'")}')">수정</button>
+          ${b.status !== 'completed' && b.status !== 'cancelled'
+            ? `<button class="btn btn-sm" style="background:rgba(22,163,74,0.10);color:#16a34a;border:1.5px solid rgba(22,163,74,0.3)" onclick="openCompleteModal(${b.id})">완료</button>`
+            : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════
+   고객 관리 탭
+══════════════════════════════════════════════════ */
+let customerSearchTimer = null;
+function searchCustomers() {
+  clearTimeout(customerSearchTimer);
+  customerSearchTimer = setTimeout(async () => {
+    const q = document.getElementById('customerSearchInput').value.trim();
+    try {
+      const data = q
+        ? await apiGet('/api/admin/users/search?q=' + encodeURIComponent(q))
+        : await apiGet('/api/admin/users?limit=100');
+      renderCustomersTable(data.users || []);
+    } catch(e) {}
+  }, 300);
 }
 
 async function loadCustomers() {
   try {
-    const data = await apiGet('/api/admin/users');
-    const tbody = document.getElementById('customersTable');
-    if (!data.users?.length) {
-      tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-light)">고객이 없습니다</td></tr>';
-      return;
-    }
-    tbody.innerHTML = data.users.map(u=>`
-      <tr>
-        <td style="font-weight:700;color:var(--navy)">${u.name}</td>
-        <td>${u.email}</td>
-        <td>${u.phone||'-'}</td>
-        <td>${u.yacht_name?u.yacht_name+(u.yacht_length?' ('+u.yacht_length+'ft)':''):'-'}</td>
-        <td><span class="badge ${u.membership_type==='vip'?'badge-gold':'badge-navy'}">${u.membership_type||'standard'}</span></td>
-        <td style="font-size:13px;color:var(--text-light)">${u.created_at?.split('T')[0]||'-'}</td>
-      </tr>
-    `).join('');
+    const data = await apiGet('/api/admin/users?limit=100');
+    renderCustomersTable(data.users || []);
   } catch(e) {}
+}
+
+function renderCustomersTable(users) {
+  const tbody = document.getElementById('customersTable');
+  document.getElementById('customerCount').textContent = users.length;
+  if (!users.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">고객이 없습니다</td></tr>';
+    return;
+  }
+  tbody.innerHTML = users.map(u => `
+    <tr>
+      <td style="font-weight:700;color:var(--navy)">${u.name}</td>
+      <td>${u.email}</td>
+      <td>${u.phone || '-'}</td>
+      <td>${u.yacht_name ? u.yacht_name + (u.yacht_model ? ' · ' + u.yacht_model : '') : '-'}</td>
+      <td style="text-align:center;font-family:Montserrat;font-weight:700">${u.booking_count || 0}</td>
+      <td><span class="badge ${u.membership_type === 'vip' ? 'badge-gold' : u.membership_type === 'premium' ? 'badge-navy' : 'badge-grey'}">${u.membership_type || 'standard'}</span></td>
+      <td style="font-size:13px;color:var(--text-light)">${(u.created_at || '').split('T')[0]}</td>
+    </tr>
+  `).join('');
+}
+
+/* ══════════════════════════════════════════════════
+   문의 관리 탭
+══════════════════════════════════════════════════ */
+let inqSearchTimer = null;
+function searchInquiries() {
+  clearTimeout(inqSearchTimer);
+  inqSearchTimer = setTimeout(async () => {
+    const q      = document.getElementById('inqSearchInput').value.trim();
+    const status = document.getElementById('inqStatusFilter').value;
+    let url = '/api/admin/inquiries?';
+    if (q)      url += 'search=' + encodeURIComponent(q) + '&';
+    if (status) url += 'status=' + status;
+    try {
+      const data = await apiGet(url);
+      renderInquiriesTable(data.inquiries || []);
+    } catch(e) {}
+  }, 300);
 }
 
 async function loadInquiries() {
   try {
     const data = await apiGet('/api/admin/inquiries');
-    const tbody = document.getElementById('inquiriesTable');
-    if (!data.inquiries?.length) {
-      tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">문의가 없습니다</td></tr>';
-      return;
-    }
-    tbody.innerHTML = data.inquiries.map(i=>`
-      <tr>
-        <td style="font-size:13px;color:var(--text-light)">${i.created_at?.split('T')[0]||'-'}</td>
-        <td style="font-weight:700">${i.name}</td>
-        <td>${i.email}</td>
-        <td><span class="badge badge-navy">${i.inquiry_type}</span></td>
-        <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.subject}</td>
-        <td><span class="badge ${i.status==='answered'?'badge-green':'badge-gold'}">${i.status==='answered'?'답변완료':'대기 중'}</span></td>
-        <td><button class="btn btn-sm btn-outline-navy" onclick="viewInquiry(${i.id})">보기</button></td>
-      </tr>
-    `).join('');
+    const inquiries = data.inquiries || [];
+    renderInquiriesTable(inquiries);
+    // 미답변 뱃지
+    const pending = inquiries.filter(i => i.status === 'pending').length;
+    const badge   = document.getElementById('pendingInqBadge');
+    if (pending > 0) { badge.textContent = pending; badge.style.display = 'inline-flex'; }
+    else             { badge.style.display = 'none'; }
   } catch(e) {}
 }
 
-function showTab(tab) {
-  ['stats','bookings','customers','inquiries'].forEach(t=>{
-    document.getElementById('content-'+t).style.display='none';
-    document.getElementById('tab-'+t)?.classList.remove('active');
-  });
-  document.getElementById('content-'+tab).style.display='block';
-  document.getElementById('tab-'+tab)?.classList.add('active');
-  const titles={stats:'통계 대시보드',bookings:'예약 관리',customers:'고객 관리',inquiries:'문의 관리'};
-  document.getElementById('pageTitle').textContent = titles[tab]||tab;
-  if (tab==='bookings') loadAllBookings();
-  if (tab==='customers') loadCustomers();
-  if (tab==='inquiries') loadInquiries();
+function renderInquiriesTable(list) {
+  const tbody = document.getElementById('inquiriesTable');
+  if (!list.length) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--text-light)">문의가 없습니다</td></tr>';
+    return;
+  }
+  tbody.innerHTML = list.map(i => `
+    <tr style="cursor:pointer" onclick="viewInquiry(${i.id})">
+      <td style="font-size:13px;color:var(--text-light)">${(i.created_at || '').split('T')[0]}</td>
+      <td style="font-weight:700">${i.name}</td>
+      <td>${i.email}</td>
+      <td><span class="badge badge-navy">${i.inquiry_type || '일반'}</span></td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${i.subject}</td>
+      <td><span class="badge ${i.status === 'answered' ? 'badge-green' : 'badge-gold'}">${i.status === 'answered' ? '답변완료' : '대기 중'}</span></td>
+      <td><button class="btn btn-sm btn-outline-navy" onclick="event.stopPropagation();viewInquiry(${i.id})">보기/답변</button></td>
+    </tr>
+  `).join('');
 }
 
+async function viewInquiry(id) {
+  try {
+    const data = await apiGet('/api/admin/inquiries/' + id);
+    if (!data.success) { showToast('문의를 불러올 수 없습니다.', 'error'); return; }
+    const i = data.inquiry;
+    document.getElementById('inqModalId').value = id;
+    document.getElementById('inqModalMeta').innerHTML = `
+      <div class="inq-meta-item"><span class="inq-meta-label">고객명</span><span class="inq-meta-value">${i.name}</span></div>
+      <div class="inq-meta-item"><span class="inq-meta-label">이메일</span><span class="inq-meta-value">${i.email}</span></div>
+      <div class="inq-meta-item"><span class="inq-meta-label">연락처</span><span class="inq-meta-value">${i.phone || '-'}</span></div>
+      <div class="inq-meta-item"><span class="inq-meta-label">유형</span><span class="inq-meta-value">${i.inquiry_type || '일반'}</span></div>
+      <div class="inq-meta-item"><span class="inq-meta-label">제목</span><span class="inq-meta-value">${i.subject}</span></div>
+      <div class="inq-meta-item"><span class="inq-meta-label">접수일</span><span class="inq-meta-value">${(i.created_at || '').split('T')[0]}</span></div>
+    `;
+    document.getElementById('inqModalMessage').textContent = i.message;
+
+    const answerArea = document.getElementById('inqAnswerArea');
+    if (i.answer) {
+      answerArea.style.display = 'block';
+      document.getElementById('inqModalAnswer').textContent = i.answer;
+      document.getElementById('inqReplyText').value = i.answer;
+    } else {
+      answerArea.style.display = 'none';
+      document.getElementById('inqReplyText').value = '';
+    }
+
+    document.getElementById('modalInquiry').classList.add('open');
+  } catch(e) { showToast('오류가 발생했습니다.', 'error'); }
+}
+
+async function submitInquiryAnswer() {
+  const id     = document.getElementById('inqModalId').value;
+  const answer = document.getElementById('inqReplyText').value.trim();
+  if (!answer) { showToast('답변 내용을 입력해주세요.', 'error'); return; }
+  try {
+    const data = await apiPatch('/api/admin/inquiries/' + id, { answer, status: 'answered' });
+    if (data.success) {
+      showToast('답변이 등록되었습니다.', 'success');
+      closeModalById('modalInquiry');
+      loadInquiries();
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '답변 등록에 실패했습니다.', 'error'); }
+}
+
+/* ══════════════════════════════════════════════════
+   예약 완료 처리 모달
+══════════════════════════════════════════════════ */
+function openCompleteModal(bookingId) {
+  document.getElementById('completeBookingId').value = bookingId;
+  document.getElementById('completeTechnician').value = '';
+  document.getElementById('completeDescription').value = '';
+  document.getElementById('completeParts').value = '';
+  document.getElementById('completeNotes').value = '';
+  document.getElementById('completeNextDate').value = '';
+  document.getElementById('modalComplete').classList.add('open');
+}
+
+async function completeBooking() {
+  const id          = document.getElementById('completeBookingId').value;
+  const technician  = document.getElementById('completeTechnician').value.trim();
+  const description = document.getElementById('completeDescription').value.trim();
+  const parts       = document.getElementById('completeParts').value.trim();
+  const notes       = document.getElementById('completeNotes').value.trim();
+  const nextDate    = document.getElementById('completeNextDate').value;
+
+  if (!technician || !description) {
+    showToast('담당 기술자와 작업 내용은 필수입니다.', 'error'); return;
+  }
+  try {
+    const data = await apiPost('/api/admin/bookings/' + id + '/complete', {
+      technician_name: technician,
+      description,
+      parts_used: parts || null,
+      notes: notes || null,
+      next_service_date: nextDate || null
+    });
+    if (data.success) {
+      showToast('서비스 완료 처리 및 이력이 등록되었습니다.', 'success');
+      closeModalById('modalComplete');
+      loadAllBookings();
+      loadStats();
+      loadCharts();
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message || '처리에 실패했습니다.', 'error'); }
+}
+
+/* ══════════════════════════════════════════════════
+   기존 예약 상태 변경 모달
+══════════════════════════════════════════════════ */
 function openModal(id, status, notes) {
   document.getElementById('modalBookingId').value = id;
-  document.getElementById('modalStatus').value = status;
-  document.getElementById('modalNotes').value = notes;
-  document.getElementById('modal').classList.add('open');
+  document.getElementById('modalStatus').value    = status;
+  document.getElementById('modalNotes').value     = notes;
+  document.getElementById('modalBooking').classList.add('open');
 }
-function closeModal(e) { document.getElementById('modal').classList.remove('open'); }
 
 async function updateBookingStatus() {
-  const id = document.getElementById('modalBookingId').value;
+  const id     = document.getElementById('modalBookingId').value;
   const status = document.getElementById('modalStatus').value;
-  const notes = document.getElementById('modalNotes').value;
+  const notes  = document.getElementById('modalNotes').value;
+
+  // 완료 상태로 변경 시 서비스이력 모달로 안내
+  if (status === 'completed') {
+    closeModalById('modalBooking');
+    openCompleteModal(id);
+    return;
+  }
+
   try {
-    const data = await apiPatch('/api/admin/bookings/'+id, {status, admin_notes:notes});
+    const data = await apiPatch('/api/admin/bookings/' + id, { status, admin_notes: notes });
     if (data.success) {
-      showToast('예약 상태가 업데이트되었습니다','success');
-      document.getElementById('modal').classList.remove('open');
-      loadAllBookings(); loadTodayBookings(); loadStats();
+      showToast('예약 상태가 업데이트되었습니다.', 'success');
+      closeModalById('modalBooking');
+      loadAllBookings();
+      loadTodayBookings();
+      loadStats();
     }
-  } catch(e) { showToast('업데이트에 실패했습니다','error'); }
+  } catch(e) { showToast('업데이트에 실패했습니다.', 'error'); }
+}
+
+/* ══════════════════════════════════════════════════
+   CSV 내보내기
+══════════════════════════════════════════════════ */
+function exportBookingsCSV() {
+  if (!allBookingsData.length) {
+    showToast('내보낼 예약 데이터가 없습니다.', ''); return;
+  }
+  const headers = ['예약번호','고객명','연락처','패키지','요트명','마리나','예약일','시간','상태','금액','결제','등록일'];
+  const rows = allBookingsData.map(b => [
+    b.booking_number,
+    b.user_name        || '',
+    b.user_phone       || '',
+    b.package_name     || '',
+    b.yacht_name       || '',
+    b.marina_berth     || '',
+    b.scheduled_date   || '',
+    b.scheduled_time   || '',
+    b.status           || '',
+    b.total_price      || 0,
+    b.payment_status   || '',
+    (b.created_at || '').split('T')[0]
+  ]);
+
+  const csv = [headers, ...rows]
+    .map(r => r.map(v => '"' + String(v).replace(/"/g, '""') + '"').join(','))
+    .join('\n');
+
+  const bom  = '\uFEFF'; // UTF-8 BOM (Excel 한글 깨짐 방지)
+  const blob = new Blob([bom + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href     = url;
+  a.download = `bookings_${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('CSV 파일이 다운로드되었습니다.', 'success');
+}
+
+/* ══════════════════════════════════════════════════
+   탭 전환
+══════════════════════════════════════════════════ */
+function showTab(tab) {
+  ['stats','bookings','customers','inquiries'].forEach(t => {
+    document.getElementById('content-' + t).style.display = 'none';
+    document.getElementById('tab-' + t)?.classList.remove('active');
+  });
+  document.getElementById('content-' + tab).style.display = 'block';
+  document.getElementById('tab-'     + tab)?.classList.add('active');
+  const titles = { stats:'통계 대시보드', bookings:'예약 관리', customers:'고객 관리', inquiries:'문의 관리' };
+  document.getElementById('pageTitle').textContent = titles[tab] || tab;
+  if (tab === 'bookings')  loadAllBookings();
+  if (tab === 'customers') loadCustomers();
+  if (tab === 'inquiries') loadInquiries();
+}
+
+/* ══════════════════════════════════════════════════
+   유틸리티
+══════════════════════════════════════════════════ */
+function closeModal(modalId, e) {
+  if (e.target.classList.contains('modal-overlay'))
+    document.getElementById(modalId)?.classList.remove('open');
+}
+function closeModalById(modalId) {
+  document.getElementById(modalId)?.classList.remove('open');
 }
 
 async function initDB() {
   if (!confirm('DB를 초기화하면 기존 데이터가 삭제됩니다. 계속하시겠습니까?\n(개발 환경 전용)')) return;
   try {
-    const res = await fetch('/api/init-db',{method:'POST'});
+    const res  = await fetch('/api/init-db', { method: 'POST' });
     const data = await res.json();
-    if (data.success) { showToast('DB 초기화 완료!','success'); loadStats(); loadTodayBookings(); }
-    else throw new Error(data.error);
-  } catch(e) { showToast('초기화 실패: '+e.message,'error'); }
+    if (data.success) {
+      showToast('DB 초기화 완료!', 'success');
+      loadStats();
+      loadCharts();
+      loadTodayBookings();
+    } else throw new Error(data.error);
+  } catch(e) { showToast('초기화 실패: ' + e.message, 'error'); }
 }
 
-function viewInquiry(id) { showToast('문의 상세 기능은 준비 중입니다',''); }
-
 function statusBadge(s) {
-  const cls={pending:'badge-gold',confirmed:'badge-navy',completed:'badge-green',cancelled:'badge-red',in_progress:'badge-blue'};
-  const label={pending:'대기 중',confirmed:'확정',completed:'완료',cancelled:'취소',in_progress:'진행 중'};
-  return `<span class="badge ${cls[s]||'badge-grey'}">${label[s]||s}</span>`;
+  const cls   = { pending:'badge-gold', confirmed:'badge-navy', completed:'badge-green', cancelled:'badge-red', in_progress:'badge-blue' };
+  const label = { pending:'대기 중', confirmed:'확정', completed:'완료', cancelled:'취소', in_progress:'진행 중' };
+  return `<span class="badge ${cls[s] || 'badge-grey'}">${label[s] || s}</span>`;
 }
 
 function logout() {
   localStorage.removeItem('yachtToken');
   localStorage.removeItem('yachtUser');
-  location.href='/';
+  location.href = '/';
 }
 
-function showToast(msg, type='') {
+function showToast(msg, type = '') {
   const t = document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(type?' '+type:'');
+  t.textContent = msg;
+  t.className   = 'toast' + (type ? ' ' + type : '');
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 </script>
 </body>
