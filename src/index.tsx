@@ -7,6 +7,7 @@ import bookingRoutes from './routes/bookings'
 import adminRoutes from './routes/admin'
 import userRoutes from './routes/users'
 import inquiryRoutes from './routes/inquiries'
+import { hashPassword } from './middleware/auth'
 
 const app = new Hono<{ Bindings: Env }>()
 
@@ -162,12 +163,22 @@ app.post('/api/init-db', async (c) => {
     `).run()
     
     await c.env.DB.prepare(
-      "INSERT OR IGNORE INTO users (email, password_hash, name, phone, role, membership_type) VALUES ('admin@hyundaiyacht.com', 'admin_hash', '관리자', '02-0000-0000', 'admin', 'vip')"
+      "INSERT OR IGNORE INTO users (email, password_hash, name, phone, role, membership_type) VALUES ('admin@hyundaiyacht.com', '__PLACEHOLDER__', '관리자', '02-0000-0000', 'admin', 'vip')"
     ).run()
-    
+
     await c.env.DB.prepare(
-      "INSERT OR IGNORE INTO users (email, password_hash, name, phone, role, yacht_name, yacht_model, yacht_length, marina_berth, membership_type) VALUES ('demo@hyundaiyacht.com', 'demo_hash', '김민준', '010-1234-5678', 'customer', 'Sea Breeze', 'Hyundai Wando 470', 14.3, 'A-24', 'premium')"
+      "INSERT OR IGNORE INTO users (email, password_hash, name, phone, role, yacht_name, yacht_model, yacht_length, marina_berth, membership_type) VALUES ('demo@hyundaiyacht.com', '__PLACEHOLDER__', '김민준', '010-1234-5678', 'customer', 'Sea Breeze', 'Hyundai Wando 470', 14.3, 'A-24', 'premium')"
     ).run()
+
+    // [B-1] 데모 계정 비밀번호를 PBKDF2 해시로 업데이트
+    const adminHash = await hashPassword('Admin1234!')
+    const demoHash  = await hashPassword('Demo1234!')
+    await c.env.DB.prepare(
+      "UPDATE users SET password_hash = ? WHERE email = 'admin@hyundaiyacht.com'"
+    ).bind(adminHash).run()
+    await c.env.DB.prepare(
+      "UPDATE users SET password_hash = ? WHERE email = 'demo@hyundaiyacht.com'"
+    ).bind(demoHash).run()
     
     // 슬롯 동적 생성 (오늘부터 10주, 평일+주말 09:00 / 13:00)
     const slotToday = new Date()

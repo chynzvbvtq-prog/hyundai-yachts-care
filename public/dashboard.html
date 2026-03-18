@@ -298,6 +298,35 @@
                 <i class="fas fa-save"></i> 변경사항 저장
               </button>
             </form>
+
+            <!-- 비밀번호 변경 섹션 -->
+            <div style="border-top:1px solid var(--bg-medium);margin-top:32px;padding-top:28px">
+              <h4 style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:16px">
+                <i class="fas fa-lock" style="color:var(--brand-red);margin-right:8px"></i>비밀번호 변경
+              </h4>
+              <div id="pwChangeAlert" class="alert" style="display:none"></div>
+              <form onsubmit="changePassword(event)" style="max-width:400px">
+                <div class="form-group">
+                  <label class="form-label">현재 비밀번호</label>
+                  <input type="password" class="form-input" id="currentPw" placeholder="현재 비밀번호 입력" autocomplete="current-password">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">새 비밀번호</label>
+                  <input type="password" class="form-input" id="newPw" placeholder="영문+숫자 조합 8자 이상" autocomplete="new-password" oninput="checkNewPwStrength()">
+                  <div id="newPwBar" style="margin-top:6px;height:4px;border-radius:2px;background:var(--bg-medium);overflow:hidden;display:none">
+                    <div id="newPwFill" style="height:100%;width:0;transition:width 0.3s,background 0.3s"></div>
+                  </div>
+                  <div id="newPwMsg" style="font-size:11px;margin-top:3px;color:var(--text-muted)"></div>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">새 비밀번호 확인</label>
+                  <input type="password" class="form-input" id="newPw2" placeholder="새 비밀번호 재입력" autocomplete="new-password">
+                </div>
+                <button type="submit" class="btn btn-outline-navy" id="pwChangeBtn">
+                  <i class="fas fa-key"></i> 비밀번호 변경
+                </button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
@@ -602,6 +631,69 @@ function renderMaintenanceCards(schedule) {
   }).join('');
 }
 
+// ── 비밀번호 강도 바 (프로필 탭용) ──
+function checkNewPwStrength() {
+  const pw   = document.getElementById('newPw').value;
+  const bar  = document.getElementById('newPwBar');
+  const fill = document.getElementById('newPwFill');
+  const msg  = document.getElementById('newPwMsg');
+  bar.style.display = pw.length ? 'block' : 'none';
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (/[A-Za-z]/.test(pw)) score++;
+  if (/\d/.test(pw))   score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++;
+  const lv = [
+    { label:'너무 짧음', color:'#dc2626', w:'20%' },
+    { label:'약함',      color:'#f59e0b', w:'40%' },
+    { label:'보통',      color:'#eab308', w:'65%' },
+    { label:'강함',      color:'#22c55e', w:'85%' },
+    { label:'매우 강함', color:'#16a34a', w:'100%'}
+  ][Math.min(score, 4)];
+  fill.style.width = lv.w; fill.style.background = lv.color;
+  msg.textContent  = lv.label; msg.style.color = lv.color;
+}
+
+async function changePassword(e) {
+  e.preventDefault();
+  const token  = localStorage.getItem('yachtToken');
+  const current = document.getElementById('currentPw').value;
+  const newPw   = document.getElementById('newPw').value;
+  const newPw2  = document.getElementById('newPw2').value;
+  const alertEl = document.getElementById('pwChangeAlert');
+  const btn     = document.getElementById('pwChangeBtn');
+
+  const PW_RE = /^(?=.*[A-Za-z])(?=.*\d).{8,72}$/;
+  if (!current) { showPwAlert('현재 비밀번호를 입력해주세요.', 'error'); return; }
+  if (!PW_RE.test(newPw)) { showPwAlert('새 비밀번호는 영문+숫자 조합 8자 이상이어야 합니다.', 'error'); return; }
+  if (newPw !== newPw2)   { showPwAlert('새 비밀번호가 일치하지 않습니다.', 'error'); return; }
+
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 변경 중...';
+  try {
+    const res = await fetch('/api/auth/change-password', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
+      body: JSON.stringify({ current_password: current, new_password: newPw })
+    });
+    const data = await res.json();
+    if (data.success) {
+      showPwAlert('비밀번호가 변경되었습니다.', 'success');
+      document.getElementById('currentPw').value = '';
+      document.getElementById('newPw').value     = '';
+      document.getElementById('newPw2').value    = '';
+      document.getElementById('newPwBar').style.display = 'none';
+      document.getElementById('newPwMsg').textContent   = '';
+    } else { throw new Error(data.error); }
+  } catch(err) { showPwAlert(err.message || '변경에 실패했습니다.', 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-key"></i> 비밀번호 변경'; }
+}
+
+function showPwAlert(msg, type) {
+  const el = document.getElementById('pwChangeAlert');
+  el.className = `alert ${type} show`; el.style.display = 'block'; el.textContent = msg;
+  setTimeout(() => { el.style.display = 'none'; el.className = 'alert'; }, 4000);
+}
+
 async function updateProfile(e) {
   e.preventDefault();
   const token = localStorage.getItem('yachtToken');
@@ -653,6 +745,7 @@ function statusBadge(s) {
 function logout() {
   localStorage.removeItem('yachtToken');
   localStorage.removeItem('yachtUser');
+  localStorage.removeItem('yachtRefreshToken');
   location.href = '/';
 }
 

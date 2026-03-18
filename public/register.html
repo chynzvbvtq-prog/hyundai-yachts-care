@@ -160,11 +160,16 @@
           <div class="form-grid">
             <div class="form-group">
               <label class="form-label">비밀번호 <span class="required">*</span></label>
-              <input type="password" class="form-input" id="pw" placeholder="8자 이상" required minlength="8">
+              <input type="password" class="form-input" id="pw" placeholder="영문+숫자 8자 이상" required minlength="8" oninput="checkPwStrength()">
+              <div id="pwStrengthBar" style="margin-top:8px;height:4px;border-radius:2px;background:var(--bg-medium);overflow:hidden;display:none">
+                <div id="pwStrengthFill" style="height:100%;width:0;transition:width 0.3s,background 0.3s"></div>
+              </div>
+              <div id="pwStrengthMsg" style="font-size:11px;margin-top:4px;color:var(--text-muted)"></div>
             </div>
             <div class="form-group">
               <label class="form-label">비밀번호 확인 <span class="required">*</span></label>
-              <input type="password" class="form-input" id="pw2" placeholder="비밀번호 재입력" required>
+              <input type="password" class="form-input" id="pw2" placeholder="비밀번호 재입력" required oninput="checkPwMatch()">
+              <div id="pwMatchMsg" style="font-size:11px;margin-top:4px"></div>
             </div>
           </div>
 
@@ -214,17 +219,67 @@
 </div>
 
 <script>
+// ── 비밀번호 강도 검사 ──
+function checkPwStrength() {
+  const pw  = document.getElementById('pw').value;
+  const bar = document.getElementById('pwStrengthBar');
+  const fill= document.getElementById('pwStrengthFill');
+  const msg = document.getElementById('pwStrengthMsg');
+  bar.style.display = pw.length ? 'block' : 'none';
+
+  let score = 0;
+  if (pw.length >= 8)  score++;
+  if (/[A-Za-z]/.test(pw)) score++;
+  if (/\d/.test(pw))   score++;
+  if (/[^A-Za-z0-9]/.test(pw)) score++; // 특수문자 보너스
+
+  const levels = [
+    { label:'너무 짧음', color:'#dc2626', w:'20%' },
+    { label:'약함',      color:'#f59e0b', w:'40%' },
+    { label:'보통',      color:'#eab308', w:'65%' },
+    { label:'강함',      color:'#22c55e', w:'85%' },
+    { label:'매우 강함', color:'#16a34a', w:'100%'}
+  ];
+  const lv = levels[Math.min(score, 4)];
+  fill.style.width     = lv.w;
+  fill.style.background= lv.color;
+  msg.textContent      = lv.label;
+  msg.style.color      = lv.color;
+}
+
+function checkPwMatch() {
+  const pw  = document.getElementById('pw').value;
+  const pw2 = document.getElementById('pw2').value;
+  const msg = document.getElementById('pwMatchMsg');
+  if (!pw2) { msg.textContent = ''; return; }
+  if (pw === pw2) {
+    msg.textContent = '비밀번호가 일치합니다 ✓';
+    msg.style.color = '#16a34a';
+  } else {
+    msg.textContent = '비밀번호가 일치하지 않습니다';
+    msg.style.color = '#dc2626';
+  }
+}
+
 async function handleRegister(e) {
   e.preventDefault();
-  const pw = document.getElementById('pw').value;
+  const pw  = document.getElementById('pw').value;
   const pw2 = document.getElementById('pw2').value;
   const alertEl = document.getElementById('regAlert');
+
+  // 클라이언트 사이드 유효성 검사
+  const PW_RE = /^(?=.*[A-Za-z])(?=.*\d).{8,72}$/;
+  if (!PW_RE.test(pw)) {
+    alertEl.className = 'alert error show'; alertEl.style.display = 'block';
+    alertEl.textContent = '비밀번호는 영문+숫자 조합 8자 이상이어야 합니다.';
+    return;
+  }
   if (pw !== pw2) {
-    alertEl.className = 'alert error show';
-    alertEl.style.display = 'block';
+    alertEl.className = 'alert error show'; alertEl.style.display = 'block';
     alertEl.textContent = '비밀번호가 일치하지 않습니다.';
     return;
   }
+
   const btn = document.getElementById('regBtn');
   btn.disabled = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; 처리 중...';
@@ -234,10 +289,10 @@ async function handleRegister(e) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        name: document.getElementById('name').value,
-        phone: document.getElementById('phone').value,
-        email: document.getElementById('email').value,
-        password: pw,
+        name:         document.getElementById('name').value,
+        phone:        document.getElementById('phone').value,
+        email:        document.getElementById('email').value,
+        password:     pw,
         yacht_name:   document.getElementById('yachtName').value,
         yacht_model:  document.getElementById('yachtModel').value,
         yacht_length: parseFloat(document.getElementById('yachtLength').value) || null,
@@ -248,6 +303,7 @@ async function handleRegister(e) {
     if (data.success) {
       localStorage.setItem('yachtToken', data.token);
       localStorage.setItem('yachtUser', JSON.stringify(data.user));
+      if (data.refresh_token) localStorage.setItem('yachtRefreshToken', data.refresh_token);
       alertEl.className = 'alert success show';
       alertEl.style.display = 'block';
       alertEl.textContent = '회원가입이 완료되었습니다! 대시보드로 이동합니다...';

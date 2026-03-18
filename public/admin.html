@@ -1186,6 +1186,7 @@ function statusBadge(s) {
 function logout() {
   localStorage.removeItem('yachtToken');
   localStorage.removeItem('yachtUser');
+  localStorage.removeItem('yachtRefreshToken');
   location.href = '/';
 }
 

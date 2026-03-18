@@ -84,5 +84,8 @@ export interface JWTPayload {
   userId: number;
   email: string;
   role: string;
+  name?: string;
+  iat?: number;
   exp: number;
+  type?: string;   // 'refresh' 토큰 구분
 }

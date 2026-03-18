@@ -187,6 +187,7 @@ async function handleLogin(e) {
     if (data.success) {
       localStorage.setItem('yachtToken', data.token);
       localStorage.setItem('yachtUser', JSON.stringify(data.user));
+      if (data.refresh_token) localStorage.setItem('yachtRefreshToken', data.refresh_token);
       if (data.user.role === 'admin') { location.href = '/admin.html'; }
       else { location.href = new URLSearchParams(location.search).get('redirect') || '/dashboard.html'; }
     } else { throw new Error(data.error || '로그인에 실패했습니다.'); }
@@ -199,8 +200,9 @@ async function handleLogin(e) {
   }
 }
 
+// 이미 로그인된 경우 리디렉션
 const token = localStorage.getItem('yachtToken');
-const user = JSON.parse(localStorage.getItem('yachtUser') || 'null');
+const user  = JSON.parse(localStorage.getItem('yachtUser') || 'null');
 if (token && user) { location.href = user.role === 'admin' ? '/admin.html' : '/dashboard.html'; }
 </script>
 </body>
