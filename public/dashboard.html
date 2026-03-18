@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>마이페이지 | HYUNDAI YACHT CARE</title>
+  <!-- E-3: 폰트 비동기 로딩 최적화 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
   <style>
+    body { margin:0; background:var(--bg-light,#F5F7FA); }
     /* ── 서비스 이력 카드 ── */
     .history-card {
       background: #fff;
@@ -136,7 +140,26 @@
 
       <!-- Overview Tab -->
       <div id="content-overview">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:20px" id="dashGreeting">안녕하세요!</p>
+
+        <!-- E-5: 웰컴 카드 (상단 고정) -->
+        <div id="welcomeCard" style="background:linear-gradient(135deg,#001e3c 0%,#002D56 60%,#0a3561 100%);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;overflow:hidden">
+          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 90% 50%,rgba(157,29,34,0.12),transparent);pointer-events:none"></div>
+          <div style="position:relative;z-index:1">
+            <div style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(157,29,34,0.8);margin-bottom:8px">Welcome Back</div>
+            <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px" id="welcomeName">안녕하세요!</div>
+            <div style="font-size:13px;color:rgba(255,255,255,0.55)" id="welcomeSub">마이페이지에서 예약 현황과 서비스 이력을 확인하세요.</div>
+          </div>
+          <div style="display:flex;gap:10px;flex-shrink:0;position:relative;z-index:1;flex-wrap:wrap">
+            <a href="/booking.html" class="btn btn-primary">
+              <i class="fas fa-calendar-plus"></i>&nbsp; 새 예약하기
+            </a>
+            <button onclick="showTab('bookings')" class="btn btn-outline" style="border-color:rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.07)">
+              <i class="fas fa-list"></i>&nbsp; 예약 내역
+            </button>
+          </div>
+        </div>
+
+        <p style="color:var(--text-medium);font-size:15px;margin-bottom:20px" id="dashGreeting"></p>
 
         <!-- C-5: 온보딩 배너 (요트 정보 미입력 시) -->
         <div id="onboardingBanner" style="display:none;background:linear-gradient(135deg,var(--navy) 0%,#0a3561 100%);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
@@ -438,7 +461,18 @@ function updateSidebar() {
   document.getElementById('sidebarAvatar').textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
   document.getElementById('sidebarName').textContent = currentUser.name || '-';
   document.getElementById('sidebarEmail').textContent = currentUser.email || '-';
-  document.getElementById('dashGreeting').textContent = currentUser.name + ' 고객님, 환영합니다 👋';
+  document.getElementById('dashGreeting').textContent = '';
+
+  // E-5: 웰컴 카드 초기화
+  const hour = new Date().getHours();
+  const greeting = hour < 6 ? '좋은 새벽이에요' : hour < 12 ? '좋은 아침이에요' : hour < 18 ? '안녕하세요' : '좋은 저녁이에요';
+  const welcomeName = document.getElementById('welcomeName');
+  const welcomeSub  = document.getElementById('welcomeSub');
+  if (welcomeName) welcomeName.textContent = `${greeting}, ${currentUser.name || '고객'} 님! 👋`;
+  if (welcomeSub) {
+    const today = new Date().toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'short'});
+    welcomeSub.textContent = `오늘은 ${today}입니다. 예약 현황과 서비스 이력을 확인하세요.`;
+  }
 }
 
 async function loadDashboardData() {
@@ -564,7 +598,16 @@ function checkOnboardingBanner() {
 function renderRecentBookings() {
   const tbody = document.getElementById('recentBookingsTable');
   const recent = allBookings.slice(0, 5);
-  if (!recent.length) return;
+  if (!recent.length) {
+    tbody.innerHTML = `<tr><td colspan="5">
+      <div class="empty-state" style="padding:32px">
+        <i class="fas fa-calendar-times"></i>
+        <p style="font-size:14px;margin-bottom:12px">아직 예약 내역이 없습니다</p>
+        <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 첫 예약하기</a>
+      </div>
+    </td></tr>`;
+    return;
+  }
   tbody.innerHTML = recent.map(b => `
     <tr>
       <td><span style="font-family:Montserrat;font-size:12px;font-weight:700;color:var(--navy)">${b.booking_number}</span></td>

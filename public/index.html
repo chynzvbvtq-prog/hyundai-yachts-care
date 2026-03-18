@@ -5,11 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>현대요트 케어서비스 | HYUNDAI YACHT CARE</title>
   <meta name="description" content="현대요트의 프리미엄 케어서비스. 전문 기술진의 완벽한 요트 관리 서비스를 경험하세요.">
+  <!-- E-3: preconnect + 비동기 폰트 로딩 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"></noscript>
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
+  <!-- E-3: Critical inline CSS — 즉각 레이아웃 표시 -->
+  <style>
+    body { margin:0; background:#fff; overflow-x:hidden; }
+    .navbar { position:fixed; top:0; left:0; right:0; z-index:1000; }
+    .nav-container { display:flex; align-items:center; justify-content:space-between; max-width:1280px; margin:0 auto; padding:0 24px; height:88px; }
+    .loading-overlay { position:fixed; inset:0; background:#002D56; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:9999; transition:opacity .4s ease; }
+    .loading-overlay.hidden { opacity:0; pointer-events:none; }
+    .loader { width:40px; height:40px; border:3px solid rgba(255,255,255,.2); border-top-color:#9D1D22; border-radius:50%; animation:spin .8s linear infinite; margin-bottom:16px; }
+    .loading-text { font-family:'Montserrat',sans-serif; font-size:13px; letter-spacing:.2em; color:rgba(255,255,255,.6); }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
   <style>
     /* ══════════════════════════════════════════
        INDEX PAGE — BATCH 5 DESIGN REFRESH
@@ -536,6 +549,11 @@
 <!-- Toast -->
 <div class="toast" id="toast"></div>
 
+<!-- E-2: 관리자 플로팅 버튼 (admin 로그인 시만 표시) -->
+<a href="/admin.html" class="admin-access-hint" id="adminFloatBtn" style="display:none">
+  <i class="fas fa-cog"></i> 관리자 대시보드
+</a>
+
 <!-- ── Navigation ── -->
 <nav class="navbar transparent" id="navbar">
   <div class="nav-container">
@@ -556,6 +574,9 @@
       </li>
       <li id="navUser" style="display:none">
         <a href="/dashboard.html" class="btn-nav" onclick="closeMenu()">마이페이지</a>
+      </li>
+      <li id="navAdmin" style="display:none">
+        <a href="/admin.html" class="btn-nav" style="color:var(--brand-red)" onclick="closeMenu()"><i class="fas fa-cog" style="margin-right:4px;font-size:12px"></i>관리자</a>
       </li>
       <li>
         <a href="/booking.html" class="btn-nav btn-nav-primary" onclick="closeMenu()">예약하기</a>
@@ -1608,6 +1629,17 @@
 
 <script src="/static/app.js"></script>
 <script>
+// E-2: 관리자 플로팅 버튼 표시
+(function() {
+  try {
+    const user = JSON.parse(localStorage.getItem('yachtUser') || 'null');
+    if (user && user.role === 'admin') {
+      const btn = document.getElementById('adminFloatBtn');
+      if (btn) btn.style.display = 'flex';
+    }
+  } catch(e) {}
+})();
+
 // ── D-1: Process layout toggle ──
 (function() {
   const desktop = document.getElementById('processDesktop');

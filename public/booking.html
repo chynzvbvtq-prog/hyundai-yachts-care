@@ -28,6 +28,7 @@
       <li><a href="/#services" class="nav-link" style="color:var(--text-dark)">서비스</a></li>
       <li id="navAuth"><a href="/login.html" class="btn-nav">로그인</a></li>
       <li id="navUser" style="display:none"><a href="/dashboard.html" class="btn-nav">마이페이지</a></li>
+      <li id="navAdmin" style="display:none"><a href="/admin.html" class="btn-nav" style="color:var(--brand-red)"><i class="fas fa-cog" style="margin-right:4px;font-size:12px"></i>관리자</a></li>
     </ul>
     <button class="hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
   </div>
@@ -45,6 +46,23 @@
 <!-- Booking Body -->
 <section style="background:var(--bg-light);padding:60px 0 120px">
   <div class="container">
+
+    <!-- 비로그인 알림 배너 -->
+    <div id="guestNoticeBanner" style="display:none;background:linear-gradient(135deg,var(--navy),#0a3561);border-radius:var(--radius-md);padding:16px 24px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+      <div style="display:flex;align-items:center;gap:12px">
+        <i class="fas fa-info-circle" style="color:rgba(255,200,100,0.9);font-size:18px;flex-shrink:0"></i>
+        <div style="color:rgba(255,255,255,0.9);font-size:14px">
+          <strong style="color:#fff">로그인하면 더 빠르게 예약할 수 있어요!</strong>
+          <span style="display:block;font-size:12px;color:rgba(255,255,255,0.6);margin-top:2px">로그인 시 요트 정보 자동 입력 · 예약 내역 관리 가능</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-shrink:0">
+        <a href="/login.html?redirect=/booking.html" class="btn btn-sm" style="background:rgba(255,255,255,0.15);color:#fff;border:1px solid rgba(255,255,255,0.25);font-size:12px">
+          <i class="fas fa-sign-in-alt"></i> 로그인
+        </a>
+        <button onclick="document.getElementById('guestNoticeBanner').style.display='none'" style="background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:16px;padding:0 4px">✕</button>
+      </div>
+    </div>
 
     <!-- Progress Bar -->
     <div class="progress-bar" id="progressBar" style="max-width:720px;margin:0 auto 56px">
@@ -335,18 +353,26 @@
             <p style="font-size:12px;color:var(--text-light);text-align:right;margin-top:4px">* 실제 금액은 현장 점검 후 확정됩니다</p>
           </div>
 
-          <!-- Login prompt (shown if not logged in) -->
+          <!-- Login prompt (E-4: 개선된 비로그인 안내) -->
           <div class="login-prompt" id="loginPromptBox" style="display:none">
-            <h4><i class="fas fa-lock" style="color:var(--brand-red);margin-right:8px"></i> 예약하려면 로그인이 필요합니다</h4>
-            <p>로그인 후 예약을 완료하거나, 비회원으로 문의를 남기실 수 있습니다.</p>
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <div style="width:44px;height:44px;background:rgba(157,29,34,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0">
+                <i class="fas fa-lock" style="color:var(--brand-red);font-size:18px"></i>
+              </div>
+              <div>
+                <h4 style="margin:0 0 4px;font-size:16px">로그인 후 예약이 가능합니다</h4>
+                <p style="margin:0;font-size:13px;opacity:.8">로그인하면 요트 정보가 자동으로 채워집니다.</p>
+              </div>
+            </div>
             <div class="login-prompt-btns">
-              <a href="/login.html?redirect=/booking.html" class="btn btn-primary">
-                <i class="fas fa-sign-in-alt"></i> 로그인
+              <a href="/login.html?redirect=/booking.html" class="btn btn-primary" style="flex:1">
+                <i class="fas fa-sign-in-alt"></i> 로그인하기
               </a>
-              <a href="/register.html" class="btn btn-outline">
+              <a href="/register.html" class="btn btn-outline" style="flex:1;border-color:rgba(255,255,255,.4);color:#fff">
                 <i class="fas fa-user-plus"></i> 회원가입
               </a>
             </div>
+            <p style="margin:10px 0 0;font-size:11px;opacity:.6;text-align:center">로그인 후 이 페이지로 자동으로 돌아옵니다.</p>
           </div>
 
           <div class="step-buttons">
@@ -904,6 +930,15 @@ async function renderTimeSlotsForDate(dateStr) {
     updateSummary();
   }
 }
+
+// ── 비로그인 시 배너 표시 ──
+(function() {
+  const token = localStorage.getItem('yachtToken');
+  if (!token) {
+    const banner = document.getElementById('guestNoticeBanner');
+    if (banner) banner.style.display = 'flex';
+  }
+})();
 </script>
 </body>
 </html>

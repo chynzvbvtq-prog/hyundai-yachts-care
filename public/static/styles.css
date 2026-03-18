@@ -1940,3 +1940,562 @@ img[loading="lazy"] {
   transition: var(--transition), transform 0.25s ease;
 }
 .card:hover { transform: translateY(-2px); }
+
+/* ══════════════════════════════════════════
+   BATCH 6 — UX 긴급 수정 추가 스타일
+   ══════════════════════════════════════════ */
+
+/* ── E-3: 스켈레톤 로딩 ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-medium) 25%, var(--bg-light) 50%, var(--bg-medium) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease infinite;
+  border-radius: var(--radius-sm);
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── E-1: 데모 계정 박스 (스타일 재정의) ── */
+.demo-box {
+  background: var(--bg-light);
+  border: 1.5px solid var(--bg-medium);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  font-size: 13px;
+  color: var(--text-medium);
+  line-height: 1.7;
+}
+
+/* ── E-2: 관리자 nav 링크 강조 ── */
+#navAdmin a {
+  color: var(--brand-red) !important;
+  font-weight: 600;
+}
+#navAdmin a:hover {
+  background: rgba(157,29,34,0.08) !important;
+}
+
+/* ── E-4: 로그인 프롬프트 개선 ── */
+.login-prompt {
+  background: linear-gradient(135deg, #001e3c 0%, #002D56 100%);
+  border-radius: var(--radius-md);
+  padding: 24px 28px;
+  color: var(--white);
+  margin-bottom: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.login-prompt h4 { color: #fff; margin-bottom: 6px; font-size: 16px; }
+.login-prompt p  { color: rgba(255,255,255,0.65); font-size: 13px; margin-bottom: 16px; }
+.login-prompt-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* ── E-5: 웰컴 카드 반응형 ── */
+@media (max-width: 640px) {
+  #welcomeCard { padding: 20px; }
+  #welcomeCard > div:first-child { width: 100%; }
+  #welcomeCard > div:last-child  { width: 100%; justify-content: stretch; }
+  #welcomeCard > div:last-child a,
+  #welcomeCard > div:last-child button { flex: 1; text-align: center; }
+}
+
+/* ── 버튼 비활성화 스타일 ── */
+.btn:disabled,
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── 관리자 대시보드 — 빠른 접근 힌트 ── */
+.admin-access-hint {
+  position: fixed;
+  bottom: 24px; right: 24px;
+  background: var(--navy);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: var(--radius-pill);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+  box-shadow: var(--shadow-lg);
+  cursor: pointer;
+  z-index: 999;
+  transition: var(--transition);
+  text-decoration: none;
+}
+.admin-access-hint:hover {
+  background: var(--brand-red);
+  transform: translateY(-2px);
+}
+.admin-access-hint i { font-size: 14px; }
+
+/* ── 페이지 전환 fade ── */
+.page-fade-in {
+  animation: pageFadeIn 0.4s ease forwards;
+}
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── Form 입력 에러 상태 ── */
+.form-input.error,
+.form-select.error {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(157,29,34,0.1);
+}
+.form-input.success,
+.form-select.success {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22,163,74,0.1);
+}
+
+/* ── 토스트 알림 개선 ── */
+.toast {
+  position: fixed;
+  bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--navy);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: var(--radius-pill);
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: var(--shadow-lg);
+  z-index: 9998;
+  transition: transform 0.35s cubic-bezier(.4,0,.2,1), opacity 0.35s ease;
+  opacity: 0;
+  white-space: nowrap;
+  max-width: calc(100vw - 48px);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+.toast.success { background: #16a34a; }
+.toast.error   { background: var(--brand-red); }
+
+/* ════════════════════════════════════════════════
+   BATCH 6 — UX/UI 개선 스타일
+════════════════════════════════════════════════ */
+
+/* ── 1. 로딩 오버레이 빠른 숨김 ── */
+.loading-overlay {
+  transition: opacity 0.3s ease;
+}
+
+/* ── 2. 페이지 헤더 디자인 개선 ── */
+.page-header {
+  background: linear-gradient(135deg, #001428 0%, #002D56 50%, #0a3d6b 100%);
+  padding: 100px 0 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.page-header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 80% 60% at 70% 40%, rgba(157,29,34,0.12), transparent 60%);
+}
+.page-header > .container { position: relative; z-index: 1; }
+.page-header h1 {
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 700;
+  color: #fff;
+  margin: 10px 0 12px;
+  letter-spacing: -0.02em;
+}
+.page-header p {
+  font-size: 16px;
+  color: rgba(255,255,255,0.65);
+  margin: 0;
+}
+.page-header .section-label {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(157,29,34,0.85);
+  display: inline-block;
+}
+
+/* ── 3. 예약 단계 진행 바 개선 ── */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  position: relative;
+}
+.progress-step::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 60%;
+  right: 0;
+  height: 2px;
+  background: var(--bg-medium);
+  z-index: 0;
+}
+.progress-step:last-child::after { display: none; }
+.progress-step.active::after { background: var(--brand-red); }
+.progress-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--bg-medium);
+  color: var(--text-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+  border: 2.5px solid var(--bg-medium);
+}
+.progress-step.active .progress-dot {
+  background: var(--brand-red);
+  color: #fff;
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 4px rgba(157,29,34,0.15);
+}
+.progress-step.done .progress-dot {
+  background: #16a34a;
+  color: #fff;
+  border-color: #16a34a;
+}
+.progress-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-light);
+  white-space: nowrap;
+}
+.progress-step.active .progress-label { color: var(--brand-red); }
+.progress-step.done .progress-label { color: #16a34a; }
+
+/* ── 4. 예약 패키지 옵션 카드 개선 ── */
+.pkg-option {
+  border: 2px solid var(--bg-medium);
+  border-radius: var(--radius-lg);
+  padding: 28px 22px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: #fff;
+  position: relative;
+}
+.pkg-option:hover {
+  border-color: rgba(157,29,34,0.4);
+  box-shadow: 0 4px 20px rgba(157,29,34,0.08);
+  transform: translateY(-2px);
+}
+.pkg-option.selected {
+  border-color: var(--brand-red);
+  box-shadow: 0 0 0 3px rgba(157,29,34,0.12), 0 4px 20px rgba(157,29,34,0.12);
+  background: rgba(157,29,34,0.02);
+}
+.pkg-option-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--brand-red);
+  color: #fff;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+}
+.pkg-option.selected .pkg-option-check { display: flex; }
+.pkg-option-name {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 4px;
+}
+.pkg-option-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 8px;
+}
+.pkg-option-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--brand-red);
+  margin-bottom: 10px;
+}
+.pkg-option-desc {
+  font-size: 13px;
+  color: var(--text-medium);
+  line-height: 1.6;
+}
+.package-select-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 768px) {
+  .package-select-grid { grid-template-columns: 1fr; }
+}
+
+/* ── 5. 예약 사이드 요약 카드 ── */
+.booking-wrap {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 960px) {
+  .booking-wrap { grid-template-columns: 1fr; }
+}
+.booking-summary-card {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--bg-medium);
+  padding: 24px;
+  position: sticky;
+  top: 108px;
+}
+.booking-summary-title {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--navy);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Montserrat', sans-serif;
+}
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg-light);
+  font-size: 13px;
+}
+.summary-item:last-child { border-bottom: none; }
+.summary-item-label { color: var(--text-medium); flex-shrink: 0; }
+.summary-item-value { color: var(--navy); font-weight: 600; text-align: right; }
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 0;
+  margin-top: 8px;
+  border-top: 2px solid var(--bg-medium);
+}
+.summary-total-label { font-size: 14px; font-weight: 700; color: var(--navy); }
+.summary-total-value {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--brand-red);
+}
+
+/* ── 6. 예약 스텝 카드 ── */
+.booking-step {
+  background: #fff;
+  border-radius: var(--radius-lg);
+  border: 1.5px solid var(--bg-medium);
+  padding: 32px 36px;
+  display: none;
+  animation: stepFadeIn 0.3s ease;
+}
+.booking-step.active { display: block; }
+@keyframes stepFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--navy);
+  margin-bottom: 28px;
+}
+.step-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  flex-wrap: wrap;
+}
+@media (max-width: 600px) {
+  .booking-step { padding: 24px 20px; }
+  .step-buttons { flex-direction: column-reverse; }
+  .step-buttons .btn { width: 100%; justify-content: center; }
+}
+
+/* ── 7. 로그인 프롬프트 (예약 페이지) ── */
+.login-prompt {
+  background: linear-gradient(135deg, var(--navy) 0%, #0a3561 100%);
+  border-radius: var(--radius-md);
+  padding: 24px;
+  color: #fff;
+  margin-bottom: 20px;
+}
+.login-prompt-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ── 8. 확인 박스 (예약 step 4) ── */
+.confirm-box {
+  background: var(--bg-light);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--bg-medium);
+  padding: 20px 24px;
+  margin-bottom: 16px;
+}
+.confirm-box-title {
+  font-size: 11px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.confirm-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--bg-medium);
+  font-size: 14px;
+}
+.confirm-row:last-child { border-bottom: none; }
+.confirm-label { color: var(--text-medium); }
+.confirm-value { color: var(--navy); font-weight: 600; text-align: right; }
+.confirm-total-price {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--brand-red);
+}
+
+/* ── 9. 대시보드 예약 내역 테이블 개선 ── */
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+.booking-table th {
+  background: var(--bg-light);
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  border-bottom: 1.5px solid var(--bg-medium);
+}
+.booking-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--bg-light);
+  vertical-align: middle;
+}
+.booking-table tr:hover td { background: rgba(0,45,86,0.02); }
+.booking-table tr:last-child td { border-bottom: none; }
+
+/* ── 10. 상태 배지 개선 ── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'Montserrat', sans-serif;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.badge-pending    { background: rgba(245,158,11,0.1);  color: #b45309; }
+.badge-confirmed  { background: rgba(37,99,235,0.1);   color: #1d4ed8; }
+.badge-in_progress { background: rgba(139,92,246,0.1); color: #7c3aed; }
+.badge-completed  { background: rgba(22,163,74,0.1);   color: #16a34a; }
+.badge-cancelled  { background: rgba(107,114,128,0.1); color: #6b7280; }
+
+/* ── 11. 빈 상태 표시 ── */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-light);
+}
+.empty-state i {
+  font-size: 40px;
+  color: var(--bg-medium);
+  display: block;
+  margin-bottom: 14px;
+}
+.empty-state p {
+  font-size: 15px;
+  margin-bottom: 20px;
+  color: var(--text-light);
+}
+
+/* ── 12. 관리자 사이드바 링크 색상 통일 ── */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 16px;
+  border-radius: var(--radius-sm);
+  color: rgba(255,255,255,0.65);
+  cursor: pointer;
+  transition: var(--transition);
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 2px;
+  user-select: none;
+}
+.sidebar-link:hover { background: rgba(255,255,255,0.07); color: #fff; }
+.sidebar-link.active { background: rgba(157,29,34,0.18); color: #fff; }
+.sidebar-link i { width: 18px; text-align: center; font-size: 14px; }
+
+/* ── 13. 모바일 반응형 개선 ── */
+@media (max-width: 768px) {
+  .page-header { padding: 88px 0 40px; }
+  .page-header h1 { font-size: 22px; }
+  .booking-summary-card { position: static; }
+  .confirm-total-price { font-size: 22px; }
+  .stats-grid { grid-template-columns: 1fr 1fr !important; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr !important; }
+  .booking-step { padding: 20px 16px; }
+}
+
+/* ── 14. 부드러운 스크롤 애니메이션 ── */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+.fa-spin {
+  animation: spin 0.8s linear infinite !important;
+  display: inline-block;
+}

@@ -96,7 +96,7 @@ async function authFetch(url, options = {}) {
   }
 })();
 
-// ── Nav scroll ──
+// ── Nav scroll + Auth 상태 반영 (E-2) ──
 (function initNavbar() {
   const nav = document.getElementById('navbar');
   if (!nav) return;
@@ -106,14 +106,21 @@ async function authFetch(url, options = {}) {
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  // Show/hide auth nav items
-  const token = getToken();
-  const user  = getUser();
-  const navAuth = document.getElementById('navAuth');
-  const navUser = document.getElementById('navUser');
+  const token    = getToken();
+  const user     = getUser();
+  const navAuth  = document.getElementById('navAuth');
+  const navUser  = document.getElementById('navUser');
+  const navAdmin = document.getElementById('navAdmin');
   if (token && user) {
-    if (navAuth) navAuth.style.display = 'none';
-    if (navUser) navUser.style.display = 'block';
+    if (navAuth)  navAuth.style.display  = 'none';
+    if (navUser)  navUser.style.display  = 'block';
+    if (navAdmin) navAdmin.style.display = user.role === 'admin' ? 'block' : 'none';
+    const userLink = navUser?.querySelector('a');
+    if (userLink && user.name) {
+      userLink.innerHTML = `<i class="fas fa-user-circle" style="margin-right:5px;font-size:13px"></i>${user.name}`;
+    }
+  } else {
+    if (navAdmin) navAdmin.style.display = 'none';
   }
 })();
 
@@ -133,7 +140,7 @@ function closeMenu() {
 window.addEventListener('load', () => {
   const overlay = document.getElementById('loadingOverlay');
   if (overlay) {
-    setTimeout(() => overlay.classList.add('hidden'), 400);
+    setTimeout(() => overlay.classList.add('hidden'), 200);
   }
 });
 
@@ -267,7 +274,7 @@ function showToast(msg, type = '') {
   t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 
-// ── Nav scroll ──
+// ── Nav scroll + Auth 상태 반영 (E-2) ──
 (function initNavbar() {
   const nav = document.getElementById('navbar');
   if (!nav) return;
@@ -277,14 +284,21 @@ function showToast(msg, type = '') {
   };
   window.addEventListener('scroll', onScroll, { passive: true });
   onScroll();
-  // Show/hide auth nav items
-  const token = getToken();
-  const user  = getUser();
-  const navAuth = document.getElementById('navAuth');
-  const navUser = document.getElementById('navUser');
+  const token    = getToken();
+  const user     = getUser();
+  const navAuth  = document.getElementById('navAuth');
+  const navUser  = document.getElementById('navUser');
+  const navAdmin = document.getElementById('navAdmin');
   if (token && user) {
-    if (navAuth) navAuth.style.display = 'none';
-    if (navUser) navUser.style.display = 'block';
+    if (navAuth)  navAuth.style.display  = 'none';
+    if (navUser)  navUser.style.display  = 'block';
+    if (navAdmin) navAdmin.style.display = user.role === 'admin' ? 'block' : 'none';
+    const userLink = navUser?.querySelector('a');
+    if (userLink && user.name) {
+      userLink.innerHTML = `<i class="fas fa-user-circle" style="margin-right:5px;font-size:13px"></i>${user.name}`;
+    }
+  } else {
+    if (navAdmin) navAdmin.style.display = 'none';
   }
 })();
 
@@ -304,7 +318,7 @@ function closeMenu() {
 window.addEventListener('load', () => {
   const overlay = document.getElementById('loadingOverlay');
   if (overlay) {
-    setTimeout(() => overlay.classList.add('hidden'), 400);
+    setTimeout(() => overlay.classList.add('hidden'), 200);
   }
 });
 

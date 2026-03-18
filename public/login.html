@@ -4,11 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>로그인 | HYUNDAI YACHT CARE</title>
+  <!-- 폰트 preconnect (E-3: 로딩 최적화) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet"></noscript>
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
   <style>
+    /* ── E-3: Critical inline styles for instant layout ── */
+    body { margin:0; background:#fff; font-family:'Noto Sans KR','Montserrat',sans-serif; }
+
     .auth-split {
       min-height: 100vh;
       display: grid;
@@ -19,8 +25,7 @@
       .auth-brand { display: none; }
     }
     .auth-brand {
-      background:
-        linear-gradient(170deg, #001428 0%, #002D56 40%, #0a3d6b 70%, #10263C 100%);
+      background: linear-gradient(170deg, #001428 0%, #002D56 40%, #0a3d6b 70%, #10263C 100%);
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -40,10 +45,7 @@
       position:absolute; inset:0;
       background: radial-gradient(ellipse 60% 60% at 60% 40%, rgba(157,29,34,0.12), transparent);
     }
-    .auth-brand-content { position:relative; z-index:1; text-align:center; }    .auth-brand-logo {
-      display:flex; align-items:center; gap:14px; justify-content:center;
-      margin-bottom:48px;
-    }
+    .auth-brand-content { position:relative; z-index:1; text-align:center; }
     .auth-brand-title {
       font-size:clamp(28px,3vw,38px); font-weight:700; color:#fff;
       line-height:1.3; margin-bottom:16px; letter-spacing:-0.02em;
@@ -52,15 +54,27 @@
       font-size:16px; color:rgba(255,255,255,0.65); line-height:1.7;
       max-width:380px; margin:0 auto 48px;
     }
-    .auth-brand-stats {
-      display:flex; gap:40px; justify-content:center;
-    }
+    .auth-brand-stats { display:flex; gap:40px; justify-content:center; }
     .auth-brand-stat { text-align:center; }
     .auth-brand-stat-num {
       font-family:'Montserrat',sans-serif; font-size:26px; font-weight:700;
-      color:var(--brand-red); line-height:1; margin-bottom:4px;
+      color:#9D1D22; line-height:1; margin-bottom:4px;
     }
     .auth-brand-stat-label { font-size:12px; color:rgba(255,255,255,0.5); }
+
+    /* ── 왼쪽 패널 추가 장식 ── */
+    .auth-brand-features {
+      margin-top: 48px; display: flex; flex-direction: column; gap: 14px;
+    }
+    .auth-brand-feat {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 18px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      color: rgba(255,255,255,0.85); font-size: 14px;
+    }
+    .auth-brand-feat i { color: #9D1D22; font-size: 16px; width: 20px; text-align: center; }
 
     .auth-form-side {
       display:flex; align-items:center; justify-content:center;
@@ -68,16 +82,86 @@
       background: var(--white);
       overflow-y: auto;
     }
-    .auth-form-inner {
-      width: 100%; max-width: 420px;
-    }
-    .auth-form-logo {
-      display:flex; align-items:center; gap:10px;
-      margin-bottom:40px;
-      text-decoration:none;
-    }
+    .auth-form-inner { width: 100%; max-width: 420px; }
     .auth-form-title { font-size:28px; font-weight:700; color:var(--navy); margin-bottom:6px; letter-spacing:-0.01em; }
     .auth-form-sub   { font-size:15px; color:var(--text-medium); margin-bottom:32px; }
+
+    /* ── E-1: 데모 계정 카드 (원클릭) ── */
+    .demo-accounts {
+      margin: 20px 0 0;
+      border: 1.5px solid var(--bg-medium);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+    }
+    .demo-accounts-header {
+      padding: 10px 16px;
+      background: var(--bg-light);
+      font-size: 12px; font-weight: 700;
+      color: var(--text-medium);
+      letter-spacing: .05em; text-transform: uppercase;
+      display: flex; align-items: center; gap: 6px;
+      border-bottom: 1px solid var(--bg-medium);
+    }
+    .demo-accounts-header i { color: var(--brand-red); }
+    .demo-account-btn {
+      width: 100%;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px;
+      background: none; border: none;
+      border-bottom: 1px solid var(--bg-medium);
+      cursor: pointer;
+      text-align: left;
+      transition: background 0.2s ease;
+    }
+    .demo-account-btn:last-child { border-bottom: none; }
+    .demo-account-btn:hover { background: var(--bg-light); }
+    .demo-account-btn:active { background: var(--bg-medium); }
+    .demo-account-left { display: flex; align-items: center; gap: 10px; }
+    .demo-account-badge {
+      padding: 3px 8px; border-radius: 20px;
+      font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    }
+    .demo-account-badge.admin {
+      background: rgba(0,45,86,0.1); color: var(--navy);
+    }
+    .demo-account-badge.customer {
+      background: rgba(157,29,34,0.1); color: var(--brand-red);
+    }
+    .demo-account-info { font-size: 13px; color: var(--text-dark); line-height: 1.4; }
+    .demo-account-info small { display: block; font-size: 11px; color: var(--text-light); margin-top: 1px; }
+    .demo-account-cta {
+      font-size: 11px; font-weight: 600; color: var(--navy);
+      display: flex; align-items: center; gap: 4px;
+      white-space: nowrap;
+      opacity: 0; transition: opacity 0.2s;
+    }
+    .demo-account-btn:hover .demo-account-cta { opacity: 1; }
+
+    /* ── 관리자 접근 안내 배너 ── */
+    .admin-hint {
+      margin-top: 14px;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(0,45,86,0.06) 0%, rgba(0,45,86,0.03) 100%);
+      border: 1px solid rgba(0,45,86,0.15);
+      border-radius: var(--radius-sm);
+      font-size: 12px; color: var(--text-medium);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .admin-hint i { color: var(--navy); font-size: 13px; margin-top: 1px; flex-shrink: 0; }
+
+    /* ── 로그인 버튼 강화 ── */
+    .login-submit-btn {
+      margin-top: 8px; height: 56px; font-size: 15px; font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    /* ── 소셜 로그인 구분선 ── */
+    .auth-divider {
+      border: none; border-top: 1px solid var(--bg-medium);
+      margin: 24px 0; position: relative;
+    }
+    .auth-footer { font-size: 14px; color: var(--text-medium); text-align: center; margin-top: 16px; }
+    .auth-footer a { color: var(--brand-red); font-weight: 600; }
   </style>
 </head>
 <body>
@@ -86,12 +170,12 @@
   <!-- Left: Brand panel -->
   <div class="auth-brand">
     <div class="auth-brand-content">
-      <div class="auth-brand-logo" style="display:flex;flex-direction:column;gap:4px;margin-bottom:32px;">
-        <div style="font-family:'Montserrat',sans-serif;font-size:28px;font-weight:700;letter-spacing:-.01em;color:#fff">Hyundai Yachts</div>
+      <div style="display:flex;flex-direction:column;gap:4px;margin-bottom:36px;text-align:center;">
+        <div style="font-family:'Montserrat',sans-serif;font-size:30px;font-weight:700;letter-spacing:-.01em;color:#fff">Hyundai Yachts</div>
         <div style="font-family:'Montserrat',sans-serif;font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:rgba(192,54,61,0.9)">YOUR DREAM WE MAKE</div>
       </div>
       <h2 class="auth-brand-title">요트의 가치를<br><span style="color:rgba(192,54,61,0.9)">완벽하게</span> 보존합니다</h2>
-      <p class="auth-brand-sub">현대요트 케어서비스에 로그인하여 프리미엄 요트 관리 서비스를 이용하세요.</p>
+      <p class="auth-brand-sub">현대요트 케어서비스에 로그인하여<br>프리미엄 요트 관리 서비스를 이용하세요.</p>
       <div class="auth-brand-stats">
         <div class="auth-brand-stat">
           <div class="auth-brand-stat-num">850+</div>
@@ -106,6 +190,25 @@
           <div class="auth-brand-stat-label">서비스 연혁</div>
         </div>
       </div>
+      <!-- 서비스 특징 목록 -->
+      <div class="auth-brand-features">
+        <div class="auth-brand-feat">
+          <i class="fas fa-calendar-check"></i>
+          <span>24시간 온라인 예약 시스템</span>
+        </div>
+        <div class="auth-brand-feat">
+          <i class="fas fa-history"></i>
+          <span>서비스 이력 실시간 관리</span>
+        </div>
+        <div class="auth-brand-feat">
+          <i class="fas fa-bell"></i>
+          <span>정기 점검 알림 서비스</span>
+        </div>
+        <div class="auth-brand-feat">
+          <i class="fas fa-shield-alt"></i>
+          <span>7일 품질 보증 서비스</span>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -113,7 +216,7 @@
   <div class="auth-form-side">
     <div class="auth-form-inner">
 
-      <a href="/" class="auth-form-logo" style="display:flex;flex-direction:column;gap:3px;text-decoration:none;">
+      <a href="/" style="display:flex;flex-direction:column;gap:3px;text-decoration:none;margin-bottom:36px;">
         <div style="font-family:'Montserrat',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.01em;color:var(--brand-dark)">Hyundai Yachts</div>
         <div style="font-family:'Montserrat',sans-serif;font-size:8px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--brand-red)">YOUR DREAM WE MAKE</div>
       </a>
@@ -123,7 +226,7 @@
 
       <div id="loginAlert" class="alert"></div>
 
-      <form onsubmit="handleLogin(event)">
+      <form onsubmit="handleLogin(event)" id="loginForm">
         <div class="form-group">
           <label class="form-label">이메일 <span class="required">*</span></label>
           <input type="email" class="form-input" id="email" placeholder="example@email.com" required autocomplete="email">
@@ -131,26 +234,54 @@
         <div class="form-group">
           <label class="form-label">비밀번호 <span class="required">*</span></label>
           <div style="position:relative">
-            <input type="password" class="form-input" id="password" placeholder="비밀번호 입력" required autocomplete="current-password">
-            <button type="button" onclick="togglePw()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:14px;background:none;border:none;cursor:pointer">
+            <input type="password" class="form-input" id="password" placeholder="비밀번호 입력" required autocomplete="current-password" style="padding-right:46px">
+            <button type="button" onclick="togglePw()" style="position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--text-light);font-size:14px;background:none;border:none;cursor:pointer;padding:4px">
               <i class="fas fa-eye" id="pwIcon"></i>
             </button>
           </div>
         </div>
-        <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px;height:56px;font-size:15px" id="loginBtn">
+        <button type="submit" class="btn btn-primary btn-full login-submit-btn" id="loginBtn">
           <i class="fas fa-sign-in-alt"></i>&nbsp; 로그인
         </button>
       </form>
 
-      <hr class="auth-divider">
-
-      <div class="demo-box">
-        <strong><i class="fas fa-lock" style="color:var(--brand-red);margin-right:6px"></i>데모 계정</strong>
-        <div>관리자: admin@hyundaiyacht.com / Admin1234!</div>
-        <div style="margin-top:4px">고객: demo@hyundaiyacht.com / Demo1234!</div>
+      <!-- E-1: 데모 계정 원클릭 입력 -->
+      <div class="demo-accounts">
+        <div class="demo-accounts-header">
+          <i class="fas fa-user-circle"></i>
+          체험용 데모 계정 (클릭하면 자동 입력됩니다)
+        </div>
+        <button class="demo-account-btn" onclick="fillDemo('admin@hyundaiyacht.com','Admin1234!')">
+          <div class="demo-account-left">
+            <span class="demo-account-badge admin">관리자</span>
+            <div class="demo-account-info">
+              admin@hyundaiyacht.com
+              <small>예약 관리 · 고객 관리 · 통계 대시보드 접근 가능</small>
+            </div>
+          </div>
+          <span class="demo-account-cta"><i class="fas fa-arrow-right"></i> 입력</span>
+        </button>
+        <button class="demo-account-btn" onclick="fillDemo('demo@hyundaiyacht.com','Demo1234!')">
+          <div class="demo-account-left">
+            <span class="demo-account-badge customer">고객</span>
+            <div class="demo-account-info">
+              demo@hyundaiyacht.com
+              <small>예약 · 서비스 이력 · 정기점검 · 프로필 관리</small>
+            </div>
+          </div>
+          <span class="demo-account-cta"><i class="fas fa-arrow-right"></i> 입력</span>
+        </button>
       </div>
 
-      <div class="auth-footer" style="margin-top:24px">
+      <!-- 관리자 페이지 안내 -->
+      <div class="admin-hint">
+        <i class="fas fa-info-circle"></i>
+        <span>관리자 계정으로 로그인하면 <strong>관리자 대시보드</strong>(/admin.html)로 자동 이동됩니다. 고객 계정은 마이페이지(/dashboard.html)로 이동합니다.</span>
+      </div>
+
+      <hr class="auth-divider">
+
+      <div class="auth-footer">
         계정이 없으신가요? <a href="/register.html">회원가입</a>
         &nbsp;·&nbsp; <a href="/">홈으로</a>
       </div>
@@ -159,6 +290,43 @@
 </div>
 
 <script>
+// ── E-1: 데모 계정 자동 입력 ──
+function fillDemo(email, pw) {
+  const emailEl = document.getElementById('email');
+  const pwEl    = document.getElementById('password');
+  // 타이핑 효과로 자연스럽게 입력
+  emailEl.value = '';
+  pwEl.value    = '';
+  emailEl.focus();
+
+  let i = 0;
+  const typeEmail = () => {
+    if (i < email.length) {
+      emailEl.value += email[i++];
+      setTimeout(typeEmail, 18);
+    } else {
+      let j = 0;
+      const typePw = () => {
+        if (j < pw.length) {
+          pwEl.value += pw[j++];
+          setTimeout(typePw, 22);
+        } else {
+          // 입력 완료 후 버튼 강조
+          const btn = document.getElementById('loginBtn');
+          btn.style.transform = 'scale(1.02)';
+          btn.style.boxShadow = '0 0 0 4px rgba(157,29,34,0.2)';
+          setTimeout(() => {
+            btn.style.transform = '';
+            btn.style.boxShadow = '';
+          }, 800);
+        }
+      };
+      typePw();
+    }
+  };
+  typeEmail();
+}
+
 function togglePw() {
   const pw = document.getElementById('password');
   const icon = document.getElementById('pwIcon');
@@ -168,34 +336,49 @@ function togglePw() {
 
 async function handleLogin(e) {
   e.preventDefault();
-  const btn = document.getElementById('loginBtn');
+  const btn     = document.getElementById('loginBtn');
   const alertEl = document.getElementById('loginAlert');
   alertEl.className = 'alert';
   alertEl.style.display = 'none';
-  btn.disabled = true;
+  btn.disabled  = true;
   btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>&nbsp; 로그인 중...';
   try {
     const res = await fetch('/api/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: document.getElementById('email').value,
+        email:    document.getElementById('email').value.trim(),
         password: document.getElementById('password').value
       })
     });
     const data = await res.json();
     if (data.success) {
       localStorage.setItem('yachtToken', data.token);
-      localStorage.setItem('yachtUser', JSON.stringify(data.user));
+      localStorage.setItem('yachtUser',  JSON.stringify(data.user));
       if (data.refresh_token) localStorage.setItem('yachtRefreshToken', data.refresh_token);
-      if (data.user.role === 'admin') { location.href = '/admin.html'; }
-      else { location.href = new URLSearchParams(location.search).get('redirect') || '/dashboard.html'; }
-    } else { throw new Error(data.error || '로그인에 실패했습니다.'); }
+
+      btn.innerHTML = '<i class="fas fa-check"></i>&nbsp; 로그인 성공!';
+      btn.style.background = 'linear-gradient(135deg,#16a34a,#15803d)';
+
+      setTimeout(() => {
+        if (data.user.role === 'admin') {
+          location.href = '/admin.html';
+        } else {
+          location.href = new URLSearchParams(location.search).get('redirect') || '/dashboard.html';
+        }
+      }, 500);
+    } else {
+      throw new Error(data.error || '로그인에 실패했습니다.');
+    }
   } catch(err) {
     alertEl.className = 'alert error show';
     alertEl.style.display = 'block';
     alertEl.textContent = err.message || '로그인에 실패했습니다.';
-    btn.disabled = false;
+    // 폼 흔들기 애니메이션
+    const form = document.getElementById('loginForm');
+    form.style.animation = 'shake 0.4s ease';
+    setTimeout(() => form.style.animation = '', 400);
+    btn.disabled  = false;
     btn.innerHTML = '<i class="fas fa-sign-in-alt"></i>&nbsp; 로그인';
   }
 }
@@ -203,7 +386,19 @@ async function handleLogin(e) {
 // 이미 로그인된 경우 리디렉션
 const token = localStorage.getItem('yachtToken');
 const user  = JSON.parse(localStorage.getItem('yachtUser') || 'null');
-if (token && user) { location.href = user.role === 'admin' ? '/admin.html' : '/dashboard.html'; }
+if (token && user) {
+  location.href = user.role === 'admin' ? '/admin.html' : '/dashboard.html';
+}
 </script>
+
+<style>
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20%      { transform: translateX(-8px); }
+  40%      { transform: translateX(8px); }
+  60%      { transform: translateX(-6px); }
+  80%      { transform: translateX(6px); }
+}
+</style>
 </body>
 </html>

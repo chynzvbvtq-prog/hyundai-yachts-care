@@ -241,10 +241,31 @@ app.post('/api/init-db', async (c) => {
 // 정적 파일 서빙
 app.use('/static/*', serveStatic({ root: './' }))
 
+// ── 모든 정적 자산 서빙 (ASSETS binding 우선, 없으면 serveStatic) ──
+// HTML 페이지들을 ASSETS에서 직접 서빙
+app.get('*.html', async (c) => {
+  const assets = (c.env as any).ASSETS
+  if (assets) {
+    const res = await assets.fetch(c.req.raw)
+    if (res.status !== 404) return res
+  }
+  // fallback: serveStatic
+  const path = c.req.path.replace(/^\//, '')
+  const serve = serveStatic({ path: `./${path}` })
+  return serve(c, async () => c.text('Not Found', 404))
+})
+
 // SPA 폴백 - index.html 반환
 app.get('*', async (c) => {
-  const html = await c.env.ASSETS?.fetch(new Request(new URL('/', c.req.url)))
-  if (html) return html
+  const assets = (c.env as any).ASSETS
+  if (assets) {
+    // 정확한 경로로 먼저 시도
+    const exactRes = await assets.fetch(c.req.raw)
+    if (exactRes.status !== 404) return exactRes
+    // SPA fallback: index.html
+    const html = await assets.fetch(new Request(new URL('/', c.req.url)))
+    if (html && html.status !== 404) return html
+  }
   return c.text('Not Found', 404)
 })
 
