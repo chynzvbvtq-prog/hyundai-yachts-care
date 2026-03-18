@@ -136,7 +136,27 @@
 
       <!-- Overview Tab -->
       <div id="content-overview">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:32px" id="dashGreeting">안녕하세요!</p>
+        <p style="color:var(--text-medium);font-size:15px;margin-bottom:20px" id="dashGreeting">안녕하세요!</p>
+
+        <!-- C-5: 온보딩 배너 (요트 정보 미입력 시) -->
+        <div id="onboardingBanner" style="display:none;background:linear-gradient(135deg,var(--navy) 0%,#0a3561 100%);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div style="display:flex;align-items:center;gap:14px">
+            <div style="width:44px;height:44px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--brand-red-light);flex-shrink:0">
+              <i class="fas fa-ship"></i>
+            </div>
+            <div>
+              <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px">요트 정보를 등록하고 더 빠르게 예약하세요!</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.6)">프로필에 요트 정보를 저장하면 예약 시 자동으로 입력됩니다.</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;flex-shrink:0">
+            <button onclick="showTab('profile')" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 지금 등록하기</button>
+            <button onclick="document.getElementById('onboardingBanner').style.display='none'" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:none;cursor:pointer;padding:0 10px;border-radius:var(--radius-sm);font-size:16px">✕</button>
+          </div>
+        </div>
+
+        <!-- C-3: 예약 상태 알림 배너 -->
+        <div id="bookingAlertBanner" style="display:none;margin-bottom:20px"></div>
 
         <div class="stats-grid">
           <div class="stat-card">
@@ -344,6 +364,61 @@
   </div>
 </div>
 
+<!-- ══ C-4: 예약 취소 확인 모달 ══ -->
+<div class="modal-overlay" id="modalCancel" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal" onclick="event.stopPropagation()" style="position:relative;max-width:480px">
+    <button class="modal-close" onclick="document.getElementById('modalCancel').classList.remove('open')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-calendar-times" style="color:#c53030;margin-right:8px"></i>예약 취소</div>
+
+    <!-- 예약 정보 요약 -->
+    <div style="background:var(--bg-light);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;font-size:14px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="color:var(--text-medium)">예약 번호</span>
+        <span style="font-family:'Montserrat',sans-serif;font-weight:700;color:var(--navy)" id="cancelModalNum">-</span>
+      </div>
+      <div style="display:flex;justify-content:space-between">
+        <span style="color:var(--text-medium)">예약 날짜</span>
+        <span style="font-weight:600;color:var(--navy)" id="cancelModalDate">-</span>
+      </div>
+    </div>
+
+    <!-- 48시간 정책 경고 -->
+    <div id="cancelPolicyMsg" style="display:none;background:rgba(245,158,11,0.08);border:1.5px solid rgba(245,158,11,0.25);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;font-size:13px;color:#92400e;line-height:1.6;align-items:flex-start"></div>
+
+    <!-- 취소 사유 선택 -->
+    <div class="form-group" style="margin-bottom:16px">
+      <label class="form-label">취소 사유 <span class="required">*</span></label>
+      <select class="form-select" id="cancelReason" onchange="onCancelReasonChange()">
+        <option value="">사유를 선택해주세요</option>
+        <option value="schedule">일정 변경</option>
+        <option value="duplicate">중복 예약</option>
+        <option value="yacht">요트 상태 문제</option>
+        <option value="price">요금 문제</option>
+        <option value="other">기타</option>
+      </select>
+    </div>
+
+    <div id="cancelReasonOther" style="display:none;margin-bottom:16px">
+      <label class="form-label">직접 입력</label>
+      <textarea class="form-textarea" id="cancelOtherText" rows="2" placeholder="취소 사유를 입력해주세요"></textarea>
+    </div>
+
+    <p style="font-size:12px;color:var(--text-light);margin-bottom:20px">
+      <i class="fas fa-info-circle" style="color:var(--brand-red);margin-right:4px"></i>
+      취소 후에는 되돌릴 수 없습니다. 신중하게 결정해주세요.
+    </p>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end">
+      <button class="btn btn-outline-navy" onclick="document.getElementById('modalCancel').classList.remove('open')">
+        돌아가기
+      </button>
+      <button class="btn" style="background:#dc2626;color:#fff;border:none" id="cancelConfirmBtn" onclick="confirmCancelBooking()">
+        <i class="fas fa-times"></i> 예약 취소 확인
+      </button>
+    </div>
+  </div>
+</div>
+
 <script>
 let currentUser = null;
 let allBookings = [];
@@ -355,6 +430,7 @@ window.addEventListener('load', async () => {
   if (!currentUser) { location.href = '/login.html'; return; }
   updateSidebar();
   await loadDashboardData();
+  checkOnboardingBanner();
 });
 
 function updateSidebar() {
@@ -404,8 +480,85 @@ async function loadDashboardData() {
 
 function renderStats() {
   document.getElementById('statTotal').textContent = allBookings.length;
-  document.getElementById('statPending').textContent = allBookings.filter(b=>b.status==='pending'||b.status==='confirmed').length;
+  const activeCount = allBookings.filter(b=>b.status==='pending'||b.status==='confirmed').length;
+  document.getElementById('statPending').textContent = activeCount;
   document.getElementById('statCompleted').textContent = allBookings.filter(b=>b.status==='completed').length;
+  renderBookingAlertBanner(activeCount);
+}
+
+function renderBookingAlertBanner(activeCount) {
+  const banner = document.getElementById('bookingAlertBanner');
+  const pending = allBookings.filter(b => b.status === 'pending');
+  const confirmed = allBookings.filter(b => b.status === 'confirmed');
+
+  // 다가오는 예약 (3일 이내)
+  const today = new Date(); today.setHours(0,0,0,0);
+  const soon = allBookings.filter(b => {
+    if (b.status !== 'confirmed') return false;
+    const d = new Date(b.scheduled_date);
+    const diff = Math.ceil((d - today) / (1000*60*60*24));
+    return diff >= 0 && diff <= 3;
+  });
+
+  const items = [];
+
+  if (soon.length > 0) {
+    const s = soon[0];
+    const d = new Date(s.scheduled_date);
+    const diff = Math.ceil((d - today) / (1000*60*60*24));
+    const label = diff === 0 ? '오늘' : diff === 1 ? '내일' : diff + '일 후';
+    items.push(`
+      <div style="background:rgba(37,99,235,0.08);border:1.5px solid rgba(37,99,235,0.25);border-radius:var(--radius-md);padding:14px 18px;display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;background:rgba(37,99,235,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d4ed8;flex-shrink:0"><i class="fas fa-calendar-check"></i></div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:#1d4ed8"><i class="fas fa-bell" style="margin-right:5px"></i>${label} 예약이 있습니다</div>
+          <div style="font-size:12px;color:var(--text-medium);margin-top:2px">${s.package_name||'서비스'} · ${s.scheduled_date} ${s.scheduled_time} · ${s.yacht_name}</div>
+        </div>
+        <button onclick="showTab('bookings')" class="btn btn-sm" style="background:rgba(37,99,235,0.15);color:#1d4ed8;border:none;cursor:pointer;white-space:nowrap">예약 보기</button>
+      </div>
+    `);
+  }
+
+  if (pending.length > 0) {
+    items.push(`
+      <div style="background:rgba(245,158,11,0.08);border:1.5px solid rgba(245,158,11,0.25);border-radius:var(--radius-md);padding:14px 18px;display:flex;align-items:center;gap:12px">
+        <div style="width:36px;height:36px;background:rgba(245,158,11,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#b45309;flex-shrink:0"><i class="fas fa-clock"></i></div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:#b45309">담당자 확인 대기 중인 예약 ${pending.length}건</div>
+          <div style="font-size:12px;color:var(--text-medium);margin-top:2px">접수 후 24시간 이내 담당자가 연락드립니다.</div>
+        </div>
+        <button onclick="showTab('bookings')" class="btn btn-sm" style="background:rgba(245,158,11,0.15);color:#b45309;border:none;cursor:pointer;white-space:nowrap">확인하기</button>
+      </div>
+    `);
+  }
+
+  if (items.length > 0) {
+    banner.style.display = 'flex';
+    banner.style.flexDirection = 'column';
+    banner.style.gap = '10px';
+    banner.innerHTML = items.join('');
+  } else {
+    banner.style.display = 'none';
+  }
+}
+
+function checkOnboardingBanner() {
+  const u = currentUser;
+  if (!u) return;
+  const needsOnboarding = !u.yacht_name;
+  const dismissed = sessionStorage.getItem('onboardingDismissed');
+  if (needsOnboarding && !dismissed) {
+    document.getElementById('onboardingBanner').style.display = 'flex';
+    // 닫기 버튼에 sessionStorage 저장
+    const banner = document.getElementById('onboardingBanner');
+    const closeBtn = banner.querySelector('button:last-child');
+    if (closeBtn) {
+      closeBtn.onclick = () => {
+        banner.style.display = 'none';
+        sessionStorage.setItem('onboardingDismissed', '1');
+      };
+    }
+  }
 }
 
 function renderRecentBookings() {
@@ -472,20 +625,66 @@ function renderAllBookings() {
       <td>${b.scheduled_date} ${b.scheduled_time}</td>
       <td>${statusBadge(b.status)}</td>
       <td style="font-family:Montserrat;font-weight:700">${Number(b.total_price).toLocaleString()}원</td>
-      <td>${b.status==='pending'?`<button class="btn btn-sm" style="color:#c53030;border:1.5px solid #c53030;height:34px;padding:0 14px;border-radius:var(--radius-sm)" onclick="cancelBooking(${b.id})">취소</button>`:'-'}</td>
+      <td>${b.status==='pending'?`<button class="btn btn-sm" style="color:#c53030;border:1.5px solid #c53030;height:34px;padding:0 14px;border-radius:var(--radius-sm)" onclick="openCancelModal(${b.id},'${b.booking_number}','${b.scheduled_date}')">취소</button>`:'-'}</td>
     </tr>
   `).join('');
 }
 
-async function cancelBooking(id) {
-  if (!confirm('예약을 취소하시겠습니까?')) return;
+// C-4: 예약 취소 모달
+let _cancelTargetId = null;
+
+function openCancelModal(id, bookingNum, scheduledDate) {
+  _cancelTargetId = id;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const svcDate = new Date(scheduledDate);
+  const diffHours = (svcDate - today) / (1000*60*60);
+  const canFreeCancel = diffHours >= 48;
+
+  document.getElementById('cancelModalNum').textContent = bookingNum;
+  document.getElementById('cancelModalDate').textContent = scheduledDate;
+  const policyEl = document.getElementById('cancelPolicyMsg');
+  if (canFreeCancel) {
+    policyEl.style.display = 'none';
+  } else {
+    policyEl.style.display = 'flex';
+    policyEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#b45309;margin-right:8px;flex-shrink:0"></i>
+      서비스 48시간 이내 취소는 취소 수수료가 발생할 수 있습니다. 자세한 사항은 담당자에게 문의하세요.`;
+  }
+  // 사유 초기화
+  document.getElementById('cancelReason').value = '';
+  document.getElementById('cancelReasonOther').style.display = 'none';
+  document.getElementById('cancelOtherText').value = '';
+  document.getElementById('modalCancel').classList.add('open');
+}
+
+function onCancelReasonChange() {
+  const v = document.getElementById('cancelReason').value;
+  document.getElementById('cancelReasonOther').style.display = v === 'other' ? 'block' : 'none';
+}
+
+async function confirmCancelBooking() {
+  const id = _cancelTargetId;
+  if (!id) return;
+  const reason = document.getElementById('cancelReason').value;
+  if (!reason) { showToast('취소 사유를 선택해주세요.', 'error'); return; }
+  const otherText = document.getElementById('cancelOtherText').value;
+  const finalReason = reason === 'other' ? (otherText || '기타') : document.getElementById('cancelReason').options[document.getElementById('cancelReason').selectedIndex].text;
+
+  const btn = document.getElementById('cancelConfirmBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 처리 중...';
+
   const token = localStorage.getItem('yachtToken');
   try {
-    const res = await fetch('/api/bookings/'+id, {method:'DELETE',headers:{'Authorization':'Bearer '+token}});
+    const res = await fetch('/api/bookings/'+id, {method:'DELETE', headers:{'Authorization':'Bearer '+token}});
     const data = await res.json();
-    if (data.success) { showToast('예약이 취소되었습니다','success'); await loadDashboardData(); renderAllBookings(); }
-    else throw new Error(data.error);
-  } catch(e) { showToast(e.message,'error'); }
+    if (data.success) {
+      document.getElementById('modalCancel').classList.remove('open');
+      showToast('예약이 취소되었습니다', 'success');
+      await loadDashboardData();
+      renderAllBookings();
+    } else throw new Error(data.error);
+  } catch(e) { showToast(e.message, 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-times"></i> 예약 취소 확인'; }
 }
 
 function filterBookings() { renderAllBookings(); }
@@ -734,6 +933,7 @@ function showTab(tab) {
   document.getElementById('pageTitle').textContent = titles[tab]||tab;
   if (tab==='bookings') renderAllBookings();
   if (tab==='history') loadHistory();
+  if (tab==='overview') checkOnboardingBanner();
 }
 
 function statusBadge(s) {
