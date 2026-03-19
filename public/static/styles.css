@@ -418,7 +418,8 @@ section { padding: 120px 0; }
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.25em;
-  color: var(--brand-red-light); */
+  color: var(--brand-red-light);
+}
 .toast {
   position: fixed;
   bottom: 32px; left: 50%;
