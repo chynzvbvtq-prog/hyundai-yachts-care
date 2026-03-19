@@ -575,6 +575,29 @@
       background: rgba(157,29,34,0.03) !important;
       transform: translateY(-3px);
     }
+
+    /* ── Navbar 겹침 방지: page-header 상단 패딩을 navbar 높이(88px) + 충분한 여유로 확보 ── */
+    .page-header {
+      padding-top: 130px !important;   /* navbar 88px + 여유 42px */
+      padding-bottom: 60px !important;
+    }
+
+    /* ── booking 페이지 navbar: page-header 위에서 명확히 구분 ── */
+    #navbar {
+      background: rgba(0, 20, 40, 0.96) !important;
+      backdrop-filter: blur(16px) !important;
+      -webkit-backdrop-filter: blur(16px) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35) !important;
+    }
+    /* navbar 내 텍스트 색상 - 어두운 배경에 맞게 흰색으로 */
+    #navbar .nav-link   { color: rgba(255,255,255,0.85) !important; }
+    #navbar .nav-link:hover { color: #fff !important; }
+    #navbar .btn-nav    { border-color: rgba(255,255,255,0.35) !important; color: #fff !important; }
+    #navbar .btn-nav:hover  { background: rgba(255,255,255,0.12) !important; }
+    #navbar .logo-hyundai   { color: #fff !important; }
+    #navbar .logo-yacht     { color: rgba(239,139,142,0.9) !important; }
+    #navbar .hamburger span { background: #fff !important; }
   </style>
 </head>
 <body>
