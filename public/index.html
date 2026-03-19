@@ -1437,8 +1437,21 @@ window.updateCalc = function() {
     breakdown.innerHTML = rows;
   }
 
-  // Update book button link
-  if (bookBtn) bookBtn.href = `/booking.html?package=${pkg}`;
+  // Update book button link — pass ALL calculator selections as URL params
+  if (bookBtn) {
+    const params = new URLSearchParams({ package: pkg });
+    if (len)  params.set('length', len);
+    if (loc)  params.set('location', loc);
+    // Collect checked extras: encode as comma-separated values
+    const extraKeys = [];
+    document.querySelectorAll('.calc-extra-check:checked').forEach(cb => {
+      const label = cb.closest('label')?.textContent.trim().split('+')[0].trim();
+      // encode by value so booking page can reconstruct
+      extraKeys.push(cb.value);
+    });
+    if (extraKeys.length) params.set('extras', extraKeys.join(','));
+    bookBtn.href = `/booking.html?${params.toString()}`;
+  }
 
   // Sync card UI
   document.querySelectorAll('.calc-pkg-card').forEach(c => {

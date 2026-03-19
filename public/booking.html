@@ -1164,16 +1164,78 @@ const EXTRA = {
   visit:      { label: '현장 방문 서비스',price: 50000  }
 };
 
-// ── URL package preselect ──
-const urlPkg = new URLSearchParams(location.search).get('package');
-if (urlPkg && PKG[urlPkg]) {
-  S.pkg = urlPkg;
-  setTimeout(() => {
-    const el = document.getElementById('pkg' + urlPkg.charAt(0).toUpperCase() + urlPkg.slice(1));
-    if (el) el.classList.add('selected');
-    updateSummary();
-  }, 0);
-}
+// ── URL preselect (calculator → booking page) ──
+(function applyCalcParams() {
+  const params = new URLSearchParams(location.search);
+
+  // 1) Package
+  const urlPkg = params.get('package');
+  if (urlPkg && PKG[urlPkg]) {
+    S.pkg = urlPkg;
+  }
+
+  // 2) Yacht length (ft)
+  const urlLen = parseInt(params.get('length'));
+  if (urlLen && urlLen > 0) {
+    S.yachtLength = urlLen;
+  }
+
+  // 3) Extras — encoded as comma-separated price values (100000,150000,80000)
+  //    Map price → EXTRA key
+  const priceToKey = { '100000': 'nano', '150000': 'underwater', '80000': 'interior' };
+  const urlExtras = params.get('extras');
+  if (urlExtras) {
+    urlExtras.split(',').forEach(val => {
+      const key = priceToKey[val.trim()];
+      if (key && EXTRA[key]) {
+        S.extras[key] = EXTRA[key].price;
+      }
+    });
+  }
+
+  // 4) Location surcharge → map to 'visit' extra
+  const urlLoc = parseInt(params.get('location'));
+  if (urlLoc === 50000 && EXTRA.visit) {
+    S.extras.visit = EXTRA.visit.price;
+  }
+
+  // Apply to UI after DOM is ready
+  if (urlPkg || urlLen || urlExtras || urlLoc) {
+    setTimeout(() => {
+      // Package UI
+      if (S.pkg) {
+        const idMap = { basic: 'pkgBasic', premium: 'pkgPremium', signature: 'pkgSignature' };
+        document.getElementById(idMap[S.pkg])?.classList.add('selected');
+        // activate next button
+        const hint = document.getElementById('pkgHint');
+        if (hint) hint.classList.remove('show');
+        const nextBtn = document.getElementById('step1NextBtn');
+        if (nextBtn) nextBtn.style.opacity = '1';
+      }
+
+      // Yacht length UI
+      if (S.yachtLength) {
+        const lenEl = document.getElementById('yachtLength');
+        if (lenEl) lenEl.value = S.yachtLength;
+      }
+
+      // Extras UI
+      const extraIdMap = { nano: 'exNano', underwater: 'exUnderwater', interior: 'exInterior', visit: 'exVisit' };
+      Object.keys(S.extras).forEach(key => {
+        const el = document.getElementById(extraIdMap[key]);
+        if (el) el.classList.add('selected');
+      });
+
+      updateSummary();
+
+      // Show a brief toast to inform the user
+      const count = [S.pkg ? 1 : 0, S.yachtLength ? 1 : 0, Object.keys(S.extras).length].reduce((a,b) => a+b, 0);
+      if (count > 0) {
+        toast(`✓ 견적 계산기 선택 내용이 자동 적용되었습니다`, 'success');
+      }
+    }, 0);
+  }
+})();
 
 // ── Package Select ──
 function selectPkg(pkg) {
