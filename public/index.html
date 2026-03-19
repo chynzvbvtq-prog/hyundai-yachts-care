@@ -403,28 +403,11 @@
       margin-top: 6px; letter-spacing:.02em;
     }
 
-    /* ── D-2: Package card selected state ── */
-    .package-card {
-      transition: var(--transition), outline 0.15s;
-      cursor: pointer;
-    }
-    .package-card.selected-pkg {
+    /* ── D-2: Package card selected state (pkg-tier 전용) ── */
+    .pkg-tier-card.selected-pkg {
       outline: 2.5px solid var(--brand-red);
       outline-offset: 3px;
       box-shadow: 0 0 0 6px rgba(157,29,34,0.08), var(--shadow-lg);
-    }
-    .package-card.selected-pkg .package-name {
-      color: var(--brand-red);
-    }
-    /* ── Package card ribbon for Signature ── */
-    .package-card-ribbon {
-      position: absolute; top: 16px; right: -26px;
-      background: var(--navy); color: #fff;
-      font-family:'Montserrat',sans-serif; font-size: 10px; font-weight:700;
-      letter-spacing:.12em; text-transform:uppercase;
-      padding: 5px 36px;
-      transform: rotate(45deg); transform-origin: top right;
-      pointer-events: none;
     }
 
     /* ── D-3: Stats Banner ── */
@@ -547,12 +530,6 @@
     }
     .section-reveal.visible {
       opacity: 1; transform: none;
-    }
-
-    /* ── Package card price pulse on hover ── */
-    .package-card:hover .package-price .price-amount {
-      color: var(--brand-red);
-      transition: color 0.2s;
     }
 
     /* ── Marina section heading color fix ── */
