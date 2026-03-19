@@ -2801,70 +2801,67 @@ img[loading="lazy"] {
 }
 
 /* ════════════════════════════════════════════════
-   🚨 EMERGENCY LAYOUT FIX — 응급 레이아웃 복구
-   ================================================
-   모든 페이지의 사이드바/메인 레이아웃 충돌 방지
-   중복 CSS 규칙 무력화 및 핵심 레이아웃 확정
+   레이아웃 확정 — 사이드바/메인 레이아웃 (대시보드 공통)
    ================================================ */
 
 /* ── 사이드바 + 메인 레이아웃 (대시보드/어드민 공통) ── */
 .dash-layout {
-  display: grid !important;
-  grid-template-columns: 260px 1fr !important;
-  min-height: 100vh !important;
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  min-height: 100vh;
 }
 .sidebar {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 260px !important;
-  height: 100vh !important;
-  background: var(--navy, #002D56) !important;
-  z-index: 100 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  overflow-y: auto !important;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 260px;
+  height: 100vh;
+  background: var(--navy, #002D56);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
 }
 .dash-main {
-  margin-left: 260px !important;
-  background: var(--bg-light, #F5F7FA) !important;
-  min-height: 100vh !important;
+  margin-left: 260px;
+  background: var(--bg-light, #F5F7FA);
+  min-height: 100vh;
 }
 .dash-content {
-  padding: 40px !important;
+  padding: 40px;
 }
 .dash-header {
-  background: #fff !important;
-  border-bottom: 1px solid var(--bg-medium, #E8ECF0) !important;
-  padding: 20px 40px !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: space-between !important;
-  position: sticky !important;
-  top: 0 !important;
-  z-index: 50 !important;
+  background: #fff;
+  border-bottom: 1px solid var(--bg-medium, #E8ECF0);
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
 /* ── 모바일: 960px 이하에서 사이드바 숨김 ── */
 @media (max-width: 960px) {
   .dash-layout {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
   .sidebar {
-    transform: translateX(-100%) !important;
-    transition: transform 0.3s ease !important;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
   }
   .sidebar.open {
-    transform: translateX(0) !important;
+    transform: translateX(0);
   }
   .dash-main {
-    margin-left: 0 !important;
+    margin-left: 0;
   }
   .dash-content {
-    padding: 20px !important;
+    padding: 20px;
   }
   .dash-header {
-    padding: 16px 20px !important;
+    padding: 16px 20px;
   }
 }
 
