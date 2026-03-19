@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>마이페이지 | HYUNDAI YACHT CARE</title>
-  <!-- E-3: 폰트 비동기 로딩 최적화 -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
@@ -12,243 +11,679 @@
   <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/static/styles.css">
   <style>
-    body { margin:0; background:var(--bg-light,#F5F7FA); }
-    /* ── 서비스 이력 카드 ── */
-    .history-card {
-      background: #fff;
-      border-radius: var(--radius-md);
-      border: 1.5px solid var(--bg-medium);
-      padding: 24px 28px;
-      margin-bottom: 16px;
-      transition: var(--transition);
-      cursor: pointer;
+    /* ─── Base ─── */
+    body { margin: 0; background: #F0F2F5; font-family: 'Noto Sans KR', sans-serif; }
+
+    /* ─── Layout ─── */
+    .my-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 100vh;
     }
-    .history-card:hover { border-color: var(--brand-red); box-shadow: var(--shadow-sm); }
-    .history-card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
-    .history-card-title { font-size: 16px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
-    .history-card-date { font-family: 'Montserrat', sans-serif; font-size: 12px; color: var(--text-light); }
-    .history-card-meta { display: flex; flex-wrap: wrap; gap: 16px; margin-bottom: 10px; }
-    .history-meta-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-medium); }
-    .history-meta-item i { color: var(--brand-red); width: 14px; }
-    .history-desc { font-size: 14px; color: var(--text-medium); line-height: 1.7; }
-    .history-parts { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-    .history-part-tag {
+
+    /* ─── Sidebar ─── */
+    .my-sidebar {
+      background: linear-gradient(180deg, #001830 0%, #002D56 100%);
+      position: fixed;
+      top: 0; left: 0;
+      width: 240px;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      z-index: 100;
+    }
+    .my-sidebar-brand {
+      padding: 24px 20px 18px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .my-sidebar-brand a { text-decoration: none; display: flex; flex-direction: column; gap: 2px; }
+    .brand-main {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px; font-weight: 800;
+      color: #fff; letter-spacing: 0.02em;
+    }
+    .brand-sub {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px; font-weight: 600;
+      color: rgba(157,29,34,0.8);
+      letter-spacing: 0.15em; text-transform: uppercase;
+    }
+    .my-nav { padding: 14px 10px; flex: 1; }
+    .my-nav-section {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      padding: 14px 10px 5px;
+    }
+    .my-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      font-size: 13px; font-weight: 500;
+      color: rgba(255,255,255,0.6);
+      cursor: pointer;
+      transition: all 0.18s;
+      margin-bottom: 1px;
+    }
+    .my-nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
+    .my-nav-item.active {
+      background: linear-gradient(135deg, rgba(157,29,34,0.25), rgba(157,29,34,0.12));
+      color: #fff;
+      box-shadow: inset 3px 0 0 #9D1D22;
+    }
+    .my-nav-item i { width: 17px; text-align: center; font-size: 13px; }
+    .my-sidebar-footer {
+      padding: 14px 18px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .my-user-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 10px;
+    }
+    .my-avatar {
+      width: 36px; height: 36px;
+      background: rgba(0,45,86,0.4);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px; font-weight: 700; color: #fff;
+      flex-shrink: 0;
+    }
+    .my-user-name { font-size: 13px; font-weight: 700; color: #fff; }
+    .my-user-email { font-size: 11px; color: rgba(255,255,255,0.4); margin-top: 1px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 140px; }
+    .my-home-link {
+      display: flex; align-items: center; gap: 7px;
+      font-size: 12px; color: rgba(255,255,255,0.35);
+      padding: 6px 10px; border-radius: 8px;
+      text-decoration: none; transition: all 0.18s;
+    }
+    .my-home-link:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); }
+
+    /* ─── Main ─── */
+    .my-main {
+      margin-left: 240px;
+      display: flex; flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ─── Topbar ─── */
+    .my-topbar {
+      background: #fff;
+      border-bottom: 1px solid #E5E7EB;
+      padding: 0 28px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    .my-topbar-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 17px; font-weight: 700;
+      color: #002D56;
+    }
+
+    /* ─── Content ─── */
+    .my-content { padding: 24px 28px; flex: 1; }
+
+    /* ─── Welcome Banner ─── */
+    .welcome-banner {
+      background: linear-gradient(135deg, #001830 0%, #002D56 55%, #0a3561 100%);
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+      position: relative; overflow: hidden;
+    }
+    .welcome-banner::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 70% 100% at 100% 50%, rgba(157,29,34,0.15), transparent);
+      pointer-events: none;
+    }
+    .welcome-eyebrow {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 10px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(157,29,34,0.9);
+      margin-bottom: 6px;
+    }
+    .welcome-name {
+      font-size: 20px; font-weight: 700; color: #fff;
+      margin-bottom: 4px;
+    }
+    .welcome-sub { font-size: 13px; color: rgba(255,255,255,0.5); }
+    .welcome-actions { display: flex; gap: 10px; flex-wrap: wrap; position: relative; z-index: 1; }
+
+    /* ─── KPI Strip ─── */
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .kpi-tile {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #E5E7EB;
+      padding: 18px 20px;
+      display: flex; align-items: center; gap: 14px;
+      transition: box-shadow 0.2s, transform 0.2s;
+    }
+    .kpi-tile:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); transform: translateY(-1px); }
+    .kpi-tile-icon {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+    .icon-red   { background: rgba(157,29,34,0.10); color: #9D1D22; }
+    .icon-navy  { background: rgba(0,45,86,0.10);   color: #002D56; }
+    .icon-green { background: rgba(22,163,74,0.10); color: #16a34a; }
+    .icon-amber { background: rgba(245,158,11,0.10); color: #B45309; }
+    .kpi-tile-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 26px; font-weight: 800;
+      color: #111827; line-height: 1;
+    }
+    .kpi-tile-label { font-size: 12px; color: #6B7280; margin-top: 3px; }
+
+    /* ─── Next Appointment Card ─── */
+    .next-appt {
+      background: linear-gradient(135deg, #002D56, #0a3561);
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 20px;
+      flex-wrap: wrap;
+      position: relative; overflow: hidden;
+    }
+    .next-appt::before {
+      content: '\f21a';
+      font-family: 'Font Awesome 6 Free';
+      font-weight: 900;
+      position: absolute;
+      right: 24px; top: 50%;
+      transform: translateY(-50%);
+      font-size: 64px;
+      color: rgba(255,255,255,0.05);
+      pointer-events: none;
+    }
+    .next-appt-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 9px; font-weight: 700;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: rgba(157,29,34,0.8);
+      margin-bottom: 4px;
+    }
+    .next-appt-date {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 24px; font-weight: 800;
+      color: #fff; margin-bottom: 4px;
+    }
+    .next-appt-pkg  { font-size: 14px; color: rgba(255,255,255,0.7); margin-bottom: 8px; }
+    .next-appt-meta { display: flex; gap: 14px; flex-wrap: wrap; }
+    .next-appt-meta span {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: rgba(255,255,255,0.55);
+    }
+    .next-appt-meta i { color: rgba(157,29,34,0.8); }
+    .next-appt-empty {
+      text-align: center; padding: 12px 0;
+      color: rgba(255,255,255,0.45); font-size: 14px;
+    }
+    .next-appt-empty i { font-size: 24px; color: rgba(255,255,255,0.15); display: block; margin-bottom: 6px; }
+
+    /* ─── Alert Banners ─── */
+    .alert-banner {
+      border-radius: 12px; padding: 14px 18px;
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 12px;
+    }
+    .alert-banner-icon {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .alert-banner-title { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .alert-banner-desc  { font-size: 12px; }
+    .alert-blue  { background: rgba(37,99,235,0.07); border: 1px solid rgba(37,99,235,0.2); }
+    .alert-blue .alert-banner-icon { background: rgba(37,99,235,0.14); color: #1D4ED8; }
+    .alert-blue .alert-banner-title { color: #1D4ED8; }
+    .alert-blue .alert-banner-desc  { color: #4B5563; }
+    .alert-amber { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); }
+    .alert-amber .alert-banner-icon { background: rgba(245,158,11,0.14); color: #B45309; }
+    .alert-amber .alert-banner-title { color: #92400E; }
+    .alert-amber .alert-banner-desc  { color: #4B5563; }
+    .alert-banner-action { margin-left: auto; flex-shrink: 0; }
+
+    /* ─── Card ─── */
+    .my-card {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #E5E7EB;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+    .my-card-header {
+      padding: 16px 22px;
+      border-bottom: 1px solid #E5E7EB;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 10px;
+    }
+    .my-card-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 13px; font-weight: 700;
+      color: #002D56; letter-spacing: 0.04em;
+      text-transform: uppercase;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .my-card-body { padding: 20px 22px; }
+    .my-card-footer { padding: 12px 22px; border-top: 1px solid #E5E7EB; }
+
+    /* ─── Booking Cards Grid ─── */
+    .booking-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .bk-card {
+      background: #fff;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 18px;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .bk-card:hover { border-color: #9D1D22; box-shadow: 0 4px 14px rgba(0,0,0,0.07); }
+    .bk-card-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 12px;
+    }
+    .bk-card-num {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700;
+      color: #9CA3AF; letter-spacing: 0.05em;
+      margin-bottom: 3px;
+    }
+    .bk-card-pkg { font-size: 14px; font-weight: 700; color: #111827; }
+    .bk-card-rows { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+    .bk-card-row {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 13px; color: #4B5563;
+    }
+    .bk-card-row i { color: #9D1D22; width: 14px; text-align: center; font-size: 12px; }
+    .bk-card-bottom {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 12px;
+      border-top: 1px solid #F3F4F6;
+    }
+    .bk-card-price {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px; font-weight: 800; color: #111827;
+    }
+
+    /* ─── Badge ─── */
+    .badge {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 3px 10px; border-radius: 99px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px; font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; display: inline-block; }
+    .badge-gold    { background: rgba(245,158,11,0.12); color: #B45309; }
+    .badge-navy    { background: rgba(0,45,86,0.10);   color: #002D56; }
+    .badge-green   { background: rgba(22,163,74,0.10); color: #15803D; }
+    .badge-red     { background: rgba(220,38,38,0.10); color: #B91C1C; }
+    .badge-grey    { background: rgba(107,114,128,0.10);color: #4B5563; }
+    .badge-blue    { background: rgba(37,99,235,0.10); color: #1D4ED8; }
+
+    /* ─── Button ─── */
+    .btn { display: inline-flex; align-items: center; gap: 6px; border: none; cursor: pointer; border-radius: 8px; font-family: 'Montserrat', sans-serif; font-weight: 600; transition: all 0.18s; }
+    .btn-sm   { font-size: 12px; padding: 7px 14px; height: 32px; }
+    .btn-md   { font-size: 13px; padding: 9px 18px; height: 40px; }
+    .btn-primary { background: #9D1D22; color: #fff; }
+    .btn-primary:hover { background: #7f1518; }
+    .btn-outline { background: #fff; color: #374151; border: 1.5px solid #D1D5DB; }
+    .btn-outline:hover { border-color: #9D1D22; color: #9D1D22; }
+    .btn-ghost { background: rgba(255,255,255,0.08); color: #fff; border: 1px solid rgba(255,255,255,0.2); }
+    .btn-ghost:hover { background: rgba(255,255,255,0.15); }
+    .btn-danger { background: rgba(220,38,38,0.1); color: #dc2626; border: 1.5px solid rgba(220,38,38,0.3); }
+    .btn-danger:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+    /* ─── History Card ─── */
+    .history-item {
+      background: #fff;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 12px;
+      padding: 20px 22px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: border-color 0.18s, box-shadow 0.18s;
+    }
+    .history-item:hover { border-color: #9D1D22; box-shadow: 0 4px 14px rgba(0,0,0,0.07); }
+    .history-item-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+    .history-item-title { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 3px; }
+    .history-item-date  { font-size: 12px; color: #9CA3AF; display: flex; align-items: center; gap: 4px; }
+    .history-item-meta  { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 8px; }
+    .history-meta-pill  { display: flex; align-items: center; gap: 5px; font-size: 13px; color: #4B5563; }
+    .history-meta-pill i { color: #9D1D22; font-size: 11px; }
+    .history-item-desc  { font-size: 13px; color: #6B7280; line-height: 1.65; margin-bottom: 8px; }
+    .history-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .history-tag {
       display: inline-block; padding: 3px 10px;
       background: rgba(0,45,86,0.06); border-radius: 99px;
-      font-size: 12px; color: var(--navy); font-family: 'Montserrat', sans-serif;
+      font-size: 11px; color: #002D56;
+      font-family: 'Montserrat', sans-serif;
     }
-    .history-next-date {
+    .history-next-rec {
       display: inline-flex; align-items: center; gap: 6px;
-      margin-top: 12px; padding: 6px 12px;
-      background: rgba(157,29,34,0.06); border-radius: var(--radius-sm);
-      font-size: 13px; color: var(--brand-red); font-weight: 600;
+      margin-top: 10px; padding: 6px 12px;
+      background: rgba(157,29,34,0.06); border-radius: 8px;
+      font-size: 12px; color: #9D1D22; font-weight: 700;
     }
-    /* ── 정기점검 카드 ── */
-    .maintenance-card {
-      background: #fff; border-radius: var(--radius-md);
-      border: 1.5px solid var(--bg-medium); padding: 24px;
-      transition: var(--transition); border-left: 4px solid var(--brand-red);
+
+    /* ─── Maintenance Cards ─── */
+    .maintenance-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
     }
-    .maintenance-card:hover { box-shadow: var(--shadow-sm); }
-    .maintenance-card.urgent { border-left-color: #dc2626; }
-    .maintenance-card.overdue { border-left-color: #9ca3af; opacity: 0.7; }
-    .maintenance-badge-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
-    .maintenance-title { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
-    .maintenance-due { font-size: 13px; color: var(--text-medium); margin-bottom: 4px; }
-    .maintenance-notes { font-size: 13px; color: var(--text-light); }
+    .maint-item {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #E5E7EB;
+      border-left: 4px solid #9D1D22;
+      padding: 20px;
+      transition: box-shadow 0.18s;
+    }
+    .maint-item:hover { box-shadow: 0 4px 14px rgba(0,0,0,0.07); }
+    .maint-item.urgent  { border-left-color: #dc2626; }
+    .maint-item.overdue { border-left-color: #9CA3AF; opacity: 0.75; }
+    .maint-item-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+    .maint-item-title { font-size: 14px; font-weight: 700; color: #111827; margin-bottom: 6px; }
+    .maint-item-due   { font-size: 13px; color: #4B5563; display: flex; align-items: center; gap: 6px; }
+    .maint-item-due i { color: #9D1D22; }
     .days-badge {
       display: inline-flex; align-items: center; gap: 4px;
-      padding: 4px 10px; border-radius: 99px;
-      font-family: 'Montserrat', sans-serif; font-size: 12px; font-weight: 700;
+      padding: 3px 10px; border-radius: 99px;
+      font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 700;
     }
-    .days-badge.soon    { background: rgba(245,158,11,0.12); color: #b45309; }
+    .days-badge.soon    { background: rgba(245,158,11,0.12); color: #B45309; }
     .days-badge.urgent  { background: rgba(220,38,38,0.12);  color: #dc2626; }
     .days-badge.ok      { background: rgba(22,163,74,0.10);   color: #16a34a; }
-    .days-badge.overdue { background: rgba(107,114,128,0.12); color: #6b7280; }
-    /* ── 이력 상세 모달 ── */
-    .history-modal-section { margin-bottom: 20px; }
-    .history-modal-label { font-size: 11px; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-    .history-modal-value { font-size: 14px; color: var(--navy); font-weight: 600; }
-    .history-modal-text { font-size: 14px; color: var(--text-medium); line-height: 1.7; background: var(--bg-light); padding: 14px 16px; border-radius: var(--radius-sm); white-space: pre-wrap; }
+    .days-badge.overdue { background: rgba(107,114,128,0.12); color: #6B7280; }
+
+    /* ─── Profile Form ─── */
+    .profile-section {
+      background: #fff;
+      border-radius: 14px;
+      border: 1px solid #E5E7EB;
+      padding: 28px;
+      margin-bottom: 20px;
+      max-width: 680px;
+    }
+    .profile-section-title {
+      font-size: 15px; font-weight: 700; color: #002D56;
+      margin-bottom: 20px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-label { display: block; font-size: 12px; font-weight: 700; color: #374151; margin-bottom: 6px; font-family: 'Montserrat', sans-serif; letter-spacing: 0.04em; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 10px 14px;
+      border: 1.5px solid #D1D5DB; border-radius: 10px;
+      font-size: 14px; color: #111827;
+      background: #fff; box-sizing: border-box;
+      transition: border-color 0.18s;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #9D1D22; box-shadow: 0 0 0 3px rgba(157,29,34,0.08); }
+    .form-input:disabled { background: #F9FAFB; color: #6B7280; }
+    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .required { color: #dc2626; }
+    .profile-divider { border: none; border-top: 1.5px solid #F3F4F6; margin: 24px 0; }
+    .alert-inline { display: none; padding: 12px 14px; border-radius: 10px; font-size: 13px; font-weight: 600; margin-bottom: 14px; }
+    .alert-inline.success { display: block; background: rgba(22,163,74,0.08); color: #15803D; border: 1px solid rgba(22,163,74,0.2); }
+    .alert-inline.error   { display: block; background: rgba(220,38,38,0.08); color: #B91C1C; border: 1px solid rgba(220,38,38,0.2); }
+    .pw-strength-bar { height: 4px; border-radius: 2px; background: #E5E7EB; overflow: hidden; margin-top: 6px; display: none; }
+    .pw-strength-fill { height: 100%; width: 0; transition: width 0.3s, background 0.3s; }
+    .pw-msg { font-size: 11px; margin-top: 3px; color: #9CA3AF; }
+
+    /* ─── Empty State ─── */
+    .empty-state {
+      text-align: center;
+      padding: 48px 20px;
+      grid-column: 1 / -1;
+    }
+    .empty-state i { font-size: 36px; color: #D1D5DB; display: block; margin-bottom: 12px; }
+    .empty-state-title { font-size: 15px; font-weight: 700; color: #6B7280; margin-bottom: 4px; }
+    .empty-state-desc  { font-size: 13px; color: #9CA3AF; margin-bottom: 16px; }
+
+    /* ─── Toast ─── */
+    .my-toast {
+      position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+      padding: 13px 20px; border-radius: 12px;
+      font-size: 14px; font-weight: 600; color: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.18);
+      transition: all 0.3s ease;
+      opacity: 0; transform: translateY(10px);
+      pointer-events: none; background: #002D56;
+    }
+    .my-toast.show { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+    /* ─── Modal ─── */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 16px; padding: 28px; max-width: 520px; width: 100%; position: relative; max-height: 90vh; overflow-y: auto; }
+    .modal-close-btn { position: absolute; top: 14px; right: 14px; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%; border: 1.5px solid #E5E7EB; background: #fff; cursor: pointer; color: #6B7280; font-size: 13px; transition: all 0.15s; }
+    .modal-close-btn:hover { border-color: #9D1D22; color: #9D1D22; }
+    .modal-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #002D56; margin-bottom: 18px; padding-right: 36px; }
+
+    /* ─── Responsive ─── */
+    @media (max-width: 1100px) {
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 860px) {
+      .my-layout { grid-template-columns: 1fr; }
+      .my-sidebar { display: none; }
+      .my-main { margin-left: 0; }
+      .my-content { padding: 16px; }
+      .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 540px) {
+      .kpi-strip { grid-template-columns: 1fr 1fr; }
+      .booking-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-<div class="toast" id="toast"></div>
+<div id="myToast" class="my-toast"></div>
 
-<div class="dash-layout">
-  <!-- ── Sidebar ── -->
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-logo">
-      <a href="/" style="display:flex;flex-direction:column;gap:3px;text-decoration:none">
-        <span class="sidebar-logo-main">Hyundai Yachts</span>
-        <span class="sidebar-logo-sub">YOUR DREAM WE MAKE</span>
+<div class="my-layout">
+  <!-- ══ Sidebar ══ -->
+  <aside class="my-sidebar" id="sidebar">
+    <div class="my-sidebar-brand">
+      <a href="/">
+        <span class="brand-main">Hyundai Yachts</span>
+        <span class="brand-sub">YOUR DREAM WE MAKE</span>
       </a>
     </div>
-
-    <nav class="sidebar-nav">
-      <div class="sidebar-nav-section">메뉴</div>
-      <div class="sidebar-link active" onclick="showTab('overview')" id="tab-overview">
-        <i class="fas fa-tachometer-alt"></i> 대시보드
+    <nav class="my-nav">
+      <div class="my-nav-section">메뉴</div>
+      <div class="my-nav-item active" onclick="showTab('overview')" id="tab-overview">
+        <i class="fas fa-home"></i> 대시보드
       </div>
-      <div class="sidebar-link" onclick="showTab('bookings')" id="tab-bookings">
+      <div class="my-nav-item" onclick="showTab('bookings')" id="tab-bookings">
         <i class="fas fa-calendar-check"></i> 예약 내역
       </div>
-      <div class="sidebar-link" onclick="showTab('history')" id="tab-history">
+      <div class="my-nav-item" onclick="showTab('history')" id="tab-history">
         <i class="fas fa-history"></i> 서비스 이력
       </div>
-      <div class="sidebar-link" onclick="showTab('maintenance')" id="tab-maintenance">
+      <div class="my-nav-item" onclick="showTab('maintenance')" id="tab-maintenance">
         <i class="fas fa-tools"></i> 정기 점검
       </div>
-      <div class="sidebar-nav-section">계정</div>
-      <div class="sidebar-link" onclick="showTab('profile')" id="tab-profile">
+      <div class="my-nav-section">계정</div>
+      <div class="my-nav-item" onclick="showTab('profile')" id="tab-profile">
         <i class="fas fa-user-cog"></i> 프로필 설정
       </div>
-      <div class="sidebar-link" onclick="logout()" style="color:rgba(255,100,100,0.8)">
+      <div class="my-nav-item" onclick="logout()" style="color:rgba(255,100,100,0.8)">
         <i class="fas fa-sign-out-alt"></i> 로그아웃
       </div>
     </nav>
-
-    <div class="sidebar-footer">
-      <div class="sidebar-user">
-        <div class="sidebar-avatar" id="sidebarAvatar">U</div>
+    <div class="my-sidebar-footer">
+      <div class="my-user-row">
+        <div class="my-avatar" id="sidebarAvatar">U</div>
         <div>
-          <div class="sidebar-user-name" id="sidebarName">로딩 중...</div>
-          <div class="sidebar-user-role" id="sidebarEmail">-</div>
+          <div class="my-user-name" id="sidebarName">로딩 중...</div>
+          <div class="my-user-email" id="sidebarEmail">-</div>
         </div>
       </div>
-      <a href="/" style="display:flex;align-items:center;gap:8px;font-size:12px;color:rgba(255,255,255,0.4);padding:6px 12px;border-radius:var(--radius-sm);transition:var(--transition)" onmouseover="this.style.background='rgba(255,255,255,0.06)'" onmouseout="this.style.background='transparent'">
+      <a href="/" class="my-home-link">
         <i class="fas fa-home"></i> 홈으로
       </a>
     </div>
   </aside>
 
-  <!-- ── Main ── -->
-  <div class="dash-main">
-    <header class="dash-header">
-      <div>
-        <div class="dash-title" id="pageTitle">대시보드</div>
-      </div>
-      <div style="display:flex;align-items:center;gap:12px">
+  <!-- ══ Main ══ -->
+  <div class="my-main">
+    <header class="my-topbar">
+      <div class="my-topbar-title" id="pageTitle">대시보드</div>
+      <div style="display:flex;align-items:center;gap:10px">
         <a href="/booking.html" class="btn btn-primary btn-sm">
           <i class="fas fa-plus"></i> 새 예약
         </a>
       </div>
     </header>
 
-    <div class="dash-content">
+    <div class="my-content">
 
-      <!-- Overview Tab -->
+      <!-- ══════════════════════════
+           TAB: Overview
+      ══════════════════════════ -->
       <div id="content-overview">
 
-        <!-- E-5: 웰컴 카드 (상단 고정) -->
-        <div id="welcomeCard" style="background:linear-gradient(135deg,#001e3c 0%,#002D56 60%,#0a3561 100%);border-radius:var(--radius-lg);padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;position:relative;overflow:hidden">
-          <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 80% at 90% 50%,rgba(157,29,34,0.12),transparent);pointer-events:none"></div>
+        <!-- 웰컴 배너 -->
+        <div class="welcome-banner">
           <div style="position:relative;z-index:1">
-            <div style="font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(157,29,34,0.8);margin-bottom:8px">Welcome Back</div>
-            <div style="font-size:22px;font-weight:700;color:#fff;margin-bottom:6px" id="welcomeName">안녕하세요!</div>
-            <div style="font-size:13px;color:rgba(255,255,255,0.55)" id="welcomeSub">마이페이지에서 예약 현황과 서비스 이력을 확인하세요.</div>
+            <div class="welcome-eyebrow">Welcome Back</div>
+            <div class="welcome-name" id="welcomeName">안녕하세요!</div>
+            <div class="welcome-sub" id="welcomeSub">마이페이지에서 예약 현황과 서비스 이력을 확인하세요.</div>
           </div>
-          <div style="display:flex;gap:10px;flex-shrink:0;position:relative;z-index:1;flex-wrap:wrap">
-            <a href="/booking.html" class="btn btn-primary">
-              <i class="fas fa-calendar-plus"></i>&nbsp; 새 예약하기
+          <div class="welcome-actions">
+            <a href="/booking.html" class="btn btn-primary btn-md">
+              <i class="fas fa-calendar-plus"></i> 새 예약하기
             </a>
-            <button onclick="showTab('bookings')" class="btn btn-outline" style="border-color:rgba(255,255,255,.3);color:#fff;background:rgba(255,255,255,.07)">
-              <i class="fas fa-list"></i>&nbsp; 예약 내역
+            <button onclick="showTab('bookings')" class="btn btn-ghost btn-md">
+              <i class="fas fa-list"></i> 예약 내역
             </button>
           </div>
         </div>
 
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:20px" id="dashGreeting"></p>
-
-        <!-- C-5: 온보딩 배너 (요트 정보 미입력 시) -->
-        <div id="onboardingBanner" style="display:none;background:linear-gradient(135deg,var(--navy) 0%,#0a3561 100%);border-radius:var(--radius-md);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-          <div style="display:flex;align-items:center;gap:14px">
-            <div style="width:44px;height:44px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--brand-red-light);flex-shrink:0">
+        <!-- 요트 미등록 온보딩 -->
+        <div id="onboardingBanner" style="display:none;background:linear-gradient(135deg,#002D56,#0a3561);border-radius:12px;padding:16px 20px;margin-bottom:18px;display:none;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div style="width:40px;height:40px;background:rgba(255,255,255,0.1);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#f87171;flex-shrink:0">
               <i class="fas fa-ship"></i>
             </div>
             <div>
-              <div style="font-size:14px;font-weight:700;color:#fff;margin-bottom:3px">요트 정보를 등록하고 더 빠르게 예약하세요!</div>
-              <div style="font-size:12px;color:rgba(255,255,255,0.6)">프로필에 요트 정보를 저장하면 예약 시 자동으로 입력됩니다.</div>
+              <div style="font-size:14px;font-weight:700;color:#fff">요트 정보를 등록하고 더 빠르게 예약하세요!</div>
+              <div style="font-size:12px;color:rgba(255,255,255,0.55)">프로필에 요트 정보를 저장하면 예약 시 자동으로 입력됩니다.</div>
             </div>
           </div>
-          <div style="display:flex;gap:8px;flex-shrink:0">
+          <div style="display:flex;gap:8px">
             <button onclick="showTab('profile')" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i> 지금 등록하기</button>
-            <button onclick="document.getElementById('onboardingBanner').style.display='none'" style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6);border:none;cursor:pointer;padding:0 10px;border-radius:var(--radius-sm);font-size:16px">✕</button>
+            <button onclick="dismissOnboarding()" class="btn btn-ghost btn-sm" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.55);border:none">✕</button>
           </div>
         </div>
 
-        <!-- C-3: 예약 상태 알림 배너 -->
-        <div id="bookingAlertBanner" style="display:none;margin-bottom:20px"></div>
+        <!-- 예약 알림 배너 -->
+        <div id="bookingAlertBanner" style="margin-bottom:20px"></div>
 
-        <!-- KPI 카드 그리드 -->
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <div class="kpi-icon gold"><i class="fas fa-calendar-check"></i></div>
-            <div class="kpi-label">총 예약</div>
-            <div class="kpi-value" id="statTotal">-</div>
-            <div class="kpi-sub">전체 예약 건수</div>
+        <!-- KPI -->
+        <div class="kpi-strip">
+          <div class="kpi-tile">
+            <div class="kpi-tile-icon icon-navy"><i class="fas fa-calendar-check"></i></div>
+            <div>
+              <div class="kpi-tile-num" id="statTotal">-</div>
+              <div class="kpi-tile-label">전체 예약</div>
+            </div>
           </div>
-          <div class="kpi-card blue">
-            <div class="kpi-icon blue"><i class="fas fa-clock"></i></div>
-            <div class="kpi-label">대기 / 확정</div>
-            <div class="kpi-value" id="statPending">-</div>
-            <div class="kpi-sub">처리 대기 중</div>
+          <div class="kpi-tile">
+            <div class="kpi-tile-icon icon-amber"><i class="fas fa-clock"></i></div>
+            <div>
+              <div class="kpi-tile-num" id="statPending">-</div>
+              <div class="kpi-tile-label">대기 / 확정</div>
+            </div>
           </div>
-          <div class="kpi-card green">
-            <div class="kpi-icon green"><i class="fas fa-check-circle"></i></div>
-            <div class="kpi-label">완료</div>
-            <div class="kpi-value" id="statCompleted">-</div>
-            <div class="kpi-sub">완료된 서비스</div>
+          <div class="kpi-tile">
+            <div class="kpi-tile-icon icon-green"><i class="fas fa-check-circle"></i></div>
+            <div>
+              <div class="kpi-tile-num" id="statCompleted">-</div>
+              <div class="kpi-tile-label">완료 서비스</div>
+            </div>
           </div>
-          <div class="kpi-card gold">
-            <div class="kpi-icon gold"><i class="fas fa-tools"></i></div>
-            <div class="kpi-label">예정 점검</div>
-            <div class="kpi-value" id="statMaintenance">-</div>
-            <div class="kpi-sub">정기 점검 일정</div>
+          <div class="kpi-tile">
+            <div class="kpi-tile-icon icon-red"><i class="fas fa-tools"></i></div>
+            <div>
+              <div class="kpi-tile-num" id="statMaintenance">-</div>
+              <div class="kpi-tile-label">예정 점검</div>
+            </div>
           </div>
         </div>
 
         <!-- 다음 예약 카드 -->
-        <div class="next-booking-card" id="nextBookingCard">
-          <div class="next-booking-label">NEXT APPOINTMENT</div>
-          <div class="next-booking-empty">
-            <i class="fas fa-calendar-plus"></i>
-            예정된 예약이 없습니다
-          </div>
-          <div style="margin-top:12px">
-            <a href="/booking.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.6);font-weight:600">
-              <i class="fas fa-plus-circle" style="color:var(--brand-red-light)"></i> 지금 예약하기
+        <div id="nextBookingCard" class="next-appt">
+          <div style="position:relative;z-index:1;flex:1">
+            <div class="next-appt-label">NEXT APPOINTMENT</div>
+            <div class="next-appt-empty">
+              <i class="fas fa-calendar-plus"></i>
+              예정된 예약이 없습니다
+            </div>
+            <a href="/booking.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.5);font-weight:600;margin-top:8px">
+              <i class="fas fa-plus-circle" style="color:rgba(157,29,34,0.8)"></i> 지금 예약하기
             </a>
           </div>
         </div>
 
-        <!-- 최근 예약 카드 그리드 -->
-        <div class="card" style="margin-bottom:20px">
-          <div class="card-header">
-            <div class="card-header-title"><i class="fas fa-history"></i>최근 예약</div>
-            <a href="#" onclick="showTab('bookings')" style="font-size:13px;color:var(--brand-red);font-weight:600">전체 보기 →</a>
+        <!-- 최근 예약 -->
+        <div class="my-card">
+          <div class="my-card-header">
+            <div class="my-card-title"><i class="fas fa-history" style="color:#002D56"></i>최근 예약</div>
+            <a href="#" onclick="showTab('bookings');return false" style="font-size:13px;color:#9D1D22;font-weight:700;text-decoration:none">
+              전체 보기 →
+            </a>
           </div>
-          <div class="card-body" style="padding:16px 20px">
-            <div id="recentBookingsGrid" class="booking-card-grid">
+          <div class="my-card-body">
+            <div id="recentBookingsGrid" class="booking-grid">
               <div class="empty-state">
-                <div class="empty-state-icon"><i class="fas fa-calendar"></i></div>
-                <div class="empty-state-title">예약 내역이 없습니다</div>
+                <i class="fas fa-calendar-times"></i>
+                <div class="empty-state-title">아직 예약 내역이 없습니다</div>
                 <div class="empty-state-desc">첫 번째 예약을 시작해보세요!</div>
                 <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- Bookings Tab -->
+      </div><!-- /content-overview -->
+
+
+      <!-- ══════════════════════════
+           TAB: 예약 내역
+      ══════════════════════════ -->
       <div id="content-bookings" style="display:none">
-        <div class="card">
-          <div class="card-header">
-            <div class="card-header-title"><i class="fas fa-calendar-check"></i>전체 예약 내역</div>
+        <div class="my-card">
+          <div class="my-card-header">
+            <div class="my-card-title"><i class="fas fa-calendar-check" style="color:#002D56"></i>전체 예약 내역</div>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
-              <select class="form-select" style="height:36px;font-size:13px;width:auto" id="bookingFilter" onchange="filterBookings()">
+              <select class="form-select" style="height:34px;font-size:13px;width:auto;padding:0 12px" id="bookingFilter" onchange="filterBookings()">
                 <option value="">전체 상태</option>
                 <option value="pending">대기 중</option>
                 <option value="confirmed">확정</option>
@@ -258,10 +693,10 @@
               <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> 새 예약</a>
             </div>
           </div>
-          <div class="card-body" style="padding:16px 20px">
-            <div id="allBookingsGrid" class="booking-card-grid">
+          <div class="my-card-body">
+            <div id="allBookingsGrid" class="booking-grid">
               <div class="empty-state">
-                <div class="empty-state-icon"><i class="fas fa-calendar"></i></div>
+                <i class="fas fa-calendar-times"></i>
                 <div class="empty-state-title">예약 내역이 없습니다</div>
                 <div class="empty-state-desc">첫 번째 예약을 시작해보세요!</div>
                 <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>
@@ -269,146 +704,159 @@
             </div>
           </div>
         </div>
-      </div>
+      </div><!-- /content-bookings -->
 
-      <!-- History Tab -->
+
+      <!-- ══════════════════════════
+           TAB: 서비스 이력
+      ══════════════════════════ -->
       <div id="content-history" style="display:none">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">완료된 서비스 내역을 확인하세요</p>
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#002D56;margin:0 0 4px">서비스 이력</h2>
+          <p style="font-size:13px;color:#6B7280;margin:0">완료된 서비스 내역을 확인하세요</p>
+        </div>
         <div id="historyCardList">
-          <div style="text-align:center;padding:40px;color:var(--text-light)">
-            <i class="fas fa-history" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>
+          <div style="text-align:center;padding:48px;color:#9CA3AF">
+            <i class="fas fa-history" style="font-size:32px;color:#D1D5DB;display:block;margin-bottom:12px"></i>
             서비스 이력을 불러오는 중...
           </div>
         </div>
-      </div>
+      </div><!-- /content-history -->
 
-      <!-- Maintenance Tab -->
+
+      <!-- ══════════════════════════
+           TAB: 정기 점검
+      ══════════════════════════ -->
       <div id="content-maintenance" style="display:none">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">다가오는 정기 점검 일정을 확인하세요</p>
-        <div id="maintenanceCards" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px"></div>
-      </div>
+        <div style="margin-bottom:20px">
+          <h2 style="font-family:'Montserrat',sans-serif;font-size:16px;font-weight:700;color:#002D56;margin:0 0 4px">정기 점검</h2>
+          <p style="font-size:13px;color:#6B7280;margin:0">다가오는 정기 점검 일정을 확인하세요</p>
+        </div>
+        <div id="maintenanceCards" class="maintenance-grid"></div>
+      </div><!-- /content-maintenance -->
 
-      <!-- Profile Tab -->
+
+      <!-- ══════════════════════════
+           TAB: 프로필 설정
+      ══════════════════════════ -->
       <div id="content-profile" style="display:none">
-        <p style="color:var(--text-medium);font-size:15px;margin-bottom:24px">계정 정보와 요트 정보를 관리하세요</p>
-        <div class="data-card" style="max-width:700px">
-          <div class="data-card-header">
-            <div class="data-card-title">프로필 정보</div>
+
+        <!-- 기본 정보 -->
+        <div class="profile-section">
+          <div class="profile-section-title">
+            <i class="fas fa-user" style="color:#9D1D22"></i> 기본 정보
           </div>
-          <div style="padding:32px">
-            <div id="profileAlert" class="alert"></div>
-            <form onsubmit="updateProfile(event)">
-              <h4 style="margin-bottom:20px;font-size:16px">기본 정보</h4>
-              <div class="form-grid">
-                <div class="form-group">
-                  <label class="form-label">이름</label>
-                  <input type="text" class="form-input" id="profName">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">연락처</label>
-                  <input type="tel" class="form-input" id="profPhone">
-                </div>
+          <div id="profileAlert" class="alert-inline"></div>
+          <form onsubmit="updateProfile(event)">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">이름</label>
+                <input type="text" class="form-input" id="profName">
               </div>
               <div class="form-group">
-                <label class="form-label">이메일</label>
-                <input type="email" class="form-input" id="profEmail" disabled style="background:var(--bg-light)">
+                <label class="form-label">연락처</label>
+                <input type="tel" class="form-input" id="profPhone">
               </div>
-
-              <div style="border-top:1px solid var(--bg-medium);margin:24px 0 20px;padding-top:20px">
-                <h4 style="margin-bottom:20px;font-size:16px"><i class="fas fa-ship" style="color:var(--brand-red);margin-right:8px"></i>요트 정보</h4>
-                <div class="form-grid">
-                  <div class="form-group">
-                    <label class="form-label">요트 이름</label>
-                    <input type="text" class="form-input" id="profYachtName">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">요트 모델</label>
-                    <input type="text" class="form-input" id="profYachtModel">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">요트 길이 (ft)</label>
-                    <input type="number" class="form-input" id="profYachtLength">
-                  </div>
-                  <div class="form-group">
-                    <label class="form-label">계류 마리나</label>
-                    <input type="text" class="form-input" id="profMarina">
-                  </div>
-                </div>
-              </div>
-
-              <button type="submit" class="btn btn-primary" id="profSaveBtn">
-                <i class="fas fa-save"></i> 변경사항 저장
-              </button>
-            </form>
-
-            <!-- 비밀번호 변경 섹션 -->
-            <div style="border-top:1px solid var(--bg-medium);margin-top:32px;padding-top:28px">
-              <h4 style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:16px">
-                <i class="fas fa-lock" style="color:var(--brand-red);margin-right:8px"></i>비밀번호 변경
-              </h4>
-              <div id="pwChangeAlert" class="alert" style="display:none"></div>
-              <form onsubmit="changePassword(event)" style="max-width:400px">
-                <div class="form-group">
-                  <label class="form-label">현재 비밀번호</label>
-                  <input type="password" class="form-input" id="currentPw" placeholder="현재 비밀번호 입력" autocomplete="current-password">
-                </div>
-                <div class="form-group">
-                  <label class="form-label">새 비밀번호</label>
-                  <input type="password" class="form-input" id="newPw" placeholder="영문+숫자 조합 8자 이상" autocomplete="new-password" oninput="checkNewPwStrength()">
-                  <div id="newPwBar" style="margin-top:6px;height:4px;border-radius:2px;background:var(--bg-medium);overflow:hidden;display:none">
-                    <div id="newPwFill" style="height:100%;width:0;transition:width 0.3s,background 0.3s"></div>
-                  </div>
-                  <div id="newPwMsg" style="font-size:11px;margin-top:3px;color:var(--text-muted)"></div>
-                </div>
-                <div class="form-group">
-                  <label class="form-label">새 비밀번호 확인</label>
-                  <input type="password" class="form-input" id="newPw2" placeholder="새 비밀번호 재입력" autocomplete="new-password">
-                </div>
-                <button type="submit" class="btn btn-outline-navy" id="pwChangeBtn">
-                  <i class="fas fa-key"></i> 비밀번호 변경
-                </button>
-              </form>
             </div>
-          </div>
+            <div class="form-group">
+              <label class="form-label">이메일</label>
+              <input type="email" class="form-input" id="profEmail" disabled>
+            </div>
+            <hr class="profile-divider">
+            <div class="profile-section-title" style="margin-bottom:18px">
+              <i class="fas fa-ship" style="color:#9D1D22"></i> 요트 정보
+            </div>
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label">요트 이름</label>
+                <input type="text" class="form-input" id="profYachtName">
+              </div>
+              <div class="form-group">
+                <label class="form-label">요트 모델</label>
+                <input type="text" class="form-input" id="profYachtModel">
+              </div>
+              <div class="form-group">
+                <label class="form-label">요트 길이 (ft)</label>
+                <input type="number" class="form-input" id="profYachtLength">
+              </div>
+              <div class="form-group">
+                <label class="form-label">계류 마리나</label>
+                <input type="text" class="form-input" id="profMarina">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-md" id="profSaveBtn">
+              <i class="fas fa-save"></i> 변경사항 저장
+            </button>
+          </form>
         </div>
-      </div>
 
-    </div>
-  </div>
-</div>
+        <!-- 비밀번호 변경 -->
+        <div class="profile-section">
+          <div class="profile-section-title">
+            <i class="fas fa-lock" style="color:#9D1D22"></i> 비밀번호 변경
+          </div>
+          <div id="pwChangeAlert" class="alert-inline"></div>
+          <form onsubmit="changePassword(event)" style="max-width:420px">
+            <div class="form-group">
+              <label class="form-label">현재 비밀번호</label>
+              <input type="password" class="form-input" id="currentPw" placeholder="현재 비밀번호" autocomplete="current-password">
+            </div>
+            <div class="form-group">
+              <label class="form-label">새 비밀번호</label>
+              <input type="password" class="form-input" id="newPw" placeholder="영문+숫자 조합 8자 이상" autocomplete="new-password" oninput="checkNewPwStrength()">
+              <div class="pw-strength-bar" id="newPwBar"><div class="pw-strength-fill" id="newPwFill"></div></div>
+              <div class="pw-msg" id="newPwMsg"></div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">새 비밀번호 확인</label>
+              <input type="password" class="form-input" id="newPw2" placeholder="새 비밀번호 재입력" autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-outline btn-md" id="pwChangeBtn">
+              <i class="fas fa-key"></i> 비밀번호 변경
+            </button>
+          </form>
+        </div>
+
+      </div><!-- /content-profile -->
+
+    </div><!-- /my-content -->
+  </div><!-- /my-main -->
+</div><!-- /my-layout -->
+
 
 <!-- ══ 서비스 이력 상세 모달 ══ -->
 <div class="modal-overlay" id="modalHistory" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal" onclick="event.stopPropagation()" style="position:relative;max-width:580px">
-    <button class="modal-close" onclick="document.getElementById('modalHistory').classList.remove('open')"><i class="fas fa-times"></i></button>
-    <div class="modal-title"><i class="fas fa-clipboard-list" style="color:var(--brand-red);margin-right:8px"></i>서비스 이력 상세</div>
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:580px">
+    <button class="modal-close-btn" onclick="document.getElementById('modalHistory').classList.remove('open')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-clipboard-list" style="color:#9D1D22;margin-right:8px"></i>서비스 이력 상세</div>
     <div id="historyModalContent"></div>
   </div>
 </div>
 
-<!-- ══ C-4: 예약 취소 확인 모달 ══ -->
-<div class="modal-overlay" id="modalCancel" onclick="if(event.target===this)this.classList.remove('open')">
-  <div class="modal" onclick="event.stopPropagation()" style="position:relative;max-width:480px">
-    <button class="modal-close" onclick="document.getElementById('modalCancel').classList.remove('open')"><i class="fas fa-times"></i></button>
-    <div class="modal-title"><i class="fas fa-calendar-times" style="color:#c53030;margin-right:8px"></i>예약 취소</div>
 
-    <!-- 예약 정보 요약 -->
-    <div style="background:var(--bg-light);border-radius:var(--radius-sm);padding:14px 16px;margin-bottom:18px;font-size:14px">
+<!-- ══ 예약 취소 확인 모달 ══ -->
+<div class="modal-overlay" id="modalCancel" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:460px">
+    <button class="modal-close-btn" onclick="document.getElementById('modalCancel').classList.remove('open')"><i class="fas fa-times"></i></button>
+    <div class="modal-title"><i class="fas fa-calendar-times" style="color:#dc2626;margin-right:8px"></i>예약 취소</div>
+
+    <!-- 예약 정보 -->
+    <div style="background:#F9FAFB;border-radius:10px;padding:14px 16px;margin-bottom:16px;font-size:14px">
       <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-        <span style="color:var(--text-medium)">예약 번호</span>
-        <span style="font-family:'Montserrat',sans-serif;font-weight:700;color:var(--navy)" id="cancelModalNum">-</span>
+        <span style="color:#6B7280">예약 번호</span>
+        <span style="font-family:'Montserrat',sans-serif;font-weight:700;color:#002D56" id="cancelModalNum">-</span>
       </div>
       <div style="display:flex;justify-content:space-between">
-        <span style="color:var(--text-medium)">예약 날짜</span>
-        <span style="font-weight:600;color:var(--navy)" id="cancelModalDate">-</span>
+        <span style="color:#6B7280">예약 날짜</span>
+        <span style="font-weight:700;color:#002D56" id="cancelModalDate">-</span>
       </div>
     </div>
 
-    <!-- 48시간 정책 경고 -->
-    <div id="cancelPolicyMsg" style="display:none;background:rgba(245,158,11,0.08);border:1.5px solid rgba(245,158,11,0.25);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:18px;font-size:13px;color:#92400e;line-height:1.6;align-items:flex-start"></div>
+    <!-- 48시간 정책 -->
+    <div id="cancelPolicyMsg" style="display:none;background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.25);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;color:#92400E;line-height:1.6"></div>
 
-    <!-- 취소 사유 선택 -->
-    <div class="form-group" style="margin-bottom:16px">
+    <!-- 취소 사유 -->
+    <div class="form-group" style="margin-bottom:14px">
       <label class="form-label">취소 사유 <span class="required">*</span></label>
       <select class="form-select" id="cancelReason" onchange="onCancelReasonChange()">
         <option value="">사유를 선택해주세요</option>
@@ -419,32 +867,29 @@
         <option value="other">기타</option>
       </select>
     </div>
-
-    <div id="cancelReasonOther" style="display:none;margin-bottom:16px">
+    <div id="cancelReasonOther" style="display:none;margin-bottom:14px">
       <label class="form-label">직접 입력</label>
-      <textarea class="form-textarea" id="cancelOtherText" rows="2" placeholder="취소 사유를 입력해주세요"></textarea>
+      <textarea class="form-textarea" id="cancelOtherText" rows="2" placeholder="취소 사유를 입력해주세요" style="min-height:64px"></textarea>
     </div>
-
-    <p style="font-size:12px;color:var(--text-light);margin-bottom:20px">
-      <i class="fas fa-info-circle" style="color:var(--brand-red);margin-right:4px"></i>
+    <p style="font-size:12px;color:#9CA3AF;margin-bottom:18px">
+      <i class="fas fa-info-circle" style="color:#9D1D22;margin-right:4px"></i>
       취소 후에는 되돌릴 수 없습니다. 신중하게 결정해주세요.
     </p>
-
     <div style="display:flex;gap:10px;justify-content:flex-end">
-      <button class="btn btn-outline-navy" onclick="document.getElementById('modalCancel').classList.remove('open')">
-        돌아가기
-      </button>
-      <button class="btn" style="background:#dc2626;color:#fff;border:none" id="cancelConfirmBtn" onclick="confirmCancelBooking()">
+      <button class="btn btn-outline btn-md" onclick="document.getElementById('modalCancel').classList.remove('open')">돌아가기</button>
+      <button class="btn btn-danger btn-md" id="cancelConfirmBtn" onclick="confirmCancelBooking()">
         <i class="fas fa-times"></i> 예약 취소 확인
       </button>
     </div>
   </div>
 </div>
 
+
 <script>
 let currentUser = null;
 let allBookings = [];
 
+/* ─── 초기화 ─── */
 window.addEventListener('load', async () => {
   const token = localStorage.getItem('yachtToken');
   if (!token) { location.href = '/login.html?redirect=/dashboard.html'; return; }
@@ -455,29 +900,29 @@ window.addEventListener('load', async () => {
   checkOnboardingBanner();
 });
 
+/* ─── 사이드바 초기화 ─── */
 function updateSidebar() {
   if (!currentUser) return;
-  document.getElementById('sidebarAvatar').textContent = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
-  document.getElementById('sidebarName').textContent = currentUser.name || '-';
-  document.getElementById('sidebarEmail').textContent = currentUser.email || '-';
-  document.getElementById('dashGreeting').textContent = '';
+  const initial = currentUser.name ? currentUser.name[0].toUpperCase() : 'U';
+  document.getElementById('sidebarAvatar').textContent = initial;
+  document.getElementById('sidebarName').textContent   = currentUser.name || '-';
+  document.getElementById('sidebarEmail').textContent  = currentUser.email || '-';
 
-  // E-5: 웰컴 카드 초기화
   const hour = new Date().getHours();
   const greeting = hour < 6 ? '좋은 새벽이에요' : hour < 12 ? '좋은 아침이에요' : hour < 18 ? '안녕하세요' : '좋은 저녁이에요';
-  const welcomeName = document.getElementById('welcomeName');
-  const welcomeSub  = document.getElementById('welcomeSub');
-  if (welcomeName) welcomeName.textContent = `${greeting}, ${currentUser.name || '고객'} 님! 👋`;
-  if (welcomeSub) {
-    const today = new Date().toLocaleDateString('ko-KR', {month:'long', day:'numeric', weekday:'short'});
-    welcomeSub.textContent = `오늘은 ${today}입니다. 예약 현황과 서비스 이력을 확인하세요.`;
-  }
+  const today = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' });
+
+  const el = document.getElementById('welcomeName');
+  const sub = document.getElementById('welcomeSub');
+  if (el)  el.textContent = `${greeting}, ${currentUser.name || '고객'} 님! 👋`;
+  if (sub) sub.textContent = `오늘은 ${today}입니다. 예약 현황과 서비스 이력을 확인하세요.`;
 }
 
+/* ─── 대시보드 데이터 로드 ─── */
 async function loadDashboardData() {
   const token = localStorage.getItem('yachtToken');
   try {
-    const res = await fetch('/api/bookings/my', { headers: {'Authorization': 'Bearer '+token} });
+    const res = await fetch('/api/bookings/my', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     if (data.success) {
       allBookings = data.bookings || [];
@@ -488,7 +933,7 @@ async function loadDashboardData() {
   } catch(e) { console.error(e); }
 
   try {
-    const res = await fetch('/api/users/maintenance', { headers: {'Authorization': 'Bearer '+token} });
+    const res = await fetch('/api/users/maintenance', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     if (data.success) {
       document.getElementById('statMaintenance').textContent = data.schedule?.length || 0;
@@ -497,74 +942,72 @@ async function loadDashboardData() {
   } catch(e) {}
 
   try {
-    const res = await fetch('/api/auth/me', { headers: {'Authorization': 'Bearer '+token} });
+    const res = await fetch('/api/auth/me', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     if (data.success && data.user) {
-      document.getElementById('profName').value = data.user.name || '';
-      document.getElementById('profPhone').value = data.user.phone || '';
-      document.getElementById('profEmail').value = data.user.email || '';
-      document.getElementById('profYachtName').value = data.user.yacht_name || '';
-      document.getElementById('profYachtModel').value = data.user.yacht_model || '';
+      document.getElementById('profName').value        = data.user.name         || '';
+      document.getElementById('profPhone').value       = data.user.phone        || '';
+      document.getElementById('profEmail').value       = data.user.email        || '';
+      document.getElementById('profYachtName').value   = data.user.yacht_name   || '';
+      document.getElementById('profYachtModel').value  = data.user.yacht_model  || '';
       document.getElementById('profYachtLength').value = data.user.yacht_length || '';
-      document.getElementById('profMarina').value = data.user.marina_berth || '';
+      document.getElementById('profMarina').value      = data.user.marina_berth || '';
     }
   } catch(e) {}
 }
 
+/* ─── KPI 통계 ─── */
 function renderStats() {
-  document.getElementById('statTotal').textContent = allBookings.length;
-  const activeCount = allBookings.filter(b=>b.status==='pending'||b.status==='confirmed').length;
-  document.getElementById('statPending').textContent = activeCount;
-  document.getElementById('statCompleted').textContent = allBookings.filter(b=>b.status==='completed').length;
+  document.getElementById('statTotal').textContent     = allBookings.length;
+  const activeCount = allBookings.filter(b => b.status === 'pending' || b.status === 'confirmed').length;
+  document.getElementById('statPending').textContent   = activeCount;
+  document.getElementById('statCompleted').textContent = allBookings.filter(b => b.status === 'completed').length;
   renderBookingAlertBanner(activeCount);
 }
 
+/* ─── 예약 알림 배너 ─── */
 function renderBookingAlertBanner(activeCount) {
   const banner = document.getElementById('bookingAlertBanner');
-  const pending = allBookings.filter(b => b.status === 'pending');
-  const confirmed = allBookings.filter(b => b.status === 'confirmed');
-
-  // 다가오는 예약 (3일 이내)
-  const today = new Date(); today.setHours(0,0,0,0);
-  const soon = allBookings.filter(b => {
+  const pending   = allBookings.filter(b => b.status === 'pending');
+  const today     = new Date(); today.setHours(0,0,0,0);
+  const soonList  = allBookings.filter(b => {
     if (b.status !== 'confirmed') return false;
-    const d = new Date(b.scheduled_date);
-    const diff = Math.ceil((d - today) / (1000*60*60*24));
+    const diff = Math.ceil((new Date(b.scheduled_date) - today) / 86400000);
     return diff >= 0 && diff <= 3;
   });
 
   const items = [];
-
-  if (soon.length > 0) {
-    const s = soon[0];
-    const d = new Date(s.scheduled_date);
-    const diff = Math.ceil((d - today) / (1000*60*60*24));
+  if (soonList.length > 0) {
+    const s = soonList[0];
+    const diff = Math.ceil((new Date(s.scheduled_date) - today) / 86400000);
     const label = diff === 0 ? '오늘' : diff === 1 ? '내일' : diff + '일 후';
     items.push(`
-      <div style="background:rgba(37,99,235,0.08);border:1.5px solid rgba(37,99,235,0.25);border-radius:var(--radius-md);padding:14px 18px;display:flex;align-items:center;gap:12px">
-        <div style="width:36px;height:36px;background:rgba(37,99,235,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#1d4ed8;flex-shrink:0"><i class="fas fa-calendar-check"></i></div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:700;color:#1d4ed8"><i class="fas fa-bell" style="margin-right:5px"></i>${label} 예약이 있습니다</div>
-          <div style="font-size:12px;color:var(--text-medium);margin-top:2px">${s.package_name||'서비스'} · ${s.scheduled_date} ${s.scheduled_time} · ${s.yacht_name}</div>
+      <div class="alert-banner alert-blue">
+        <div class="alert-banner-icon"><i class="fas fa-calendar-check"></i></div>
+        <div>
+          <div class="alert-banner-title"><i class="fas fa-bell" style="margin-right:4px"></i>${label} 예약이 있습니다</div>
+          <div class="alert-banner-desc">${s.package_name||'서비스'} · ${s.scheduled_date} ${s.scheduled_time||''} · ${s.yacht_name||''}</div>
         </div>
-        <button onclick="showTab('bookings')" class="btn btn-sm" style="background:rgba(37,99,235,0.15);color:#1d4ed8;border:none;cursor:pointer;white-space:nowrap">예약 보기</button>
+        <div class="alert-banner-action">
+          <button onclick="showTab('bookings')" class="btn btn-sm" style="background:rgba(37,99,235,0.12);color:#1D4ED8;border:none;cursor:pointer">예약 보기</button>
+        </div>
       </div>
     `);
   }
-
   if (pending.length > 0) {
     items.push(`
-      <div style="background:rgba(245,158,11,0.08);border:1.5px solid rgba(245,158,11,0.25);border-radius:var(--radius-md);padding:14px 18px;display:flex;align-items:center;gap:12px">
-        <div style="width:36px;height:36px;background:rgba(245,158,11,0.15);border-radius:50%;display:flex;align-items:center;justify-content:center;color:#b45309;flex-shrink:0"><i class="fas fa-clock"></i></div>
-        <div style="flex:1">
-          <div style="font-size:13px;font-weight:700;color:#b45309">담당자 확인 대기 중인 예약 ${pending.length}건</div>
-          <div style="font-size:12px;color:var(--text-medium);margin-top:2px">접수 후 24시간 이내 담당자가 연락드립니다.</div>
+      <div class="alert-banner alert-amber">
+        <div class="alert-banner-icon"><i class="fas fa-clock"></i></div>
+        <div>
+          <div class="alert-banner-title">담당자 확인 대기 중인 예약 ${pending.length}건</div>
+          <div class="alert-banner-desc">접수 후 24시간 이내 담당자가 연락드립니다.</div>
         </div>
-        <button onclick="showTab('bookings')" class="btn btn-sm" style="background:rgba(245,158,11,0.15);color:#b45309;border:none;cursor:pointer;white-space:nowrap">확인하기</button>
+        <div class="alert-banner-action">
+          <button onclick="showTab('bookings')" class="btn btn-sm" style="background:rgba(245,158,11,0.12);color:#B45309;border:none;cursor:pointer">확인하기</button>
+        </div>
       </div>
     `);
   }
-
   if (items.length > 0) {
     banner.style.display = 'flex';
     banner.style.flexDirection = 'column';
@@ -575,60 +1018,61 @@ function renderBookingAlertBanner(activeCount) {
   }
 }
 
+/* ─── 온보딩 배너 ─── */
 function checkOnboardingBanner() {
   const u = currentUser;
   if (!u) return;
-  const needsOnboarding = !u.yacht_name;
   const dismissed = sessionStorage.getItem('onboardingDismissed');
-  if (needsOnboarding && !dismissed) {
-    document.getElementById('onboardingBanner').style.display = 'flex';
-    // 닫기 버튼에 sessionStorage 저장
+  if (!u.yacht_name && !dismissed) {
     const banner = document.getElementById('onboardingBanner');
-    const closeBtn = banner.querySelector('button:last-child');
-    if (closeBtn) {
-      closeBtn.onclick = () => {
-        banner.style.display = 'none';
-        sessionStorage.setItem('onboardingDismissed', '1');
-      };
-    }
+    banner.style.display = 'flex';
   }
 }
+function dismissOnboarding() {
+  const banner = document.getElementById('onboardingBanner');
+  banner.style.display = 'none';
+  sessionStorage.setItem('onboardingDismissed', '1');
+}
 
-function bookingCardHTML(b, showCancel=false) {
+/* ─── 예약 카드 HTML ─── */
+function bookingCardHTML(b, showCancel = false) {
   const pkgName = b.package_name || '개별 서비스';
-  const dateStr = b.scheduled_date ? `${b.scheduled_date} ${b.scheduled_time||''}` : '-';
-  const price = Number(b.total_price || 0).toLocaleString('ko-KR');
-  const cancelBtn = (showCancel && b.status==='pending')
-    ? `<button class="cancel-btn" onclick="openCancelModal(${b.id},'${b.booking_number}','${b.scheduled_date}')">취소</button>`
+  const dateStr = b.scheduled_date ? `${b.scheduled_date} ${b.scheduled_time || ''}` : '-';
+  const price   = Number(b.total_price || 0).toLocaleString('ko-KR');
+  const cancelBtn = (showCancel && b.status === 'pending')
+    ? `<button class="btn btn-danger btn-sm" onclick="openCancelModal(${b.id},'${b.booking_number}','${b.scheduled_date}')">
+         <i class="fas fa-times"></i> 취소
+       </button>`
     : '';
   return `
-    <div class="booking-card">
-      <div class="booking-card-top">
+    <div class="bk-card">
+      <div class="bk-card-top">
         <div>
-          <div class="booking-card-num">${b.booking_number}</div>
-          <div class="booking-card-pkg">${pkgName}</div>
+          <div class="bk-card-num">${b.booking_number}</div>
+          <div class="bk-card-pkg">${pkgName}</div>
         </div>
         ${statusBadge(b.status)}
       </div>
-      <div class="booking-card-info">
-        <div class="booking-card-row"><i class="fas fa-ship"></i>${b.yacht_name||'-'}</div>
-        <div class="booking-card-row"><i class="fas fa-calendar"></i>${dateStr}</div>
-        ${b.marina_berth ? `<div class="booking-card-row"><i class="fas fa-map-marker-alt"></i>${b.marina_berth}</div>` : ''}
+      <div class="bk-card-rows">
+        <div class="bk-card-row"><i class="fas fa-ship"></i>${b.yacht_name || '-'}</div>
+        <div class="bk-card-row"><i class="fas fa-calendar"></i>${dateStr}</div>
+        ${b.marina_berth ? `<div class="bk-card-row"><i class="fas fa-map-marker-alt"></i>${b.marina_berth}</div>` : ''}
       </div>
-      <div class="booking-card-price">
-        <span>${price}원</span>
+      <div class="bk-card-bottom">
+        <span class="bk-card-price">${price}원</span>
         ${cancelBtn}
       </div>
     </div>`;
 }
 
+/* ─── 최근 예약 렌더링 ─── */
 function renderRecentBookings() {
   const grid = document.getElementById('recentBookingsGrid');
   if (!grid) return;
   const recent = allBookings.slice(0, 6);
   if (!recent.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <div class="empty-state-icon"><i class="fas fa-calendar-times"></i></div>
+    grid.innerHTML = `<div class="empty-state">
+      <i class="fas fa-calendar-times"></i>
       <div class="empty-state-title">아직 예약 내역이 없습니다</div>
       <div class="empty-state-desc">첫 예약을 시작해보세요!</div>
       <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>
@@ -638,46 +1082,54 @@ function renderRecentBookings() {
   grid.innerHTML = recent.map(b => bookingCardHTML(b, false)).join('');
 }
 
+/* ─── 다음 예약 카드 ─── */
 function renderNextBooking() {
-  const upcoming = allBookings.find(b=>b.status==='pending'||b.status==='confirmed');
+  const upcoming = allBookings.find(b => b.status === 'pending' || b.status === 'confirmed');
   const el = document.getElementById('nextBookingCard');
   if (!el) return;
+
   if (!upcoming) {
     el.innerHTML = `
-      <div class="next-booking-label">NEXT APPOINTMENT</div>
-      <div class="next-booking-empty">
-        <i class="fas fa-calendar-plus"></i>
-        예정된 예약이 없습니다
-      </div>
-      <div style="margin-top:12px">
-        <a href="/booking.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.6);font-weight:600">
-          <i class="fas fa-plus-circle" style="color:var(--brand-red-light)"></i> 지금 예약하기
+      <div style="position:relative;z-index:1;flex:1">
+        <div class="next-appt-label">NEXT APPOINTMENT</div>
+        <div class="next-appt-empty">
+          <i class="fas fa-calendar-plus"></i>
+          예정된 예약이 없습니다
+        </div>
+        <a href="/booking.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,0.5);font-weight:600;margin-top:8px">
+          <i class="fas fa-plus-circle" style="color:rgba(157,29,34,0.8)"></i> 지금 예약하기
         </a>
       </div>`;
     return;
   }
+
   const parts = upcoming.scheduled_date.split('-');
   el.innerHTML = `
-    <div class="next-booking-label">NEXT APPOINTMENT</div>
-    <div class="next-booking-date">${parts[1]}월 ${parts[2]}일 ${upcoming.scheduled_time||''}</div>
-    <div class="next-booking-info">
-      <span style="margin-right:16px"><i class="fas fa-ship" style="margin-right:6px;color:var(--brand-red)"></i>${upcoming.package_name||'개별 서비스'}</span>
-      <span><i class="fas fa-anchor" style="margin-right:6px;color:rgba(255,255,255,0.3)"></i>${upcoming.yacht_name||'-'}</span>
+    <div style="position:relative;z-index:1;flex:1">
+      <div class="next-appt-label">NEXT APPOINTMENT</div>
+      <div class="next-appt-date">${parts[1]}월 ${parts[2]}일 ${upcoming.scheduled_time || ''}</div>
+      <div class="next-appt-pkg">${upcoming.package_name || '개별 서비스'}</div>
+      <div class="next-appt-meta">
+        <span><i class="fas fa-ship"></i>${upcoming.yacht_name || '-'}</span>
+        ${upcoming.marina_berth ? `<span><i class="fas fa-anchor"></i>${upcoming.marina_berth}</span>` : ''}
+        <span style="margin-left:4px">${statusBadge(upcoming.status)}</span>
+      </div>
     </div>
-    <div style="margin-top:8px;display:flex;align-items:center;gap:12px">
-      ${statusBadge(upcoming.status)}
-      <span style="font-family:'Montserrat',sans-serif;font-size:13px;color:rgba(255,255,255,0.5)">${upcoming.booking_number}</span>
+    <div style="position:relative;z-index:1;text-align:right;flex-shrink:0">
+      <div style="font-family:'Montserrat',sans-serif;font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:8px">${upcoming.booking_number}</div>
+      <button onclick="showTab('bookings')" class="btn btn-ghost btn-sm">예약 상세</button>
     </div>`;
 }
 
+/* ─── 전체 예약 내역 렌더링 ─── */
 function renderAllBookings() {
   const filter = document.getElementById('bookingFilter')?.value || '';
-  const list = filter ? allBookings.filter(b=>b.status===filter) : allBookings;
+  const list = filter ? allBookings.filter(b => b.status === filter) : allBookings;
   const grid = document.getElementById('allBookingsGrid');
   if (!grid) return;
   if (!list.length) {
-    grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1">
-      <div class="empty-state-icon"><i class="fas fa-calendar-times"></i></div>
+    grid.innerHTML = `<div class="empty-state">
+      <i class="fas fa-calendar-times"></i>
       <div class="empty-state-title">예약 내역이 없습니다</div>
       <div class="empty-state-desc">${filter ? '해당 상태의 예약이 없습니다.' : '첫 예약을 시작해보세요!'}</div>
       ${!filter ? '<a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 예약하기</a>' : ''}
@@ -686,53 +1138,46 @@ function renderAllBookings() {
   }
   grid.innerHTML = list.map(b => bookingCardHTML(b, true)).join('');
 }
+function filterBookings() { renderAllBookings(); }
 
-// C-4: 예약 취소 모달
+/* ─── 예약 취소 모달 ─── */
 let _cancelTargetId = null;
-
 function openCancelModal(id, bookingNum, scheduledDate) {
   _cancelTargetId = id;
-  const today = new Date(); today.setHours(0,0,0,0);
+  const today   = new Date(); today.setHours(0,0,0,0);
   const svcDate = new Date(scheduledDate);
-  const diffHours = (svcDate - today) / (1000*60*60);
-  const canFreeCancel = diffHours >= 48;
+  const diffHrs = (svcDate - today) / 3600000;
 
-  document.getElementById('cancelModalNum').textContent = bookingNum;
+  document.getElementById('cancelModalNum').textContent  = bookingNum;
   document.getElementById('cancelModalDate').textContent = scheduledDate;
   const policyEl = document.getElementById('cancelPolicyMsg');
-  if (canFreeCancel) {
-    policyEl.style.display = 'none';
-  } else {
+  if (diffHrs < 48) {
     policyEl.style.display = 'flex';
-    policyEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#b45309;margin-right:8px;flex-shrink:0"></i>
-      서비스 48시간 이내 취소는 취소 수수료가 발생할 수 있습니다. 자세한 사항은 담당자에게 문의하세요.`;
+    policyEl.innerHTML = `<i class="fas fa-exclamation-triangle" style="color:#B45309;margin-right:8px;flex-shrink:0"></i>
+      서비스 48시간 이내 취소는 취소 수수료가 발생할 수 있습니다. 담당자에게 문의하세요.`;
+  } else {
+    policyEl.style.display = 'none';
   }
-  // 사유 초기화
   document.getElementById('cancelReason').value = '';
   document.getElementById('cancelReasonOther').style.display = 'none';
   document.getElementById('cancelOtherText').value = '';
   document.getElementById('modalCancel').classList.add('open');
 }
-
 function onCancelReasonChange() {
   const v = document.getElementById('cancelReason').value;
   document.getElementById('cancelReasonOther').style.display = v === 'other' ? 'block' : 'none';
 }
-
 async function confirmCancelBooking() {
   const id = _cancelTargetId;
   if (!id) return;
   const reason = document.getElementById('cancelReason').value;
   if (!reason) { showToast('취소 사유를 선택해주세요.', 'error'); return; }
-  const otherText = document.getElementById('cancelOtherText').value;
-  const finalReason = reason === 'other' ? (otherText || '기타') : document.getElementById('cancelReason').options[document.getElementById('cancelReason').selectedIndex].text;
 
   const btn = document.getElementById('cancelConfirmBtn');
   btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 처리 중...';
-
   const token = localStorage.getItem('yachtToken');
   try {
-    const res = await fetch('/api/bookings/'+id, {method:'DELETE', headers:{'Authorization':'Bearer '+token}});
+    const res  = await fetch('/api/bookings/' + id, { method: 'DELETE', headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     if (data.success) {
       document.getElementById('modalCancel').classList.remove('open');
@@ -740,54 +1185,56 @@ async function confirmCancelBooking() {
       await loadDashboardData();
       renderAllBookings();
     } else throw new Error(data.error);
-  } catch(e) { showToast(e.message, 'error'); }
+  } catch(e) { showToast(e.message || '오류가 발생했습니다', 'error'); }
   finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-times"></i> 예약 취소 확인'; }
 }
 
-function filterBookings() { renderAllBookings(); }
-
+/* ─── 서비스 이력 ─── */
 async function loadHistory() {
   const token = localStorage.getItem('yachtToken');
   try {
-    const res = await fetch('/api/users/service-history', {headers:{'Authorization':'Bearer '+token}});
+    const res  = await fetch('/api/users/service-history', { headers: { 'Authorization': 'Bearer ' + token } });
     const data = await res.json();
     const container = document.getElementById('historyCardList');
     if (!data.success || !data.history?.length) {
-      container.innerHTML = `<div style="text-align:center;padding:48px;color:var(--text-light)">
-        <i class="fas fa-history" style="font-size:36px;color:var(--bg-medium);display:block;margin-bottom:14px"></i>
-        서비스 이력이 없습니다
-      </div>`;
+      container.innerHTML = `
+        <div style="text-align:center;padding:48px;color:#9CA3AF">
+          <i class="fas fa-history" style="font-size:32px;color:#D1D5DB;display:block;margin-bottom:12px"></i>
+          서비스 이력이 없습니다
+        </div>`;
       return;
     }
+    window._historyData = data.history;
     container.innerHTML = data.history.map((h, idx) => {
       const parts = h.parts_used ? (typeof h.parts_used === 'string' ? h.parts_used.split(',') : h.parts_used) : [];
       const partsHtml = parts.length
-        ? `<div class="history-parts">${parts.map(p => `<span class="history-part-tag">${p.trim()}</span>`).join('')}</div>`
+        ? `<div class="history-tags">${parts.map(p => `<span class="history-tag">${p.trim()}</span>`).join('')}</div>`
         : '';
       const nextDate = h.next_service_date
-        ? `<div class="history-next-date"><i class="fas fa-calendar-alt"></i>다음 점검 권장일: <strong>${h.next_service_date}</strong></div>`
+        ? `<div class="history-next-rec"><i class="fas fa-calendar-alt"></i>다음 점검 권장일: <strong>${h.next_service_date}</strong></div>`
         : '';
       return `
-        <div class="history-card" onclick="openHistoryModal(${idx})" data-idx="${idx}">
-          <div class="history-card-header">
+        <div class="history-item" onclick="openHistoryModal(${idx})">
+          <div class="history-item-header">
             <div>
-              <div class="history-card-title">${h.service_type || h.package_name || '서비스'}</div>
-              <div class="history-card-date"><i class="fas fa-calendar-check" style="margin-right:5px;color:var(--brand-red)"></i>${h.completed_at?.split('T')[0] || '-'}</div>
+              <div class="history-item-title">${h.service_type || h.package_name || '서비스'}</div>
+              <div class="history-item-date">
+                <i class="fas fa-calendar-check" style="color:#9D1D22"></i>
+                ${h.completed_at?.split('T')[0] || '-'}
+              </div>
             </div>
             <span class="badge badge-green">완료</span>
           </div>
-          <div class="history-card-meta">
-            ${h.technician_name ? `<span class="history-meta-item"><i class="fas fa-user-cog"></i>담당: ${h.technician_name}</span>` : ''}
-            ${h.yacht_name ? `<span class="history-meta-item"><i class="fas fa-anchor"></i>${h.yacht_name}</span>` : ''}
+          <div class="history-item-meta">
+            ${h.technician_name ? `<span class="history-meta-pill"><i class="fas fa-user-cog"></i>담당: ${h.technician_name}</span>` : ''}
+            ${h.yacht_name ? `<span class="history-meta-pill"><i class="fas fa-anchor"></i>${h.yacht_name}</span>` : ''}
           </div>
-          ${h.description ? `<div class="history-desc">${h.description.length > 80 ? h.description.substring(0,80)+'…' : h.description}</div>` : ''}
+          ${h.description ? `<div class="history-item-desc">${h.description.length > 80 ? h.description.slice(0, 80) + '…' : h.description}</div>` : ''}
           ${partsHtml}
           ${nextDate}
         </div>
       `;
     }).join('');
-    // 전역에 이력 데이터 저장
-    window._historyData = data.history;
   } catch(e) { console.error(e); }
 }
 
@@ -796,98 +1243,97 @@ function openHistoryModal(idx) {
   if (!h) return;
   const parts = h.parts_used ? (typeof h.parts_used === 'string' ? h.parts_used.split(',') : h.parts_used) : [];
   const partsHtml = parts.length
-    ? parts.map(p => `<span class="history-part-tag">${p.trim()}</span>`).join(' ')
-    : '<span style="color:var(--text-muted)">-</span>';
+    ? parts.map(p => `<span class="history-tag">${p.trim()}</span>`).join(' ')
+    : '<span style="color:#9CA3AF">-</span>';
 
   document.getElementById('historyModalContent').innerHTML = `
-    <div class="history-modal-section">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
-        <div>
-          <div class="history-modal-label">서비스 유형</div>
-          <div class="history-modal-value">${h.service_type || h.package_name || '-'}</div>
-        </div>
-        <div>
-          <div class="history-modal-label">완료 일자</div>
-          <div class="history-modal-value">${h.completed_at?.split('T')[0] || '-'}</div>
-        </div>
-        <div>
-          <div class="history-modal-label">담당 기술자</div>
-          <div class="history-modal-value">${h.technician_name || '-'}</div>
-        </div>
-        <div>
-          <div class="history-modal-label">요트</div>
-          <div class="history-modal-value">${h.yacht_name || '-'}</div>
-        </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px">
+      <div>
+        <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:4px">서비스 유형</div>
+        <div style="font-size:14px;font-weight:700;color:#002D56">${h.service_type || h.package_name || '-'}</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:4px">완료 일자</div>
+        <div style="font-size:14px;font-weight:700;color:#002D56">${h.completed_at?.split('T')[0] || '-'}</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:4px">담당 기술자</div>
+        <div style="font-size:14px;font-weight:700;color:#002D56">${h.technician_name || '-'}</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:4px">요트</div>
+        <div style="font-size:14px;font-weight:700;color:#002D56">${h.yacht_name || '-'}</div>
       </div>
     </div>
     ${h.description ? `
-      <div class="history-modal-section">
-        <div class="history-modal-label">작업 내용</div>
-        <div class="history-modal-text">${h.description}</div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:8px">작업 내용</div>
+        <div style="background:#F9FAFB;border-radius:10px;padding:14px;font-size:14px;color:#374151;line-height:1.7;white-space:pre-wrap">${h.description}</div>
       </div>
     ` : ''}
-    <div class="history-modal-section">
-      <div class="history-modal-label">사용 부품 / 소모품</div>
-      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">${partsHtml}</div>
+    <div style="margin-bottom:16px">
+      <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:8px">사용 부품 / 소모품</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${partsHtml}</div>
     </div>
     ${h.notes ? `
-      <div class="history-modal-section">
-        <div class="history-modal-label">특이사항 / 권고 메모</div>
-        <div class="history-modal-text">${h.notes}</div>
+      <div style="margin-bottom:16px">
+        <div style="font-size:10px;font-family:'Montserrat',sans-serif;font-weight:700;letter-spacing:0.09em;text-transform:uppercase;color:#9CA3AF;margin-bottom:8px">특이사항</div>
+        <div style="background:#F9FAFB;border-radius:10px;padding:14px;font-size:14px;color:#374151;line-height:1.7;white-space:pre-wrap">${h.notes}</div>
       </div>
     ` : ''}
     ${h.next_service_date ? `
-      <div class="history-next-date" style="width:fit-content">
+      <div class="history-next-rec" style="width:fit-content">
         <i class="fas fa-calendar-alt"></i>
         다음 점검 권장일: <strong>${h.next_service_date}</strong>
       </div>
     ` : ''}
-    <div style="margin-top:24px;text-align:right">
+    <div style="margin-top:22px;text-align:right">
       <a href="/booking.html" class="btn btn-primary btn-sm"><i class="fas fa-calendar-plus"></i> 다음 서비스 예약</a>
-    </div>
-  `;
+    </div>`;
   document.getElementById('modalHistory').classList.add('open');
 }
 
+/* ─── 정기 점검 카드 ─── */
 function renderMaintenanceCards(schedule) {
   const container = document.getElementById('maintenanceCards');
   if (!schedule.length) {
-    container.innerHTML = `<div class="data-card" style="padding:40px;text-align:center;color:var(--text-light);grid-column:1/-1">
-      <i class="fas fa-tools" style="font-size:32px;color:var(--bg-medium);display:block;margin-bottom:12px"></i>
-      예정된 정기 점검이 없습니다
-    </div>`;
+    container.innerHTML = `
+      <div style="text-align:center;padding:48px;color:#9CA3AF;grid-column:1/-1;background:#fff;border-radius:14px;border:1px solid #E5E7EB">
+        <i class="fas fa-tools" style="font-size:32px;color:#D1D5DB;display:block;margin-bottom:12px"></i>
+        예정된 정기 점검이 없습니다
+      </div>`;
     return;
   }
   const today = new Date(); today.setHours(0,0,0,0);
   container.innerHTML = schedule.map(m => {
     const dueDate = new Date(m.due_date);
-    const diff = Math.ceil((dueDate - today) / (1000*60*60*24));
+    const diff    = Math.ceil((dueDate - today) / 86400000);
     let badgeCls, badgeLabel;
-    if (diff < 0)       { badgeCls='overdue'; badgeLabel='기한 초과'; }
-    else if (diff <= 7) { badgeCls='urgent';  badgeLabel=`D-${diff}`; }
-    else if (diff <= 30){ badgeCls='soon';    badgeLabel=`D-${diff}`; }
-    else                { badgeCls='ok';      badgeLabel=`D-${diff}`; }
-
-    const cardCls = diff < 0 ? 'maintenance-card overdue' : diff <= 7 ? 'maintenance-card urgent' : 'maintenance-card';
-
+    if (diff < 0)       { badgeCls = 'overdue'; badgeLabel = '기한 초과'; }
+    else if (diff <= 7) { badgeCls = 'urgent';  badgeLabel = `D-${diff}`; }
+    else if (diff <= 30){ badgeCls = 'soon';    badgeLabel = `D-${diff}`; }
+    else                { badgeCls = 'ok';      badgeLabel = `D-${diff}`; }
+    const cardCls = diff < 0 ? 'maint-item overdue' : diff <= 7 ? 'maint-item urgent' : 'maint-item';
+    const bBadge  = diff <= 7 && diff >= 0 ? 'badge-red' : diff <= 30 && diff >= 0 ? 'badge-gold' : 'badge-navy';
     return `
       <div class="${cardCls}">
-        <div class="maintenance-badge-wrap">
-          <span class="badge ${diff<=7&&diff>=0?'badge-red':diff<=30&&diff>=0?'badge-gold':'badge-navy'}">${m.service_type||'정기 점검'}</span>
+        <div class="maint-item-top">
+          <span class="badge ${bBadge}">${m.service_type || '정기 점검'}</span>
           <span class="days-badge ${badgeCls}"><i class="fas fa-clock"></i>${badgeLabel}</span>
         </div>
-        <div class="maintenance-title">${m.service_type||'정기 점검'}</div>
-        <div class="maintenance-due"><i class="fas fa-calendar-alt" style="color:var(--brand-red);margin-right:6px"></i>점검 예정일: <strong>${m.due_date}</strong></div>
-        ${m.notes ? `<div class="maintenance-notes" style="margin-top:8px"><i class="fas fa-info-circle" style="margin-right:5px"></i>${m.notes}</div>` : ''}
-        <a href="/booking.html" class="btn btn-outline-navy btn-sm" style="margin-top:16px;display:inline-flex">
+        <div class="maint-item-title">${m.service_type || '정기 점검'}</div>
+        <div class="maint-item-due">
+          <i class="fas fa-calendar-alt"></i>점검 예정일: <strong>${m.due_date}</strong>
+        </div>
+        ${m.notes ? `<div style="font-size:12px;color:#6B7280;margin-top:6px"><i class="fas fa-info-circle" style="margin-right:4px"></i>${m.notes}</div>` : ''}
+        <a href="/booking.html" class="btn btn-outline btn-sm" style="margin-top:14px;display:inline-flex">
           <i class="fas fa-calendar-plus"></i> 예약하기
         </a>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
-// ── 비밀번호 강도 바 (프로필 탭용) ──
+/* ─── 비밀번호 강도 ─── */
 function checkNewPwStrength() {
   const pw   = document.getElementById('newPw').value;
   const bar  = document.getElementById('newPwBar');
@@ -895,38 +1341,36 @@ function checkNewPwStrength() {
   const msg  = document.getElementById('newPwMsg');
   bar.style.display = pw.length ? 'block' : 'none';
   let score = 0;
-  if (pw.length >= 8)  score++;
-  if (/[A-Za-z]/.test(pw)) score++;
-  if (/\d/.test(pw))   score++;
+  if (pw.length >= 8)        score++;
+  if (/[A-Za-z]/.test(pw))  score++;
+  if (/\d/.test(pw))         score++;
   if (/[^A-Za-z0-9]/.test(pw)) score++;
   const lv = [
-    { label:'너무 짧음', color:'#dc2626', w:'20%' },
-    { label:'약함',      color:'#f59e0b', w:'40%' },
-    { label:'보통',      color:'#eab308', w:'65%' },
-    { label:'강함',      color:'#22c55e', w:'85%' },
-    { label:'매우 강함', color:'#16a34a', w:'100%'}
+    { label: '너무 짧음', color: '#dc2626', w: '20%' },
+    { label: '약함',      color: '#f59e0b', w: '40%' },
+    { label: '보통',      color: '#eab308', w: '65%' },
+    { label: '강함',      color: '#22c55e', w: '85%' },
+    { label: '매우 강함', color: '#16a34a', w: '100%'}
   ][Math.min(score, 4)];
   fill.style.width = lv.w; fill.style.background = lv.color;
-  msg.textContent  = lv.label; msg.style.color = lv.color;
+  msg.textContent = lv.label; msg.style.color = lv.color;
 }
 
+/* ─── 비밀번호 변경 ─── */
 async function changePassword(e) {
   e.preventDefault();
-  const token  = localStorage.getItem('yachtToken');
+  const token   = localStorage.getItem('yachtToken');
   const current = document.getElementById('currentPw').value;
   const newPw   = document.getElementById('newPw').value;
   const newPw2  = document.getElementById('newPw2').value;
-  const alertEl = document.getElementById('pwChangeAlert');
   const btn     = document.getElementById('pwChangeBtn');
-
-  const PW_RE = /^(?=.*[A-Za-z])(?=.*\d).{8,72}$/;
-  if (!current) { showPwAlert('현재 비밀번호를 입력해주세요.', 'error'); return; }
-  if (!PW_RE.test(newPw)) { showPwAlert('새 비밀번호는 영문+숫자 조합 8자 이상이어야 합니다.', 'error'); return; }
-  if (newPw !== newPw2)   { showPwAlert('새 비밀번호가 일치하지 않습니다.', 'error'); return; }
-
+  const PW_RE   = /^(?=.*[A-Za-z])(?=.*\d).{8,72}$/;
+  if (!current)            { showPwAlert('현재 비밀번호를 입력해주세요.', 'error'); return; }
+  if (!PW_RE.test(newPw))  { showPwAlert('영문+숫자 조합 8자 이상이어야 합니다.', 'error'); return; }
+  if (newPw !== newPw2)    { showPwAlert('새 비밀번호가 일치하지 않습니다.', 'error'); return; }
   btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 변경 중...';
   try {
-    const res = await fetch('/api/auth/change-password', {
+    const res  = await fetch('/api/auth/change-password', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify({ current_password: current, new_password: newPw })
@@ -939,66 +1383,69 @@ async function changePassword(e) {
       document.getElementById('newPw2').value    = '';
       document.getElementById('newPwBar').style.display = 'none';
       document.getElementById('newPwMsg').textContent   = '';
-    } else { throw new Error(data.error); }
+    } else throw new Error(data.error);
   } catch(err) { showPwAlert(err.message || '변경에 실패했습니다.', 'error'); }
   finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-key"></i> 비밀번호 변경'; }
 }
-
 function showPwAlert(msg, type) {
   const el = document.getElementById('pwChangeAlert');
-  el.className = `alert ${type} show`; el.style.display = 'block'; el.textContent = msg;
-  setTimeout(() => { el.style.display = 'none'; el.className = 'alert'; }, 4000);
+  el.className = 'alert-inline ' + type; el.textContent = msg;
+  setTimeout(() => { el.className = 'alert-inline'; el.textContent = ''; }, 4000);
 }
 
+/* ─── 프로필 저장 ─── */
 async function updateProfile(e) {
   e.preventDefault();
   const token = localStorage.getItem('yachtToken');
-  const btn = document.getElementById('profSaveBtn');
-  btn.disabled=true; btn.innerHTML='<i class="fas fa-spinner fa-spin"></i> 저장 중...';
+  const btn   = document.getElementById('profSaveBtn');
+  btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
   try {
     const res = await fetch('/api/users/profile', {
-      method:'PUT',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
       body: JSON.stringify({
-        name: document.getElementById('profName').value,
-        phone: document.getElementById('profPhone').value,
-        yacht_name: document.getElementById('profYachtName').value,
-        yacht_model: document.getElementById('profYachtModel').value,
-        yacht_length: parseFloat(document.getElementById('profYachtLength').value)||null,
+        name:         document.getElementById('profName').value,
+        phone:        document.getElementById('profPhone').value,
+        yacht_name:   document.getElementById('profYachtName').value,
+        yacht_model:  document.getElementById('profYachtModel').value,
+        yacht_length: parseFloat(document.getElementById('profYachtLength').value) || null,
         marina_berth: document.getElementById('profMarina').value
       })
     });
     const data = await res.json();
     if (data.success) {
       const pa = document.getElementById('profileAlert');
-      pa.className='alert success show'; pa.style.display='block';
-      pa.textContent='프로필이 업데이트되었습니다.';
-      showToast('저장되었습니다','success');
-    }
-  } catch(e) { showToast('저장에 실패했습니다','error'); }
-  finally { btn.disabled=false; btn.innerHTML='<i class="fas fa-save"></i> 변경사항 저장'; }
+      pa.className = 'alert-inline success'; pa.textContent = '프로필이 업데이트되었습니다.';
+      showToast('저장되었습니다', 'success');
+      setTimeout(() => { pa.className = 'alert-inline'; }, 4000);
+    } else throw new Error(data.error);
+  } catch(e) { showToast('저장에 실패했습니다', 'error'); }
+  finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> 변경사항 저장'; }
 }
 
+/* ─── 탭 전환 ─── */
 function showTab(tab) {
   ['overview','bookings','history','maintenance','profile'].forEach(t => {
-    document.getElementById('content-'+t).style.display='none';
-    document.getElementById('tab-'+t)?.classList.remove('active');
+    document.getElementById('content-' + t).style.display = 'none';
+    document.getElementById('tab-' + t)?.classList.remove('active');
   });
-  document.getElementById('content-'+tab).style.display='block';
-  document.getElementById('tab-'+tab)?.classList.add('active');
-  const titles = {overview:'대시보드',bookings:'예약 내역',history:'서비스 이력',maintenance:'정기 점검',profile:'프로필 설정'};
-  document.getElementById('pageTitle').textContent = titles[tab]||tab;
-  if (tab==='bookings') renderAllBookings();
-  if (tab==='history') loadHistory();
-  if (tab==='overview') checkOnboardingBanner();
+  document.getElementById('content-' + tab).style.display = 'block';
+  document.getElementById('tab-'     + tab)?.classList.add('active');
+  const titles = { overview:'대시보드', bookings:'예약 내역', history:'서비스 이력', maintenance:'정기 점검', profile:'프로필 설정' };
+  document.getElementById('pageTitle').textContent = titles[tab] || tab;
+  if (tab === 'bookings')    renderAllBookings();
+  if (tab === 'history')     loadHistory();
+  if (tab === 'overview')    checkOnboardingBanner();
 }
 
+/* ─── 상태 뱃지 ─── */
 function statusBadge(s) {
-  const cls = {pending:'badge-gold',confirmed:'badge-navy',completed:'badge-green',cancelled:'badge-red',in_progress:'badge-blue'};
-  const label = {pending:'대기 중',confirmed:'확정',completed:'완료',cancelled:'취소',in_progress:'진행 중'};
-  return `<span class="badge ${cls[s]||'badge-grey'}">${label[s]||s}</span>`;
+  const cls   = { pending:'badge-gold', confirmed:'badge-navy', completed:'badge-green', cancelled:'badge-red', in_progress:'badge-blue' };
+  const label = { pending:'대기 중', confirmed:'확정', completed:'완료', cancelled:'취소', in_progress:'진행 중' };
+  return `<span class="badge ${cls[s] || 'badge-grey'}">${label[s] || s}</span>`;
 }
 
+/* ─── 로그아웃 ─── */
 function logout() {
   localStorage.removeItem('yachtToken');
   localStorage.removeItem('yachtUser');
@@ -1006,11 +1453,14 @@ function logout() {
   location.href = '/';
 }
 
-function showToast(msg, type='') {
-  const t = document.getElementById('toast');
-  t.textContent=msg; t.className='toast'+(type?' '+type:'');
+/* ─── 토스트 ─── */
+function showToast(msg, type = '') {
+  const t = document.getElementById('myToast');
+  t.textContent = msg;
+  t.style.background = type === 'error' ? '#9D1D22' : '#002D56';
   t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),3000);
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3200);
 }
 </script>
 </body>
