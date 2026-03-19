@@ -48,7 +48,7 @@
   <div class="container">
 
     <!-- 비로그인 알림 배너 -->
-    <div id="guestNoticeBanner" style="display:none;background:linear-gradient(135deg,var(--navy),#0a3561);border-radius:var(--radius-md);padding:16px 24px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div id="guestNoticeBanner" style="display:none;background:linear-gradient(135deg,var(--navy),#0a3561);border-radius:var(--radius-md);padding:16px 24px;margin-bottom:28px;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
       <div style="display:flex;align-items:center;gap:12px">
         <i class="fas fa-info-circle" style="color:rgba(255,200,100,0.9);font-size:18px;flex-shrink:0"></i>
         <div style="color:rgba(255,255,255,0.9);font-size:14px">
@@ -918,33 +918,30 @@ async function renderTimeSlotsForDate(dateStr) {
   }
   const available = slotMap[dateStr] || [];
   
-  // 전체 가능 슬롯 목록 (09:00~17:00 매 시간)
+  // 전체 운영 가능 슬롯 목록
   const allTimes = ['09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00'];
-  // DB에 등록된 슬롯만 유효, 나머지는 운영시간 외
-  const dbTimes = ['09:00','13:00']; // 기본 운영 슬롯
+  // DB 슬롯이 없으면 기본 운영 슬롯으로 fallback
+  const defaultTimes = ['09:00','10:00','11:00','13:00','14:00','15:00','16:00'];
+  const activeTimes = available.length > 0 ? available : defaultTimes;
 
   container.innerHTML = '';
-  if (available.length === 0 && dbTimes.length === 0) {
-    container.innerHTML = '<div style="color:var(--text-light);font-size:13px;padding:12px 0">이 날짜에는 예약 가능한 시간이 없습니다.</div>';
-    return;
-  }
-
+  
   allTimes.forEach(t => {
     const div = document.createElement('div');
     div.className = 'time-slot';
     div.textContent = t;
-    if (available.includes(t)) {
+    if (activeTimes.includes(t)) {
       div.onclick = () => selectTime(t);
       if (state.time === t) div.classList.add('selected');
     } else {
       div.classList.add('disabled');
-      div.title = '예약 불가';
+      div.title = '예약 마감';
     }
     container.appendChild(div);
   });
 
   // 이전 선택 시간이 새 날짜에서 불가 → 초기화
-  if (state.time && !available.includes(state.time)) {
+  if (state.time && !activeTimes.includes(state.time)) {
     state.time = null;
     updateSummary();
   }
