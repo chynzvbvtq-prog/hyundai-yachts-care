@@ -3104,3 +3104,131 @@ img[loading="lazy"] {
   align-items: center;
   gap: 10px;
 }
+
+/* ════════════════════════════════════════════════
+   🚨 EMERGENCY LAYOUT FIX — 응급 레이아웃 복구
+   ================================================
+   모든 페이지의 사이드바/메인 레이아웃 충돌 방지
+   중복 CSS 규칙 무력화 및 핵심 레이아웃 확정
+   ================================================ */
+
+/* ── 사이드바 + 메인 레이아웃 (대시보드/어드민 공통) ── */
+.dash-layout {
+  display: grid !important;
+  grid-template-columns: 260px 1fr !important;
+  min-height: 100vh !important;
+}
+.sidebar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 260px !important;
+  height: 100vh !important;
+  background: var(--navy, #002D56) !important;
+  z-index: 100 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow-y: auto !important;
+}
+.dash-main {
+  margin-left: 260px !important;
+  background: var(--bg-light, #F5F7FA) !important;
+  min-height: 100vh !important;
+}
+.dash-content {
+  padding: 40px !important;
+}
+.dash-header {
+  background: #fff !important;
+  border-bottom: 1px solid var(--bg-medium, #E8ECF0) !important;
+  padding: 20px 40px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+}
+
+/* ── 모바일: 960px 이하에서 사이드바 숨김 ── */
+@media (max-width: 960px) {
+  .dash-layout {
+    grid-template-columns: 1fr !important;
+  }
+  .sidebar {
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+  }
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+  .dash-main {
+    margin-left: 0 !important;
+  }
+  .dash-content {
+    padding: 20px !important;
+  }
+  .dash-header {
+    padding: 16px 20px !important;
+  }
+}
+
+/* ── navbar 고정: 일반 페이지용 ── */
+.navbar {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  z-index: 1000 !important;
+}
+
+/* ── 일반 페이지 (booking, 홈 등) 최상단 여백 ── */
+.page-header {
+  padding-top: 100px !important;
+}
+
+/* ── 전체 기본 여백 및 박스 모델 ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: hidden !important;
+}
+
+/* ── stats-grid 반응형 ── */
+.stats-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 20px !important;
+  margin-bottom: 32px !important;
+}
+@media (max-width: 960px) {
+  .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 480px) {
+  .stats-grid { grid-template-columns: 1fr 1fr !important; }
+}
+
+/* ── 카드 공통 ── */
+.data-card, .card {
+  background: #fff !important;
+  border-radius: var(--radius-md, 12px) !important;
+  border: 1.5px solid var(--bg-medium, #E8ECF0) !important;
+  box-shadow: var(--shadow-sm, 0 1px 4px rgba(0,0,0,0.06)) !important;
+  overflow: hidden !important;
+}
+
+/* ── 버튼 초기화 ── */
+.btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border: none !important;
+  cursor: pointer !important;
+  font-family: inherit !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+}

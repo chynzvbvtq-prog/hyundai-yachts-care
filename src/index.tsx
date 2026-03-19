@@ -238,35 +238,46 @@ app.post('/api/init-db', async (c) => {
   }
 })
 
-// 정적 파일 서빙
+// 정적 파일 서빙 (/static/* → public/static/)
 app.use('/static/*', serveStatic({ root: './' }))
 
-// ── 모든 정적 자산 서빙 (ASSETS binding 우선, 없으면 serveStatic) ──
-// HTML 페이지들을 ASSETS에서 직접 서빙
-app.get('*.html', async (c) => {
+// ── HTML 페이지 서빙 ──
+// ASSETS 바인딩(Cloudflare Pages)으로 각 HTML 파일을 직접 서빙
+// 확장자 없는 경로와 .html 경로 모두 처리
+const HTML_MAP: Record<string, string> = {
+  '/':            '/index.html',
+  '/index':       '/index.html',
+  '/index.html':  '/index.html',
+  '/login':       '/login.html',
+  '/login.html':  '/login.html',
+  '/register':    '/register.html',
+  '/register.html': '/register.html',
+  '/booking':     '/booking.html',
+  '/booking.html': '/booking.html',
+  '/dashboard':   '/dashboard.html',
+  '/dashboard.html': '/dashboard.html',
+  '/admin':       '/admin.html',
+  '/admin.html':  '/admin.html',
+}
+
+async function serveHtmlPage(c: any, assetPath: string): Promise<Response> {
   const assets = (c.env as any).ASSETS
   if (assets) {
-    const res = await assets.fetch(c.req.raw)
-    if (res.status !== 404) return res
+    try {
+      const assetUrl = new URL(assetPath, c.req.url)
+      const res = await assets.fetch(new Request(assetUrl.toString()))
+      if (res.ok) return res
+    } catch (_) {}
   }
-  // fallback: serveStatic
-  const path = c.req.path.replace(/^\//, '')
-  const serve = serveStatic({ path: `./${path}` })
-  return serve(c, async () => c.text('Not Found', 404))
-})
+  return c.text('Page Not Found', 404)
+}
+
+// 각 경로 등록
+for (const [route, file] of Object.entries(HTML_MAP)) {
+  app.get(route, (c) => serveHtmlPage(c, file))
+}
 
 // SPA 폴백 - index.html 반환
-app.get('*', async (c) => {
-  const assets = (c.env as any).ASSETS
-  if (assets) {
-    // 정확한 경로로 먼저 시도
-    const exactRes = await assets.fetch(c.req.raw)
-    if (exactRes.status !== 404) return exactRes
-    // SPA fallback: index.html
-    const html = await assets.fetch(new Request(new URL('/', c.req.url)))
-    if (html && html.status !== 404) return html
-  }
-  return c.text('Not Found', 404)
-})
+app.get('*', (c) => serveHtmlPage(c, '/index.html'))
 
 export default app
