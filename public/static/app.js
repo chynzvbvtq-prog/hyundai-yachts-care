@@ -126,14 +126,23 @@ async function authFetch(url, options = {}) {
 
 // ── Hamburger menu ──
 function toggleMenu() {
-  document.getElementById('navMenu')?.classList.toggle('open');
-  document.getElementById('hamburger')?.classList.toggle('open');
-  document.getElementById('menuOverlay')?.classList.toggle('active');
+  const navMenu   = document.getElementById('navMenu');
+  const hamburger = document.getElementById('hamburger');
+  const overlay   = document.getElementById('menuOverlay');
+  const isOpen    = navMenu?.classList.contains('open');
+
+  navMenu?.classList.toggle('open');
+  hamburger?.classList.toggle('open');
+  overlay?.classList.toggle('active');
+
+  // 메뉴 열림 시 body 스크롤 잠금 (모바일)
+  document.body.style.overflow = isOpen ? '' : 'hidden';
 }
 function closeMenu() {
   document.getElementById('navMenu')?.classList.remove('open');
   document.getElementById('hamburger')?.classList.remove('open');
   document.getElementById('menuOverlay')?.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 // ── Loading overlay ──
@@ -304,14 +313,23 @@ function showToast(msg, type = '') {
 
 // ── Hamburger menu ──
 function toggleMenu() {
-  document.getElementById('navMenu')?.classList.toggle('open');
-  document.getElementById('hamburger')?.classList.toggle('open');
-  document.getElementById('menuOverlay')?.classList.toggle('active');
+  const navMenu   = document.getElementById('navMenu');
+  const hamburger = document.getElementById('hamburger');
+  const overlay   = document.getElementById('menuOverlay');
+  const isOpen    = navMenu?.classList.contains('open');
+
+  navMenu?.classList.toggle('open');
+  hamburger?.classList.toggle('open');
+  overlay?.classList.toggle('active');
+
+  // 메뉴 열림 시 body 스크롤 잠금 (모바일)
+  document.body.style.overflow = isOpen ? '' : 'hidden';
 }
 function closeMenu() {
   document.getElementById('navMenu')?.classList.remove('open');
   document.getElementById('hamburger')?.classList.remove('open');
   document.getElementById('menuOverlay')?.classList.remove('active');
+  document.body.style.overflow = '';
 }
 
 // ── Loading overlay ──
