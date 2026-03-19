@@ -3576,12 +3576,14 @@ body {
    ① 서비스 패키지 3-Tier 카드 (ESSENTIAL / PREMIUM / SIGNATURE)
    ════════════════════════════════════════════════════════════ */
 
-
 /* ══════════════════════════════════════════════════════
-   SECTION CSS — (hero animations, marina, stats, testimonials,
-   slider, compare, calculator extras, process-h)
+   SECTION STYLES — Hero, Marina, Stats, Testimonials,
+   Process, Compare, Calculator, CTA, Trust, Fade anim
+   (formerly inline in index.html — moved here so new
+    design CSS below can correctly override as needed)
    ══════════════════════════════════════════════════════ */
-    /* ══════════════════════════════════════════
+
+/* ══════════════════════════════════════════
        INDEX PAGE — BATCH 5 DESIGN REFRESH
        ══════════════════════════════════════════ */
 
@@ -4118,7 +4120,6 @@ body {
     .marina-section .section-label { color: rgba(157,29,34,0.85); }
     .marina-section .divider-gold { background: rgba(157,29,34,0.5); }
 
-/* ══ NEW DESIGN CSS — overrides legacy above ══ */
 
 .pkg-tier-grid {
   display: grid;
@@ -4628,5 +4629,4 @@ body {
 .fp-legal { display: flex; gap: 20px; }
 .fp-legal a { font-size: 12px; color: rgba(255,255,255,0.28); text-decoration: none; transition: color 0.2s; }
 .fp-legal a:hover { color: #d4af37; }
-
 
