@@ -159,20 +159,38 @@
       content:''; position:absolute; inset:0;
       background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%239D1D22' fill-opacity='0.04'%3E%3Ccircle cx='40' cy='40' r='3'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") repeat;
     }
+    /* 마리나 탭 */
+    .marina-tabs {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      justify-content: center; margin-top: 36px; margin-bottom: 0;
+    }
+    .marina-tab {
+      padding: 8px 18px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 20px;
+      color: rgba(255,255,255,0.7);
+      font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .25s ease;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    .marina-tab:hover { background: rgba(255,255,255,0.15); color: #fff; }
+    .marina-tab.active { background: var(--brand-red); border-color: var(--brand-red); color: #fff; }
     .marina-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px; margin-top: 48px;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 18px; margin-top: 28px;
     }
     .marina-card {
       background: rgba(255,255,255,0.06);
       border: 1px solid rgba(255,255,255,0.1);
       border-radius: var(--radius-md);
-      padding: 28px 24px;
+      padding: 24px 20px;
       transition: var(--transition);
       cursor: default;
       position: relative; overflow:hidden;
     }
+    .marina-card.hidden { display: none; }
     .marina-card::before {
       content:''; position:absolute; top:0; left:0; right:0; height:3px;
       background: var(--brand-red); transform:scaleX(0); transform-origin:left;
@@ -180,12 +198,21 @@
     }
     .marina-card:hover { background:rgba(255,255,255,0.1); border-color:rgba(157,29,34,0.4); transform:translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.3); }
     .marina-card:hover::before { transform:scaleX(1); }
+    /* 지역 배지 (구 .marina-card-region 대체) */
+    .marina-card-region-badge {
+      display: inline-block;
+      font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700;
+      letter-spacing:.14em; text-transform:uppercase;
+      color: var(--navy); background: var(--brand-red);
+      padding: 2px 8px; border-radius: 10px;
+      margin-bottom:10px;
+    }
     .marina-card-region {
       font-family:'Montserrat',sans-serif; font-size:10px; font-weight:700;
       letter-spacing:.14em; text-transform:uppercase; color:var(--brand-red);
       margin-bottom:10px;
     }
-    .marina-card-name { font-size:17px; font-weight:700; color:#fff; margin-bottom:8px; }
+    .marina-card-name { font-size:16px; font-weight:700; color:#fff; margin-bottom:8px; }
     .marina-card-desc { font-size:13px; color:rgba(255,255,255,0.55); line-height:1.6; margin-bottom:14px; }
     .marina-card-tag {
       display:inline-flex; align-items:center; gap:5px;
@@ -932,46 +959,103 @@
       <span class="section-label" style="color:var(--brand-red)">Service Areas</span>
       <h2 class="section-title section-title-white fade-up">전국 주요 마리나 서비스</h2>
       <div class="divider-gold"></div>
-      <p class="section-subtitle section-subtitle-white fade-up delay-1">부산·경남·전남·제주 등 주요 마리나에서 직접 서비스합니다.</p>
+      <p class="section-subtitle section-subtitle-white fade-up delay-1">수도권·서해·동해·남해·제주 전국 마리나에서 직접 서비스합니다.</p>
     </div>
-    <div class="marina-grid fade-up">
-      <div class="marina-card">
-        <div class="marina-card-region">부산</div>
+
+    <!-- 지역 탭 필터 -->
+    <div class="marina-tabs fade-up" id="marinaTabs">
+      <button class="marina-tab active" onclick="filterMarina('all',this)">전체</button>
+      <button class="marina-tab" onclick="filterMarina('수도권',this)">수도권 · 한강</button>
+      <button class="marina-tab" onclick="filterMarina('서해',this)">서해권</button>
+      <button class="marina-tab" onclick="filterMarina('동해',this)">동해권</button>
+      <button class="marina-tab" onclick="filterMarina('부산',this)">부산</button>
+      <button class="marina-tab" onclick="filterMarina('경남',this)">경남</button>
+      <button class="marina-tab" onclick="filterMarina('전남',this)">전남</button>
+      <button class="marina-tab" onclick="filterMarina('제주',this)">제주</button>
+    </div>
+
+    <div class="marina-grid fade-up" id="marinaGrid">
+      <!-- 수도권·한강 -->
+      <div class="marina-card" data-region="수도권">
+        <div class="marina-card-region-badge">수도권</div>
+        <div class="marina-card-name">아라마리나 (경인 아라뱃길)</div>
+        <div class="marina-card-desc">경인 아라뱃길 수도권 최대 마리나. 서울 접근성 최고, 다양한 부대시설 완비.</div>
+        <span class="marina-card-tag"><i class="fas fa-anchor"></i> 수도권 거점</span>
+      </div>
+      <div class="marina-card" data-region="수도권">
+        <div class="marina-card-region-badge">한강</div>
+        <div class="marina-card-name">한강 마리나 (반포)</div>
+        <div class="marina-card-desc">서울 도심 속 한강 마리나. 반포 지구 기반, 접근성이 뛰어난 도심형 요트 관리.</div>
+        <span class="marina-card-tag"><i class="fas fa-anchor"></i> 도심 마리나</span>
+      </div>
+      <!-- 서해권 -->
+      <div class="marina-card" data-region="서해">
+        <div class="marina-card-region-badge">서해</div>
+        <div class="marina-card-name">전곡 마리나 (화성)</div>
+        <div class="marina-card-desc">서해안 최대 규모 마리나. 수도권 접근이 쉽고 국제 요트 행사 개최지.</div>
+        <span class="marina-card-tag"><i class="fas fa-anchor"></i> 서해 최대</span>
+      </div>
+      <div class="marina-card" data-region="서해">
+        <div class="marina-card-region-badge">서해</div>
+        <div class="marina-card-name">당진 왜목 마리나</div>
+        <div class="marina-card-desc">서해 일몰 명소 왜목항 인근. 조용한 환경에서 요트 관리에 집중 가능.</div>
+        <span class="marina-card-tag"><i class="fas fa-anchor"></i> 서해 낙조</span>
+      </div>
+      <!-- 동해권 -->
+      <div class="marina-card" data-region="동해">
+        <div class="marina-card-region-badge">동해</div>
+        <div class="marina-card-name">속초 마리나 리조트</div>
+        <div class="marina-card-desc">동해안 청정 바다와 설악산을 배경으로 한 프리미엄 요트 관리 서비스.</div>
+        <span class="marina-card-tag"><i class="fas fa-anchor"></i> 동해 청정</span>
+      </div>
+      <div class="marina-card" data-region="동해">
+        <div class="marina-card-region-badge">동해</div>
+        <div class="marina-card-name">포항 요트 마리나</div>
+        <div class="marina-card-desc">영일만 포항 마리나. 동해남부권 서비스 허브로 접근성과 시설이 우수.</div>
+        <span class="marina-card-tag"><i class="fas fa-anchor"></i> 동해남부 거점</span>
+      </div>
+      <!-- 부산 -->
+      <div class="marina-card" data-region="부산">
+        <div class="marina-card-region-badge">부산</div>
         <div class="marina-card-name">수영만 요트경기장</div>
         <div class="marina-card-desc">국내 최대 마리나 시설. 300여 척 계류 가능. 서비스 허브 거점.</div>
         <span class="marina-card-tag"><i class="fas fa-anchor"></i> 300척 계류</span>
       </div>
-      <div class="marina-card">
-        <div class="marina-card-region">부산</div>
+      <div class="marina-card" data-region="부산">
+        <div class="marina-card-region-badge">부산</div>
         <div class="marina-card-name">해운대 요트클럽</div>
         <div class="marina-card-desc">해운대 마린시티 인근. 고급 마리나 시설과 편의 서비스 완비.</div>
         <span class="marina-card-tag"><i class="fas fa-anchor"></i> 프리미엄 시설</span>
       </div>
-      <div class="marina-card">
-        <div class="marina-card-region">경남</div>
+      <!-- 경남 -->
+      <div class="marina-card" data-region="경남">
+        <div class="marina-card-region-badge">경남</div>
         <div class="marina-card-name">거제 마리나 리조트</div>
         <div class="marina-card-desc">청정 한려수도를 배경으로 한 복합 마리나 리조트. 숙박 연계 가능.</div>
         <span class="marina-card-tag"><i class="fas fa-anchor"></i> 리조트 연계</span>
       </div>
-      <div class="marina-card">
-        <div class="marina-card-region">경남</div>
+      <div class="marina-card" data-region="경남">
+        <div class="marina-card-region-badge">경남</div>
         <div class="marina-card-name">통영 마리나</div>
         <div class="marina-card-desc">동양의 나폴리 통영. 역사와 자연이 어우러진 프리미엄 요트 성지.</div>
         <span class="marina-card-tag"><i class="fas fa-anchor"></i> 역사문화 도시</span>
       </div>
-      <div class="marina-card">
-        <div class="marina-card-region">전남</div>
+      <!-- 전남 -->
+      <div class="marina-card" data-region="전남">
+        <div class="marina-card-region-badge">전남</div>
         <div class="marina-card-name">여수 마리나</div>
         <div class="marina-card-desc">여수 엑스포 해양공원 인근. 다도해 풍경 속 고급 마리나 서비스.</div>
         <span class="marina-card-tag"><i class="fas fa-anchor"></i> 다도해 뷰</span>
       </div>
-      <div class="marina-card">
-        <div class="marina-card-region">제주</div>
+      <!-- 제주 -->
+      <div class="marina-card" data-region="제주">
+        <div class="marina-card-region-badge">제주</div>
         <div class="marina-card-name">제주 중문 · 서귀포 마리나</div>
         <div class="marina-card-desc">제주 남서부 최고의 마리나. 에메랄드빛 바다와 함께하는 요트 관리.</div>
         <span class="marina-card-tag"><i class="fas fa-anchor"></i> 에메랄드 바다</span>
       </div>
     </div>
+
     <div style="text-align:center;margin-top:36px">
       <a href="#inquiry" class="btn btn-outline btn-lg" style="border-color:rgba(255,255,255,.3);color:#fff">
         <i class="fas fa-map-marker-alt"></i>&nbsp; 서비스 지역 문의하기
@@ -1067,109 +1151,91 @@
       <span class="section-label">Why Choose Us</span>
       <h2 class="section-title fade-up">현대요트 케어를 선택해야 하는 이유</h2>
       <div class="divider-gold"></div>
+      <p class="section-subtitle fade-up delay-1">국제 공인 전문 기술진, 스마트 관리 시스템, 친환경 서비스로 최고의 요트 케어를 제공합니다.</p>
     </div>
 
-    <div class="feature-item fade-up">
-      <div class="feature-visual">
-        <div class="feature-visual-bg"></div>
-        <div class="feature-visual-inner">
-          <div class="feature-visual-icon"><i class="fas fa-certificate"></i></div>
-          <div class="feature-visual-title" style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)">공인 전문 기술진</div>
-          <div class="feature-visual-stats">
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">10+</div>
-              <div class="feature-visual-stat-label">년 경력</div>
-            </div>
-            <div class="feature-visual-divider"></div>
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">15</div>
-              <div class="feature-visual-stat-label">전문 자격증</div>
-            </div>
-            <div class="feature-visual-divider"></div>
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">100%</div>
-              <div class="feature-visual-stat-label">공인 인증</div>
-            </div>
+    <div class="features-grid">
+      <!-- 1. 공인 전문 기술진 -->
+      <div class="feature-card fade-up delay-1">
+        <div class="feature-card-icon"><i class="fas fa-certificate"></i></div>
+        <div class="feature-card-label">Certified Experts</div>
+        <h3>국제 공인 자격증 보유<br>전문 기술진 직접 서비스</h3>
+        <div class="feature-card-stats">
+          <div>
+            <div class="feature-card-stat-num">10+</div>
+            <div class="feature-card-stat-label">년 경력</div>
+          </div>
+          <div class="feature-card-stat-divider"></div>
+          <div>
+            <div class="feature-card-stat-num">15</div>
+            <div class="feature-card-stat-label">전문 자격증</div>
+          </div>
+          <div class="feature-card-stat-divider"></div>
+          <div>
+            <div class="feature-card-stat-num">100%</div>
+            <div class="feature-card-stat-label">공인 인증</div>
           </div>
         </div>
-      </div>
-      <div class="feature-body">
-        <span class="section-label">Certified Experts</span>
-        <h3>국제 공인 자격증 보유<br>전문 기술진 직접 서비스</h3>
-        <p>해양수산부 인증 및 국제 선박 관리 자격을 보유한 전문 기술진이 직접 서비스를 제공합니다. 요트의 모든 시스템을 완벽하게 이해하고 관리합니다.</p>
-        <ul class="feature-list">
+        <p>해양수산부 인증 및 국제 선박 관리 자격을 보유한 전문 기술진이 직접 서비스를 제공합니다.</p>
+        <ul class="feature-card-list">
           <li><i class="fas fa-check"></i> 해양수산부 인증 전문 기술진</li>
           <li><i class="fas fa-check"></i> 국제 선박 정비 자격 보유</li>
           <li><i class="fas fa-check"></i> 10년 이상 경력 엔지니어</li>
           <li><i class="fas fa-check"></i> 연간 지속 교육 이수</li>
         </ul>
-        <a href="/booking.html" class="btn btn-outline-dark">서비스 예약하기</a>
+        <a href="/booking.html" class="btn btn-outline-navy">서비스 예약하기</a>
       </div>
-    </div>
 
-    <div class="feature-item reverse fade-up">
-      <div class="feature-visual">
-        <div class="feature-visual-bg"></div>
-        <div class="feature-visual-inner">
-          <div class="feature-visual-icon"><i class="fas fa-mobile-alt"></i></div>
-          <div class="feature-visual-title" style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)">스마트 관리 시스템</div>
-          <div class="feature-visual-stats">
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">24/7</div>
-              <div class="feature-visual-stat-label">온라인 예약</div>
-            </div>
-            <div class="feature-visual-divider"></div>
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">실시간</div>
-              <div class="feature-visual-stat-label">서비스 현황</div>
-            </div>
+      <!-- 2. 스마트 관리 시스템 -->
+      <div class="feature-card fade-up delay-2">
+        <div class="feature-card-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div class="feature-card-label">Smart Management</div>
+        <h3>실시간 예약 &amp; 서비스<br>이력 관리 시스템</h3>
+        <div class="feature-card-stats">
+          <div>
+            <div class="feature-card-stat-num">24/7</div>
+            <div class="feature-card-stat-label">온라인 예약</div>
+          </div>
+          <div class="feature-card-stat-divider"></div>
+          <div>
+            <div class="feature-card-stat-num">실시간</div>
+            <div class="feature-card-stat-label">서비스 현황</div>
           </div>
         </div>
-      </div>
-      <div class="feature-body">
-        <span class="section-label">Smart Management</span>
-        <h3>실시간 예약 &amp; 서비스<br>이력 관리 시스템</h3>
-        <p>온라인 예약부터 서비스 완료 리포트까지, 요트 관리의 모든 과정을 디지털로 관리할 수 있습니다. 언제 어디서나 요트 상태를 확인하세요.</p>
-        <ul class="feature-list">
+        <p>온라인 예약부터 서비스 완료 리포트까지 요트 관리의 모든 과정을 디지털로 관리합니다.</p>
+        <ul class="feature-card-list">
           <li><i class="fas fa-check"></i> 온라인 실시간 예약 시스템</li>
           <li><i class="fas fa-check"></i> 서비스 이력 데이터베이스</li>
           <li><i class="fas fa-check"></i> 정기 점검 알림 서비스</li>
           <li><i class="fas fa-check"></i> 전담 고객 관리 시스템</li>
         </ul>
-        <a href="/booking.html" class="btn btn-outline-dark">지금 시작하기</a>
+        <a href="/booking.html" class="btn btn-outline-navy">지금 시작하기</a>
       </div>
-    </div>
 
-    <div class="feature-item fade-up">
-      <div class="feature-visual">
-        <div class="feature-visual-bg"></div>
-        <div class="feature-visual-inner">
-          <div class="feature-visual-icon"><i class="fas fa-leaf"></i></div>
-          <div class="feature-visual-title" style="font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.7)">친환경 서비스</div>
-          <div class="feature-visual-stats">
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">ISO</div>
-              <div class="feature-visual-stat-label">14001 인증</div>
-            </div>
-            <div class="feature-visual-divider"></div>
-            <div class="feature-visual-stat">
-              <div class="feature-visual-stat-num">0</div>
-              <div class="feature-visual-stat-label">해양 오염 물질</div>
-            </div>
+      <!-- 3. 친환경 서비스 -->
+      <div class="feature-card fade-up delay-3">
+        <div class="feature-card-icon"><i class="fas fa-leaf"></i></div>
+        <div class="feature-card-label">Eco-Friendly</div>
+        <h3>해양 환경을 생각하는<br>친환경 케어 솔루션</h3>
+        <div class="feature-card-stats">
+          <div>
+            <div class="feature-card-stat-num">ISO</div>
+            <div class="feature-card-stat-label">14001 인증</div>
+          </div>
+          <div class="feature-card-stat-divider"></div>
+          <div>
+            <div class="feature-card-stat-num">0</div>
+            <div class="feature-card-stat-label">해양 오염 물질</div>
           </div>
         </div>
-      </div>
-      <div class="feature-body">
-        <span class="section-label">Eco-Friendly</span>
-        <h3>해양 환경을 생각하는<br>친환경 케어 솔루션</h3>
-        <p>해양 생태계를 보호하는 친환경 세제와 공법을 사용합니다. 요트를 깨끗하게 유지하면서도 바다를 보호하는 책임감 있는 서비스를 제공합니다.</p>
-        <ul class="feature-list">
+        <p>해양 생태계를 보호하는 친환경 세제와 공법으로 요트를 깨끗하게 유지하면서 바다를 지킵니다.</p>
+        <ul class="feature-card-list">
           <li><i class="fas fa-check"></i> 해양 무해 친환경 세제 사용</li>
           <li><i class="fas fa-check"></i> 오폐수 친환경 처리 시스템</li>
           <li><i class="fas fa-check"></i> ISO 14001 환경경영 인증</li>
           <li><i class="fas fa-check"></i> 탄소중립 서비스 목표</li>
         </ul>
-        <a href="#inquiry" class="btn btn-outline-dark">더 알아보기</a>
+        <a href="#inquiry" class="btn btn-outline-navy">더 알아보기</a>
       </div>
     </div>
   </div>
@@ -1187,58 +1253,84 @@
     </div>
 
     <div class="calculator-wrap fade-up">
-      <div class="calc-grid">
-        <div>
-          <label class="calc-label">서비스 패키지</label>
-          <!-- Quick-pick chips -->
-          <div class="calc-pkg-preview" id="calcPkgChips">
-            <button class="calc-pkg-chip" onclick="setPkgChip('basic',this)">베이직</button>
-            <button class="calc-pkg-chip" onclick="setPkgChip('premium',this)">프리미엄</button>
-            <button class="calc-pkg-chip" onclick="setPkgChip('signature',this)">시그니처</button>
+      <!-- 패키지 선택 카드 -->
+      <div class="calc-pkg-row">
+        <div class="calc-section-label"><i class="fas fa-box"></i> 서비스 패키지 선택</div>
+        <div class="calc-pkg-cards" id="calcPkgCards">
+          <button class="calc-pkg-card" onclick="setCalcPkg('basic',this)">
+            <span class="calc-pkg-card-name">베이직</span>
+            <span class="calc-pkg-card-price">150,000원~</span>
+          </button>
+          <button class="calc-pkg-card" onclick="setCalcPkg('premium',this)">
+            <span class="calc-pkg-card-badge">인기</span>
+            <span class="calc-pkg-card-name">프리미엄</span>
+            <span class="calc-pkg-card-price">380,000원~</span>
+          </button>
+          <button class="calc-pkg-card" onclick="setCalcPkg('signature',this)">
+            <span class="calc-pkg-card-name">시그니처</span>
+            <span class="calc-pkg-card-price">750,000원~</span>
+          </button>
+        </div>
+        <!-- 숨겨진 select (JS 호환용) -->
+        <select class="calc-select" id="calcPackage" onchange="updateCalc()" style="display:none">
+          <option value="">패키지를 선택하세요</option>
+          <option value="basic">베이직 케어</option>
+          <option value="premium">프리미엄 케어</option>
+          <option value="signature">시그니처 케어</option>
+        </select>
+      </div>
+
+      <!-- 세부 옵션 -->
+      <div class="calc-options-grid">
+        <div class="calc-option-group">
+          <div class="calc-section-label"><i class="fas fa-ruler-horizontal"></i> 요트 길이</div>
+          <div class="calc-length-row">
+            <input type="number" class="calc-input calc-input-lg" id="calcLength" placeholder="예: 35" min="20" max="100" oninput="updateCalc()">
+            <span class="calc-unit">ft</span>
           </div>
-          <select class="calc-select" id="calcPackage" onchange="updateCalc()">
-            <option value="">패키지를 선택하세요</option>
-            <option value="basic">베이직 케어 (150,000원~)</option>
-            <option value="premium">프리미엄 케어 (380,000원~)</option>
-            <option value="signature">시그니처 케어 (750,000원~)</option>
-          </select>
+          <div class="calc-size-chips">
+            <button class="calc-size-chip" onclick="setLength(25,this)">~30ft</button>
+            <button class="calc-size-chip" onclick="setLength(38,this)">30~45ft</button>
+            <button class="calc-size-chip" onclick="setLength(52,this)">45~60ft</button>
+            <button class="calc-size-chip" onclick="setLength(70,this)">60ft+</button>
+          </div>
         </div>
-        <div>
-          <label class="calc-label">요트 길이 (피트)</label>
-          <input type="number" class="calc-input" id="calcLength" placeholder="예: 35" min="20" max="100" oninput="updateCalc()">
-        </div>
-        <div>
-          <label class="calc-label">추가 서비스</label>
-          <select class="calc-select" id="calcExtra" onchange="updateCalc()">
-            <option value="0">없음</option>
-            <option value="100000">나노 코팅 (+100,000원)</option>
-            <option value="150000">수중 점검 (+150,000원)</option>
-            <option value="80000">실내 전문 청소 (+80,000원)</option>
-          </select>
-        </div>
-        <div>
-          <label class="calc-label">서비스 위치</label>
-          <select class="calc-select" id="calcLocation" onchange="updateCalc()">
-            <option value="0">마리나 내 (기본)</option>
-            <option value="50000">출장 서비스 (+50,000원)</option>
-          </select>
-        </div>
-        <div class="calc-result-wrap">
-          <div class="calc-result">
-            <div>
-              <div class="calc-result-label">예상 견적 (VAT 포함)</div>
-              <div class="calc-result-note">* 실제 가격은 현장 점검 후 확정됩니다</div>
-            </div>
-            <div>
-              <div class="calc-result-amount" id="calcAmount">패키지 선택 후 확인</div>
-              <div class="calc-breakdown" id="calcBreakdown"></div>
-            </div>
+
+        <div class="calc-option-group">
+          <div class="calc-section-label"><i class="fas fa-plus-circle"></i> 추가 서비스</div>
+          <div class="calc-extra-list">
+            <label class="calc-extra-item">
+              <input type="checkbox" class="calc-extra-check" value="100000" onchange="updateCalc()"> 나노 코팅 <span class="calc-extra-price">+100,000원</span>
+            </label>
+            <label class="calc-extra-item">
+              <input type="checkbox" class="calc-extra-check" value="150000" onchange="updateCalc()"> 수중 점검 <span class="calc-extra-price">+150,000원</span>
+            </label>
+            <label class="calc-extra-item">
+              <input type="checkbox" class="calc-extra-check" value="80000" onchange="updateCalc()"> 실내 전문 청소 <span class="calc-extra-price">+80,000원</span>
+            </label>
+          </div>
+          <div style="margin-top:12px">
+            <div class="calc-section-label" style="margin-bottom:8px"><i class="fas fa-map-marker-alt"></i> 서비스 위치</div>
+            <select class="calc-select" id="calcLocation" onchange="updateCalc()">
+              <option value="0">마리나 내 (기본)</option>
+              <option value="50000">출장 서비스 (+50,000원)</option>
+            </select>
           </div>
         </div>
       </div>
-      <div style="text-align:center;margin-top:8px">
-        <a href="/booking.html" class="btn btn-primary btn-lg" id="calcBookBtn">
-          <i class="fas fa-calendar-check"></i>&nbsp; 이 금액으로 예약하기
+
+      <!-- 결과 영역 -->
+      <div class="calc-result-panel">
+        <div class="calc-result-left">
+          <div class="calc-result-label">예상 견적 (VAT 포함)</div>
+          <div class="calc-result-note">* 실제 가격은 현장 점검 후 확정됩니다</div>
+        </div>
+        <div class="calc-result-right">
+          <div class="calc-result-amount" id="calcAmount">패키지 선택 후 확인</div>
+          <div class="calc-breakdown" id="calcBreakdown"></div>
+        </div>
+        <a href="/booking.html" class="btn btn-primary btn-lg calc-book-btn" id="calcBookBtn">
+          <i class="fas fa-calendar-check"></i> 이 금액으로 예약하기
         </a>
       </div>
     </div>
@@ -1389,20 +1481,21 @@
       <span class="section-label">FAQ</span>
       <h2 class="section-title fade-up">자주 묻는 질문</h2>
       <div class="divider-gold"></div>
+      <p class="section-subtitle fade-up delay-1">궁금하신 사항을 빠르게 확인해보세요. 추가 문의는 하단 폼을 이용해 주세요.</p>
     </div>
     <div class="faq-list fade-up">
       <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">
-          서비스는 어디서 진행되나요?
+          <span><i class="fas fa-map-marker-alt" style="color:var(--brand-red);margin-right:10px;font-size:14px"></i>서비스는 어디서 진행되나요?</span>
           <div class="faq-icon"><i class="fas fa-plus"></i></div>
         </div>
         <div class="faq-answer">
-          <div class="faq-answer-inner">저희 서비스는 고객님의 요트가 계류된 마리나에서 직접 진행됩니다. 부산, 거제, 여수, 통영 등 주요 마리나에서 서비스 가능하며, 사전 협의를 통해 다른 지역도 방문 가능합니다.</div>
+          <div class="faq-answer-inner">저희 서비스는 고객님의 요트가 계류된 마리나에서 직접 진행됩니다. 부산, 거제, 여수, 통영, 제주 등 전국 주요 마리나에서 서비스 가능하며, 수도권(아라마리나), 서해(전곡 마리나), 동해(속초·포항) 지역도 사전 협의 후 방문 가능합니다.</div>
         </div>
       </div>
       <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">
-          서비스 소요 시간은 얼마나 걸리나요?
+          <span><i class="fas fa-clock" style="color:var(--brand-red);margin-right:10px;font-size:14px"></i>서비스 소요 시간은 얼마나 걸리나요?</span>
           <div class="faq-icon"><i class="fas fa-plus"></i></div>
         </div>
         <div class="faq-answer">
@@ -1411,7 +1504,7 @@
       </div>
       <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">
-          예약 변경 및 취소는 어떻게 하나요?
+          <span><i class="fas fa-calendar-times" style="color:var(--brand-red);margin-right:10px;font-size:14px"></i>예약 변경 및 취소는 어떻게 하나요?</span>
           <div class="faq-icon"><i class="fas fa-plus"></i></div>
         </div>
         <div class="faq-answer">
@@ -1420,7 +1513,7 @@
       </div>
       <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">
-          정기 관리 계약도 가능한가요?
+          <span><i class="fas fa-handshake" style="color:var(--brand-red);margin-right:10px;font-size:14px"></i>정기 관리 계약도 가능한가요?</span>
           <div class="faq-icon"><i class="fas fa-plus"></i></div>
         </div>
         <div class="faq-answer">
@@ -1429,7 +1522,7 @@
       </div>
       <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">
-          요트 크기에 따라 가격이 다른가요?
+          <span><i class="fas fa-ruler" style="color:var(--brand-red);margin-right:10px;font-size:14px"></i>요트 크기에 따라 가격이 다른가요?</span>
           <div class="faq-icon"><i class="fas fa-plus"></i></div>
         </div>
         <div class="faq-answer">
@@ -1438,7 +1531,7 @@
       </div>
       <div class="faq-item">
         <div class="faq-question" onclick="toggleFaq(this)">
-          서비스 후 보증이 있나요?
+          <span><i class="fas fa-shield-alt" style="color:var(--brand-red);margin-right:10px;font-size:14px"></i>서비스 후 보증이 있나요?</span>
           <div class="faq-icon"><i class="fas fa-plus"></i></div>
         </div>
         <div class="faq-answer">
@@ -1452,19 +1545,28 @@
 <!-- ── Inquiry ── -->
 <section class="inquiry" id="inquiry">
   <div class="container">
+    <div class="section-header">
+      <span class="section-label">Contact Us</span>
+      <h2 class="section-title fade-up">문의하기</h2>
+      <div class="divider-gold"></div>
+      <p class="section-subtitle fade-up delay-1">궁금한 점이나 특별한 요청사항이 있으시면 편하게 연락주세요.</p>
+    </div>
     <div class="inquiry-wrap">
+      <!-- 왼쪽: 연락처 정보 -->
       <div class="inquiry-info fade-up">
-        <span class="section-label">Contact Us</span>
-        <h3>언제든지 문의하세요</h3>
-        <p>요트 케어 서비스에 대한 궁금한 점이나 특별한 요청사항이 있으시면 편하게 연락주세요. 전문 상담사가 신속하게 답변드리겠습니다.</p>
-        <div class="contact-items">
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-phone"></i></div>
-            <div class="contact-text">
-              <strong>전화 상담</strong>
-              <span>1588-0000 (평일 09:00~18:00)</span>
-            </div>
+        <h3>언제든지<br>문의하세요</h3>
+        <p>전문 상담사가 신속하게 답변드리겠습니다. 요트 케어 서비스 상담, 견적, 예약 등 무엇이든 도와드립니다.</p>
+
+        <!-- 빠른 전화 배너 -->
+        <div class="inquiry-quick-banner">
+          <div class="inquiry-quick-text">
+            <strong><i class="fas fa-phone-alt" style="margin-right:8px"></i>1588-0000</strong>
+            평일 09:00 ~ 18:00
           </div>
+          <a href="tel:15880000" class="btn btn-primary btn-sm">전화 상담</a>
+        </div>
+
+        <div class="contact-items">
           <div class="contact-item">
             <div class="contact-icon"><i class="fas fa-envelope"></i></div>
             <div class="contact-text">
@@ -1476,22 +1578,31 @@
             <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
             <div class="contact-text">
               <strong>주요 서비스 지역</strong>
-              <span>부산, 거제, 여수, 통영, 제주 마리나</span>
+              <span>전국 마리나 (수도권·서해·동해·남해·제주)</span>
             </div>
           </div>
           <div class="contact-item">
             <div class="contact-icon"><i class="fas fa-clock"></i></div>
             <div class="contact-text">
               <strong>서비스 시간</strong>
-              <span>연중무휴 (시그니처 회원 24시간 긴급출동)</span>
+              <span>연중무휴 · 시그니처 회원 24시간 긴급출동</span>
+            </div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon"><i class="fas fa-comment-dots"></i></div>
+            <div class="contact-text">
+              <strong>카카오톡 채널</strong>
+              <span>@현대요트케어 (평일 상시 운영)</span>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- 오른쪽: 문의 폼 -->
       <div class="fade-up delay-2">
-        <div class="card">
-          <h4 style="margin-bottom:20px">문의 남기기</h4>
+        <div class="inquiry-form-card">
+          <div class="inquiry-form-title"><i class="fas fa-paper-plane" style="color:var(--brand-red);margin-right:8px"></i>문의 남기기</div>
+          <div class="inquiry-form-subtitle">평균 응답 시간: 2시간 이내 (영업 시간 기준)</div>
           <div id="inquiryAlert" class="alert"></div>
           <form id="inquiryForm" onsubmit="submitInquiry(event)">
             <div class="form-grid">
@@ -1511,11 +1622,11 @@
             <div class="form-group">
               <label class="form-label">문의 유형</label>
               <select class="form-select" id="inqType">
-                <option value="service">서비스 문의</option>
-                <option value="price">견적 문의</option>
-                <option value="booking">예약 문의</option>
-                <option value="membership">멤버십 문의</option>
-                <option value="other">기타</option>
+                <option value="service">🔧 서비스 문의</option>
+                <option value="price">💰 견적 문의</option>
+                <option value="booking">📅 예약 문의</option>
+                <option value="membership">⭐ 멤버십 문의</option>
+                <option value="other">💬 기타</option>
               </select>
             </div>
             <div class="form-group">
@@ -1524,7 +1635,7 @@
             </div>
             <div class="form-group">
               <label class="form-label">문의 내용 <span class="required">*</span></label>
-              <textarea class="form-textarea" id="inqMessage" placeholder="문의 내용을 자세히 입력해주세요" rows="5" required></textarea>
+              <textarea class="form-textarea" id="inqMessage" placeholder="문의 내용을 자세히 입력해주세요" rows="4" required></textarea>
             </div>
             <button type="submit" class="btn btn-primary btn-full" id="inqSubmitBtn">
               <i class="fas fa-paper-plane"></i>&nbsp; 문의 보내기
@@ -1538,13 +1649,28 @@
 
 <!-- ── Footer ── -->
 <footer>
+  <!-- CTA 배너 (footer 위) -->
+  <div class="footer-cta-bar">
+    <div class="container">
+      <div class="footer-cta-inner">
+        <div>
+          <div class="footer-cta-title">지금 바로 요트 케어를 시작하세요</div>
+          <div class="footer-cta-sub">전국 마리나 방문 서비스 · 24/7 온라인 예약</div>
+        </div>
+        <a href="/booking.html" class="btn btn-primary btn-lg">
+          <i class="fas fa-calendar-check"></i> 지금 예약하기
+        </a>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <div class="footer-grid">
+      <!-- 브랜드 -->
       <div class="footer-brand">
         <div class="footer-logo">
-          <!-- Inline yacht icon + brand name -->
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
+            <svg width="40" height="40" viewBox="0 0 36 36" fill="none">
               <rect width="36" height="36" rx="8" fill="rgba(157,29,34,0.15)"/>
               <path d="M8 24 Q18 27 28 24 L26 28 Q18 30 10 28 Z" fill="#9D1D22"/>
               <path d="M13 24 L14 18 L22 18 L23 24 Z" fill="rgba(255,255,255,0.8)"/>
@@ -1558,7 +1684,14 @@
             </div>
           </div>
         </div>
-        <p class="footer-desc">현대요트 케어서비스는 프리미엄 요트 전문 관리 서비스를 제공합니다. 전문 기술진이 직접 관리하는 완벽한 케어 솔루션으로 요트의 가치를 보존합니다.</p>
+        <p class="footer-desc">프리미엄 요트 전문 관리 서비스. 국제 공인 전문 기술진이 직접 관리하는 완벽한 케어 솔루션으로 요트의 가치를 보존합니다.</p>
+
+        <!-- 빠른 연락처 -->
+        <div class="footer-contact-quick">
+          <a href="tel:15880000" class="footer-contact-btn"><i class="fas fa-phone"></i> 1588-0000</a>
+          <a href="mailto:care@hyundaiyacht.com" class="footer-contact-btn"><i class="fas fa-envelope"></i> 이메일</a>
+        </div>
+
         <div class="footer-social">
           <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
           <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
@@ -1566,54 +1699,51 @@
           <a href="#" aria-label="KakaoTalk"><i class="fas fa-comment"></i></a>
         </div>
       </div>
-      <div>
-        <div class="footer-title">서비스</div>
-        <div class="footer-links">
-          <a href="/booking.html?package=basic">베이직 케어</a>
-          <a href="/booking.html?package=premium">프리미엄 케어</a>
-          <a href="/booking.html?package=signature">시그니처 케어</a>
-          <a href="#compare">패키지 비교</a>
-          <a href="#calculator">견적 계산기</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-title">서비스 지역</div>
-        <div class="footer-links">
-          <a href="#marina">수영만 마리나 (부산)</a>
-          <a href="#marina">통영 마리나 (경남)</a>
-          <a href="#marina">여수 마리나 (전남)</a>
-          <a href="#marina">제주 중문 마리나</a>
-          <a href="#inquiry">기타 지역 문의</a>
-        </div>
-      </div>
-      <div>
-        <div class="footer-title">고객 지원</div>
-        <div class="footer-links">
-          <a href="/login.html">로그인</a>
-          <a href="/register.html">회원가입</a>
-          <a href="/dashboard.html">마이페이지</a>
-          <a href="#faq">FAQ</a>
-          <a href="#inquiry">문의하기</a>
-        </div>
-      </div>
-    </div>
 
-    <!-- 연락처 바 -->
-    <div style="border-top:1px solid rgba(255,255,255,0.08);margin-top:40px;padding-top:28px;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between">
-      <div style="display:flex;flex-wrap:wrap;gap:24px">
-        <span style="font-size:13px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:7px">
-          <i class="fas fa-phone" style="color:var(--brand-red)"></i> 1588-0000
-        </span>
-        <span style="font-size:13px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:7px">
-          <i class="fas fa-envelope" style="color:var(--brand-red)"></i> care@hyundaiyacht.com
-        </span>
-        <span style="font-size:13px;color:rgba(255,255,255,0.45);display:flex;align-items:center;gap:7px">
-          <i class="fas fa-clock" style="color:var(--brand-red)"></i> 평일 09:00~18:00
-        </span>
+      <!-- 서비스 -->
+      <div>
+        <div class="footer-title"><i class="fas fa-concierge-bell" style="margin-right:6px;color:var(--brand-red)"></i>서비스</div>
+        <div class="footer-links">
+          <a href="/booking.html?package=basic"><i class="fas fa-chevron-right"></i> 베이직 케어 <span class="footer-link-badge">150,000원~</span></a>
+          <a href="/booking.html?package=premium"><i class="fas fa-chevron-right"></i> 프리미엄 케어 <span class="footer-link-badge popular">인기</span></a>
+          <a href="/booking.html?package=signature"><i class="fas fa-chevron-right"></i> 시그니처 케어 <span class="footer-link-badge vip">VIP</span></a>
+          <a href="#compare"><i class="fas fa-chevron-right"></i> 패키지 비교</a>
+          <a href="#calculator"><i class="fas fa-chevron-right"></i> 견적 계산기</a>
+        </div>
       </div>
-      <a href="/booking.html" class="btn btn-primary btn-sm">
-        <i class="fas fa-calendar-check"></i> 지금 예약하기
-      </a>
+
+      <!-- 서비스 지역 -->
+      <div>
+        <div class="footer-title"><i class="fas fa-map-marker-alt" style="margin-right:6px;color:var(--brand-red)"></i>서비스 지역</div>
+        <div class="footer-links">
+          <a href="#marina"><i class="fas fa-chevron-right"></i> 수도권 · 한강 마리나</a>
+          <a href="#marina"><i class="fas fa-chevron-right"></i> 서해권 마리나</a>
+          <a href="#marina"><i class="fas fa-chevron-right"></i> 동해권 마리나</a>
+          <a href="#marina"><i class="fas fa-chevron-right"></i> 부산 · 경남 마리나</a>
+          <a href="#marina"><i class="fas fa-chevron-right"></i> 전남 · 제주 마리나</a>
+          <a href="#inquiry"><i class="fas fa-chevron-right"></i> 기타 지역 문의</a>
+        </div>
+      </div>
+
+      <!-- 고객 지원 -->
+      <div>
+        <div class="footer-title"><i class="fas fa-headset" style="margin-right:6px;color:var(--brand-red)"></i>고객 지원</div>
+        <div class="footer-links">
+          <a href="/login.html"><i class="fas fa-chevron-right"></i> 로그인</a>
+          <a href="/register.html"><i class="fas fa-chevron-right"></i> 회원가입</a>
+          <a href="/dashboard.html"><i class="fas fa-chevron-right"></i> 마이페이지</a>
+          <a href="#faq"><i class="fas fa-chevron-right"></i> FAQ</a>
+          <a href="#inquiry"><i class="fas fa-chevron-right"></i> 문의하기</a>
+        </div>
+
+        <!-- 영업시간 -->
+        <div class="footer-hours">
+          <div class="footer-hours-title">영업 시간</div>
+          <div class="footer-hours-row"><span>평일</span><span>09:00 ~ 18:00</span></div>
+          <div class="footer-hours-row"><span>주말·공휴일</span><span>휴무</span></div>
+          <div class="footer-hours-row"><span class="footer-hours-special">시그니처 회원</span><span>24시간 긴급출동</span></div>
+        </div>
+      </div>
     </div>
 
     <div class="footer-bottom">
@@ -1778,18 +1908,57 @@ window.selectPackage = function(card, pkg) {
   }
 };
 
+// ── Marina region filter ──
+window.filterMarina = function(region, tabEl) {
+  document.querySelectorAll('.marina-tab').forEach(t => t.classList.remove('active'));
+  tabEl.classList.add('active');
+  document.querySelectorAll('.marina-card').forEach(card => {
+    if (region === 'all') {
+      card.classList.remove('hidden');
+    } else {
+      const cardRegion = card.getAttribute('data-region');
+      if (cardRegion === region) {
+        card.classList.remove('hidden');
+      } else {
+        card.classList.add('hidden');
+      }
+    }
+  });
+};
+
 // ── D-6: Calculator ──
-window.setPkgChip = function(pkg, chipEl) {
-  document.querySelectorAll('.calc-pkg-chip').forEach(c => c.classList.remove('active'));
-  chipEl.classList.add('active');
+window.setCalcPkg = function(pkg, cardEl) {
+  document.querySelectorAll('.calc-pkg-card').forEach(c => c.classList.remove('active'));
+  if (cardEl) cardEl.classList.add('active');
   const sel = document.getElementById('calcPackage');
-  if (sel) { sel.value = pkg; updateCalc(); }
+  if (sel) { sel.value = pkg; }
+  updateCalc();
+};
+// 구버전 chip 호환
+window.setPkgChip = function(pkg, chipEl) {
+  setCalcPkg(pkg, null);
+  document.querySelectorAll('.calc-pkg-chip').forEach(c => c.classList.remove('active'));
+  if (chipEl) chipEl.classList.add('active');
+};
+
+window.setLength = function(val, chipEl) {
+  const inp = document.getElementById('calcLength');
+  if (inp) inp.value = val;
+  document.querySelectorAll('.calc-size-chip').forEach(c => c.classList.remove('active'));
+  if (chipEl) chipEl.classList.add('active');
+  updateCalc();
 };
 
 window.updateCalc = function() {
   const pkg    = document.getElementById('calcPackage').value;
   const len    = parseFloat(document.getElementById('calcLength').value) || 30;
-  const extra  = parseInt(document.getElementById('calcExtra').value)    || 0;
+  // 새 체크박스 방식
+  const checkboxes = document.querySelectorAll('.calc-extra-check:checked');
+  let extra = 0;
+  checkboxes.forEach(cb => extra += parseInt(cb.value) || 0);
+  // 구버전 select 호환
+  const extraSel = document.getElementById('calcExtra');
+  if (extraSel && checkboxes.length === 0) extra = parseInt(extraSel.value) || 0;
   const loc    = parseInt(document.getElementById('calcLocation').value) || 0;
   const el     = document.getElementById('calcAmount');
   const breakdown = document.getElementById('calcBreakdown');
@@ -1818,8 +1987,8 @@ window.updateCalc = function() {
 
   // Breakdown
   if (breakdown) {
-    let rows = `<span>${names[pkg]} 패키지 (${len}ft)</span>: ${base.toLocaleString()}원`;
-    if (extra) rows += `<br><span>추가 서비스</span>: +${extra.toLocaleString()}원`;
+    let rows = `<span>${names[pkg]} (${len}ft × ${sizeMulti}배)</span>: ${base.toLocaleString()}원`;
+    if (extra) rows += `<br><span>추가 서비스 합계</span>: +${extra.toLocaleString()}원`;
     if (loc)   rows += `<br><span>출장비</span>: +${loc.toLocaleString()}원`;
     rows += `<br><span>VAT 10%</span>: +${vat.toLocaleString()}원`;
     breakdown.innerHTML = rows;
@@ -1828,10 +1997,11 @@ window.updateCalc = function() {
   // Update book button link
   if (bookBtn) bookBtn.href = `/booking.html?package=${pkg}`;
 
-  // Sync chip UI
-  document.querySelectorAll('.calc-pkg-chip').forEach(c => c.classList.remove('active'));
-  const chip = document.querySelector(`.calc-pkg-chip[onclick*="${pkg}"]`);
-  if (chip) chip.classList.add('active');
+  // Sync card UI
+  document.querySelectorAll('.calc-pkg-card').forEach(c => {
+    const onclick = c.getAttribute('onclick') || '';
+    c.classList.toggle('active', onclick.includes(`'${pkg}'`));
+  });
 };
 
 // ── FAQ ──
