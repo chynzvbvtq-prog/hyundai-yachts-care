@@ -30,7 +30,8 @@
       display: flex;
       flex-direction: column;
       overflow-y: auto;
-      z-index: 100;
+      z-index: 1100;
+      transition: transform 0.32s cubic-bezier(0.25,0.46,0.45,0.94);
     }
     .my-sidebar-brand {
       padding: 24px 20px 18px;
@@ -484,25 +485,77 @@
     .modal-close-btn:hover { border-color: #9D1D22; color: #9D1D22; }
     .modal-title { font-family: 'Montserrat', sans-serif; font-size: 16px; font-weight: 800; color: #002D56; margin-bottom: 18px; padding-right: 36px; }
 
+    /* ─── Mobile Sidebar Overlay ─── */
+    .sidebar-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      z-index: 1099;
+      backdrop-filter: blur(2px);
+    }
+    .sidebar-overlay.active { display: block; }
+
+    /* ─── Mobile Topbar Hamburger ─── */
+    .topbar-hamburger {
+      display: none;
+      width: 44px; height: 44px;
+      align-items: center; justify-content: center;
+      background: none; border: none;
+      cursor: pointer;
+      border-radius: 8px;
+      color: #002D56;
+      font-size: 20px;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .topbar-hamburger:hover { background: #F3F4F6; }
+
     /* ─── Responsive ─── */
     @media (max-width: 1100px) {
       .kpi-strip { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 860px) {
-      .my-sidebar { display: none; }
+      /* 사이드바: 슬라이드오버 모드 */
+      .my-sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.32s cubic-bezier(0.25,0.46,0.45,0.94);
+        z-index: 1100;
+      }
+      .my-sidebar.open { transform: translateX(0); }
       .my-main { margin-left: 0; }
       .my-content { padding: 16px; }
       .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+      /* topbar */
+      .topbar-hamburger { display: flex; }
+      .my-topbar { padding: 0 16px; gap: 12px; }
+      .my-topbar-title { flex: 1; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     }
     @media (max-width: 540px) {
-      .kpi-strip { grid-template-columns: 1fr 1fr; }
+      .kpi-strip { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .kpi-tile { padding: 14px 16px; gap: 10px; }
+      .kpi-tile-num { font-size: 22px; }
+      .kpi-tile-icon { width: 38px; height: 38px; font-size: 15px; }
       .booking-grid { grid-template-columns: 1fr; }
+      .my-content { padding: 12px; }
+      .my-topbar { height: 56px; padding: 0 12px; }
+      .my-topbar-title { font-size: 14px; }
+      .welcome-banner { padding: 18px 16px; }
+      .welcome-name { font-size: 17px; }
+      .welcome-actions { gap: 8px; }
+      .welcome-actions .btn { font-size: 13px; padding: 8px 14px; }
+    }
+    @media (max-width: 380px) {
+      .kpi-tile-num { font-size: 19px; }
+      .kpi-strip { gap: 10px; }
     }
   </style>
 </head>
 <body>
 
 <div id="myToast" class="my-toast"></div>
+
+<!-- 모바일 사이드바 오버레이 -->
+<div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
 <div class="my-layout">
   <!-- ══ Sidebar ══ -->
@@ -552,6 +605,10 @@
   <!-- ══ Main ══ -->
   <div class="my-main">
     <header class="my-topbar">
+      <!-- 모바일 햄버거 버튼 -->
+      <button class="topbar-hamburger" onclick="toggleSidebar()" aria-label="메뉴">
+        <i class="fas fa-bars"></i>
+      </button>
       <div class="my-topbar-title" id="pageTitle">대시보드</div>
       <div style="display:flex;align-items:center;gap:10px">
         <a href="/booking.html" class="btn btn-primary btn-sm">
@@ -1421,8 +1478,24 @@ async function updateProfile(e) {
   finally { btn.disabled = false; btn.innerHTML = '<i class="fas fa-save"></i> 변경사항 저장'; }
 }
 
+/* ─── 모바일 사이드바 토글 ─── */
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebarOverlay');
+  const isOpen  = sidebar.classList.contains('open');
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('active');
+  document.body.style.overflow = isOpen ? '' : 'hidden';
+}
+function closeSidebar() {
+  document.getElementById('sidebar')?.classList.remove('open');
+  document.getElementById('sidebarOverlay')?.classList.remove('active');
+  document.body.style.overflow = '';
+}
+
 /* ─── 탭 전환 ─── */
 function showTab(tab) {
+  closeSidebar(); // 모바일에서 탭 선택 시 사이드바 닫기
   ['overview','bookings','history','maintenance','profile'].forEach(t => {
     document.getElementById('content-' + t).style.display = 'none';
     document.getElementById('tab-' + t)?.classList.remove('active');
