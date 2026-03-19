@@ -751,72 +751,69 @@
       <p class="section-subtitle fade-up delay-1">요트의 크기와 상태에 따라 맞춤 케어 서비스를 제공합니다.<br>전문 기술진이 꼼꼼하게 점검하고 관리합니다.</p>
     </div>
 
-    <div class="packages-grid">
-      <!-- Basic Care -->
-      <div class="package-card fade-up delay-1" onclick="selectPackage(this,'basic')" title="베이직 케어 선택">
-        <div class="package-icon"><i class="fas fa-anchor" style="color:var(--brand-red)"></i></div>
-        <div class="package-name">Basic Care</div>
-        <h3 class="package-title">베이직 케어</h3>
-        <p class="package-desc">기본적인 외부 세척과 점검으로 요트의 청결함을 유지합니다.</p>
-        <div class="package-price">
-          <span class="price-from">기본가</span>
-          <span class="price-amount">150,000</span>
-          <span class="price-unit">원~</span>
+    <div class="pkg-tier-grid">
+      <!-- ESSENTIAL -->
+      <div class="pkg-tier-card pkg-essential fade-up delay-1">
+        <div class="pkg-tier-badge pkg-badge-essential">ESSENTIAL</div>
+        <div class="pkg-tier-icon"><i class="fas fa-anchor"></i></div>
+        <div class="pkg-tier-name">베이직 케어</div>
+        <p class="pkg-tier-desc">기본적인 외부 세척과 점검으로 요트의 청결함을 유지합니다.</p>
+        <div class="pkg-tier-price">
+          <span class="pkg-price-label">기본가</span>
+          <span class="pkg-price-amount">150,000<span class="pkg-price-unit">원~</span></span>
         </div>
-        <ul class="package-features">
-          <li><i class="fas fa-check-circle"></i> 선체 외부 전체 세척</li>
-          <li><i class="fas fa-check-circle"></i> 갑판 및 코크핏 클리닝</li>
-          <li><i class="fas fa-check-circle"></i> 기본 안전장비 점검</li>
-          <li><i class="fas fa-check-circle"></i> 엔진 외부 점검</li>
-          <li><i class="fas fa-check-circle"></i> 서비스 완료 리포트</li>
+        <ul class="pkg-tier-features">
+          <li><i class="fas fa-check"></i> 선체 외부 전체 세척</li>
+          <li><i class="fas fa-check"></i> 갑판 및 코크핏 클리닝</li>
+          <li><i class="fas fa-check"></i> 기본 안전장비 점검</li>
+          <li><i class="fas fa-check"></i> 엔진 외부 점검</li>
+          <li><i class="fas fa-check"></i> 서비스 완료 리포트</li>
         </ul>
-        <a href="/booking.html?package=basic" class="btn btn-outline-navy btn-full">예약하기</a>
+        <a href="/booking.html?package=basic" class="pkg-tier-btn pkg-btn-outline" onclick="selectPackage(this,'basic')">선택하기</a>
       </div>
 
-      <!-- Premium Care (Featured) -->
-      <div class="package-card featured fade-up delay-2" onclick="selectPackage(this,'premium')" title="프리미엄 케어 선택">
-        <div class="package-badge">인기</div>
-        <div class="package-icon"><i class="fas fa-star" style="color:var(--brand-red)"></i></div>
-        <div class="package-name">Premium Care</div>
-        <h3 class="package-title">프리미엄 케어</h3>
-        <p class="package-desc">내외부 종합 케어로 요트의 완벽한 상태를 유지합니다.</p>
-        <div class="package-price">
-          <span class="price-from">기본가</span>
-          <span class="price-amount">380,000</span>
-          <span class="price-unit">원~</span>
+      <!-- PREMIUM (★ 추천) -->
+      <div class="pkg-tier-card pkg-premium fade-up delay-2">
+        <div class="pkg-tier-popular-ring"></div>
+        <div class="pkg-tier-badge pkg-badge-premium">⭐ MOST POPULAR</div>
+        <div class="pkg-tier-icon"><i class="fas fa-star"></i></div>
+        <div class="pkg-tier-name">프리미엄 케어</div>
+        <p class="pkg-tier-desc">내외부 종합 케어로 요트의 완벽한 상태를 유지합니다.</p>
+        <div class="pkg-tier-price">
+          <span class="pkg-price-label">기본가</span>
+          <span class="pkg-price-amount">380,000<span class="pkg-price-unit">원~</span></span>
         </div>
-        <ul class="package-features">
-          <li><i class="fas fa-check-circle"></i> 베이직 케어 전 항목 포함</li>
-          <li><i class="fas fa-check-circle"></i> 선체 왁싱 및 폴리싱</li>
-          <li><i class="fas fa-check-circle"></i> 실내 전체 청소 및 소독</li>
-          <li><i class="fas fa-check-circle"></i> 엔진 정밀 점검</li>
-          <li><i class="fas fa-check-circle"></i> 전기 시스템 점검</li>
-          <li><i class="fas fa-check-circle"></i> 정기 점검 일정 관리</li>
+        <ul class="pkg-tier-features">
+          <li><i class="fas fa-check"></i> 베이직 케어 전 항목 포함</li>
+          <li><i class="fas fa-check"></i> 선체 왁싱 및 폴리싱</li>
+          <li><i class="fas fa-check"></i> 실내 전체 청소 및 소독</li>
+          <li><i class="fas fa-check"></i> 엔진 정밀 점검</li>
+          <li><i class="fas fa-check"></i> 전기 시스템 점검</li>
+          <li><i class="fas fa-check"></i> 정기 점검 일정 관리</li>
         </ul>
-        <a href="/booking.html?package=premium" class="btn btn-primary btn-full">예약하기</a>
+        <a href="/booking.html?package=premium" class="pkg-tier-btn pkg-btn-gold" onclick="selectPackage(this,'premium')">지금 시작하기</a>
       </div>
 
-      <!-- Signature Care -->
-      <div class="package-card fade-up delay-3" onclick="selectPackage(this,'signature')" title="시그니처 케어 선택" style="position:relative;overflow:hidden">
-        <div class="package-card-ribbon">VIP</div>
-        <div class="package-icon"><i class="fas fa-crown" style="color:var(--brand-red)"></i></div>
-        <div class="package-name">Signature Care</div>
-        <h3 class="package-title">시그니처 케어</h3>
-        <p class="package-desc">최고급 자재와 전담 기술진이 제공하는 VIP 케어 서비스입니다.</p>
-        <div class="package-price">
-          <span class="price-from">기본가</span>
-          <span class="price-amount">750,000</span>
-          <span class="price-unit">원~</span>
+      <!-- SIGNATURE (VIP) -->
+      <div class="pkg-tier-card pkg-signature fade-up delay-3">
+        <div class="pkg-tier-gold-bar"></div>
+        <div class="pkg-tier-badge pkg-badge-signature">SIGNATURE</div>
+        <div class="pkg-tier-icon"><i class="fas fa-crown"></i></div>
+        <div class="pkg-tier-name">시그니처 케어</div>
+        <p class="pkg-tier-desc">최고급 자재와 전담 기술진이 제공하는 VIP 케어 서비스입니다.</p>
+        <div class="pkg-tier-price">
+          <span class="pkg-price-label">맞춤 견적</span>
+          <span class="pkg-price-amount" style="font-size:26px">맞춤 견적 제공</span>
         </div>
-        <ul class="package-features">
-          <li><i class="fas fa-check-circle"></i> 프리미엄 케어 전 항목 포함</li>
-          <li><i class="fas fa-check-circle"></i> 나노코팅 선체 보호 처리</li>
-          <li><i class="fas fa-check-circle"></i> 전담 기술진 배정</li>
-          <li><i class="fas fa-check-circle"></i> 수중 선체 점검</li>
-          <li><i class="fas fa-check-circle"></i> 24시간 긴급 출동 서비스</li>
-          <li><i class="fas fa-check-circle"></i> 1년 정기 관리 프로그램</li>
+        <ul class="pkg-tier-features">
+          <li><i class="fas fa-check"></i> 프리미엄 케어 전 항목 포함</li>
+          <li><i class="fas fa-check"></i> 나노코팅 선체 보호 처리</li>
+          <li><i class="fas fa-check"></i> 전담 기술진 배정</li>
+          <li><i class="fas fa-check"></i> 수중 선체 점검</li>
+          <li><i class="fas fa-check"></i> 24시간 긴급 출동 서비스</li>
+          <li><i class="fas fa-check"></i> 1년 정기 관리 프로그램</li>
         </ul>
-        <a href="/booking.html?package=signature" class="btn btn-outline-navy btn-full">예약하기</a>
+        <a href="/booking.html?package=signature" class="pkg-tier-btn pkg-btn-outline pkg-btn-gold-outline" onclick="selectPackage(this,'signature')">VIP 상담 신청</a>
       </div>
     </div>
   </div>
@@ -1154,88 +1151,78 @@
       <p class="section-subtitle fade-up delay-1">국제 공인 전문 기술진, 스마트 관리 시스템, 친환경 서비스로 최고의 요트 케어를 제공합니다.</p>
     </div>
 
-    <div class="features-grid">
-      <!-- 1. 공인 전문 기술진 -->
-      <div class="feature-card fade-up delay-1">
-        <div class="feature-card-icon"><i class="fas fa-certificate"></i></div>
-        <div class="feature-card-label">Certified Experts</div>
-        <h3>국제 공인 자격증 보유<br>전문 기술진 직접 서비스</h3>
-        <div class="feature-card-stats">
-          <div>
-            <div class="feature-card-stat-num">10+</div>
-            <div class="feature-card-stat-label">년 경력</div>
-          </div>
-          <div class="feature-card-stat-divider"></div>
-          <div>
-            <div class="feature-card-stat-num">15</div>
-            <div class="feature-card-stat-label">전문 자격증</div>
-          </div>
-          <div class="feature-card-stat-divider"></div>
-          <div>
-            <div class="feature-card-stat-num">100%</div>
-            <div class="feature-card-stat-label">공인 인증</div>
-          </div>
-        </div>
-        <p>해양수산부 인증 및 국제 선박 관리 자격을 보유한 전문 기술진이 직접 서비스를 제공합니다.</p>
-        <ul class="feature-card-list">
-          <li><i class="fas fa-check"></i> 해양수산부 인증 전문 기술진</li>
-          <li><i class="fas fa-check"></i> 국제 선박 정비 자격 보유</li>
-          <li><i class="fas fa-check"></i> 10년 이상 경력 엔지니어</li>
-          <li><i class="fas fa-check"></i> 연간 지속 교육 이수</li>
+    <div class="why-grid">
+      <!-- Card 1: Official Partnership -->
+      <div class="why-card fade-up delay-1">
+        <div class="why-card-icon"><i class="fas fa-certificate"></i></div>
+        <div class="why-card-label">Official Partnership</div>
+        <h3 class="why-card-title">Certified Experts</h3>
+        <p class="why-card-subtitle">국제 공인 자격증 보유</p>
+        <p class="why-card-desc">해양수산부 인증 및 국제 선박 관리 자격을 보유한 전문 기술진이 직접 서비스를 제공합니다.</p>
+        <ul class="why-card-list">
+          <li><i class="fas fa-check-circle"></i> ABYC 인증 기술진</li>
+          <li><i class="fas fa-check-circle"></i> 국제 선박 정비 자격 보유</li>
+          <li><i class="fas fa-check-circle"></i> 10년 이상 경력 엔지니어</li>
         </ul>
-        <a href="/booking.html" class="btn btn-outline-navy">서비스 예약하기</a>
+        <div class="why-card-stats">
+          <div class="why-stat"><span class="why-stat-num">10+</span><span class="why-stat-label">년 경력</span></div>
+          <div class="why-stat"><span class="why-stat-num">15</span><span class="why-stat-label">전문 자격증</span></div>
+          <div class="why-stat"><span class="why-stat-num">100%</span><span class="why-stat-label">공인 인증</span></div>
+        </div>
       </div>
 
-      <!-- 2. 스마트 관리 시스템 -->
-      <div class="feature-card fade-up delay-2">
-        <div class="feature-card-icon"><i class="fas fa-mobile-alt"></i></div>
-        <div class="feature-card-label">Smart Management</div>
-        <h3>실시간 예약 &amp; 서비스<br>이력 관리 시스템</h3>
-        <div class="feature-card-stats">
-          <div>
-            <div class="feature-card-stat-num">24/7</div>
-            <div class="feature-card-stat-label">온라인 예약</div>
-          </div>
-          <div class="feature-card-stat-divider"></div>
-          <div>
-            <div class="feature-card-stat-num">실시간</div>
-            <div class="feature-card-stat-label">서비스 현황</div>
-          </div>
-        </div>
-        <p>온라인 예약부터 서비스 완료 리포트까지 요트 관리의 모든 과정을 디지털로 관리합니다.</p>
-        <ul class="feature-card-list">
-          <li><i class="fas fa-check"></i> 온라인 실시간 예약 시스템</li>
-          <li><i class="fas fa-check"></i> 서비스 이력 데이터베이스</li>
-          <li><i class="fas fa-check"></i> 정기 점검 알림 서비스</li>
-          <li><i class="fas fa-check"></i> 전담 고객 관리 시스템</li>
+      <!-- Card 2: Smart Management -->
+      <div class="why-card fade-up delay-2">
+        <div class="why-card-icon"><i class="fas fa-mobile-alt"></i></div>
+        <div class="why-card-label">Smart Management</div>
+        <h3 class="why-card-title">Smart Management</h3>
+        <p class="why-card-subtitle">실시간 예약 &amp; 디지털 리포트</p>
+        <p class="why-card-desc">온라인 예약부터 서비스 완료 리포트까지 요트 관리의 모든 과정을 디지털로 관리합니다.</p>
+        <ul class="why-card-list">
+          <li><i class="fas fa-check-circle"></i> 온라인 실시간 예약 시스템</li>
+          <li><i class="fas fa-check-circle"></i> 서비스 이력 데이터베이스</li>
+          <li><i class="fas fa-check-circle"></i> 정기 점검 알림 서비스</li>
         </ul>
-        <a href="/booking.html" class="btn btn-outline-navy">지금 시작하기</a>
+        <div class="why-card-stats">
+          <div class="why-stat"><span class="why-stat-num">24/7</span><span class="why-stat-label">온라인 예약</span></div>
+          <div class="why-stat"><span class="why-stat-num">실시간</span><span class="why-stat-label">서비스 현황</span></div>
+        </div>
       </div>
 
-      <!-- 3. 친환경 서비스 -->
-      <div class="feature-card fade-up delay-3">
-        <div class="feature-card-icon"><i class="fas fa-leaf"></i></div>
-        <div class="feature-card-label">Eco-Friendly</div>
-        <h3>해양 환경을 생각하는<br>친환경 케어 솔루션</h3>
-        <div class="feature-card-stats">
-          <div>
-            <div class="feature-card-stat-num">ISO</div>
-            <div class="feature-card-stat-label">14001 인증</div>
-          </div>
-          <div class="feature-card-stat-divider"></div>
-          <div>
-            <div class="feature-card-stat-num">0</div>
-            <div class="feature-card-stat-label">해양 오염 물질</div>
-          </div>
-        </div>
-        <p>해양 생태계를 보호하는 친환경 세제와 공법으로 요트를 깨끗하게 유지하면서 바다를 지킵니다.</p>
-        <ul class="feature-card-list">
-          <li><i class="fas fa-check"></i> 해양 무해 친환경 세제 사용</li>
-          <li><i class="fas fa-check"></i> 오폐수 친환경 처리 시스템</li>
-          <li><i class="fas fa-check"></i> ISO 14001 환경경영 인증</li>
-          <li><i class="fas fa-check"></i> 탄소중립 서비스 목표</li>
+      <!-- Card 3: 24/7 Support -->
+      <div class="why-card fade-up delay-3">
+        <div class="why-card-icon"><i class="fas fa-clock"></i></div>
+        <div class="why-card-label">24/7 Support</div>
+        <h3 class="why-card-title">24/7 Support</h3>
+        <p class="why-card-subtitle">긴급 상황 언제든지</p>
+        <p class="why-card-desc">해양 생태계를 보호하는 친환경 세제와 공법으로 요트를 깨끗하게 유지하면서 바다를 지킵니다.</p>
+        <ul class="why-card-list">
+          <li><i class="fas fa-check-circle"></i> 해양 무해 친환경 세제 사용</li>
+          <li><i class="fas fa-check-circle"></i> ISO 14001 환경경영 인증</li>
+          <li><i class="fas fa-check-circle"></i> 시그니처 회원 24시간 긴급출동</li>
         </ul>
-        <a href="#inquiry" class="btn btn-outline-navy">더 알아보기</a>
+        <div class="why-card-stats">
+          <div class="why-stat"><span class="why-stat-num">ISO</span><span class="why-stat-label">14001 인증</span></div>
+          <div class="why-stat"><span class="why-stat-num">0</span><span class="why-stat-label">해양 오염 물질</span></div>
+        </div>
+      </div>
+
+      <!-- Card 4: Proven Excellence -->
+      <div class="why-card fade-up delay-4">
+        <div class="why-card-icon"><i class="fas fa-trophy"></i></div>
+        <div class="why-card-label">Proven Excellence</div>
+        <h3 class="why-card-title">Proven Excellence</h3>
+        <p class="why-card-subtitle">1,200+ 요트 관리 경험</p>
+        <p class="why-card-desc">98.7% 고객 만족도와 15년+ 평균 경력의 전문 기술진이 당신의 요트를 완벽하게 케어합니다.</p>
+        <ul class="why-card-list">
+          <li><i class="fas fa-check-circle"></i> 98.7% 고객 만족도</li>
+          <li><i class="fas fa-check-circle"></i> 1,200+ 요트 관리 실적</li>
+          <li><i class="fas fa-check-circle"></i> 15년+ 평균 기술진 경력</li>
+        </ul>
+        <div class="why-card-stats">
+          <div class="why-stat"><span class="why-stat-num">1,200+</span><span class="why-stat-label">관리 요트</span></div>
+          <div class="why-stat"><span class="why-stat-num">98.7%</span><span class="why-stat-label">만족도</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -1551,93 +1538,89 @@
       <div class="divider-gold"></div>
       <p class="section-subtitle fade-up delay-1">궁금한 점이나 특별한 요청사항이 있으시면 편하게 연락주세요.</p>
     </div>
-    <div class="inquiry-wrap">
-      <!-- 왼쪽: 연락처 정보 -->
-      <div class="inquiry-info fade-up">
-        <h3>언제든지<br>문의하세요</h3>
-        <p>전문 상담사가 신속하게 답변드리겠습니다. 요트 케어 서비스 상담, 견적, 예약 등 무엇이든 도와드립니다.</p>
-
-        <!-- 빠른 전화 배너 -->
-        <div class="inquiry-quick-banner">
-          <div class="inquiry-quick-text">
-            <strong><i class="fas fa-phone-alt" style="margin-right:8px"></i>1588-0000</strong>
-            평일 09:00 ~ 18:00
+    <div class="inquiry-redesign-wrap">
+      <!-- 왼쪽 40% -->
+      <div class="inq-left fade-up delay-1">
+        <div class="inq-secure-msg">
+          <i class="fas fa-lock"></i>
+          <div>
+            <strong>안심하고 문의하세요</strong>
+            <span>24시간 이내 전문 상담사가 연락드립니다</span>
           </div>
-          <a href="tel:15880000" class="btn btn-primary btn-sm">전화 상담</a>
         </div>
 
-        <div class="contact-items">
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-envelope"></i></div>
-            <div class="contact-text">
+        <div class="inq-contact-card">
+          <div class="inq-contact-row">
+            <div class="inq-contact-icon"><i class="fas fa-phone-alt"></i></div>
+            <div class="inq-contact-info">
+              <strong>전화 상담</strong>
+              <span>1588-0000</span>
+            </div>
+          </div>
+          <div class="inq-contact-row">
+            <div class="inq-contact-icon"><i class="fas fa-envelope"></i></div>
+            <div class="inq-contact-info">
               <strong>이메일 문의</strong>
               <span>care@hyundaiyacht.com</span>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
-            <div class="contact-text">
-              <strong>주요 서비스 지역</strong>
-              <span>전국 마리나 (수도권·서해·동해·남해·제주)</span>
+          <div class="inq-contact-row">
+            <div class="inq-contact-icon"><i class="fas fa-clock"></i></div>
+            <div class="inq-contact-info">
+              <strong>운영 시간</strong>
+              <span>평일 09:00 ~ 18:00</span>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-clock"></i></div>
-            <div class="contact-text">
-              <strong>서비스 시간</strong>
-              <span>연중무휴 · 시그니처 회원 24시간 긴급출동</span>
+          <div class="inq-contact-row">
+            <div class="inq-contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+            <div class="inq-contact-info">
+              <strong>서비스 지역</strong>
+              <span>서울·부산 마리나 및 전국</span>
             </div>
           </div>
-          <div class="contact-item">
-            <div class="contact-icon"><i class="fas fa-comment-dots"></i></div>
-            <div class="contact-text">
-              <strong>카카오톡 채널</strong>
-              <span>@현대요트케어 (평일 상시 운영)</span>
-            </div>
+          <div class="inq-cta-btns">
+            <a href="tel:15880000" class="inq-cta-btn inq-cta-primary"><i class="fas fa-phone-alt"></i> 지금 전화하기</a>
+            <a href="mailto:care@hyundaiyacht.com" class="inq-cta-btn inq-cta-secondary"><i class="fas fa-envelope"></i> 이메일 보내기</a>
           </div>
         </div>
       </div>
 
-      <!-- 오른쪽: 문의 폼 -->
-      <div class="fade-up delay-2">
-        <div class="inquiry-form-card">
-          <div class="inquiry-form-title"><i class="fas fa-paper-plane" style="color:var(--brand-red);margin-right:8px"></i>문의 남기기</div>
-          <div class="inquiry-form-subtitle">평균 응답 시간: 2시간 이내 (영업 시간 기준)</div>
+      <!-- 오른쪽 60% 폼 -->
+      <div class="inq-right fade-up delay-2">
+        <div class="inq-form-box">
           <div id="inquiryAlert" class="alert"></div>
           <form id="inquiryForm" onsubmit="submitInquiry(event)">
-            <div class="form-grid">
-              <div class="form-group">
-                <label class="form-label">성함 <span class="required">*</span></label>
-                <input type="text" class="form-input" id="inqName" placeholder="홍길동" required>
+            <div class="inq-form-row">
+              <div class="inq-form-group">
+                <label class="inq-label">성함 <span class="required">*</span></label>
+                <input type="text" class="inq-input" id="inqName" placeholder="홍길동" required style="height:56px">
               </div>
-              <div class="form-group">
-                <label class="form-label">연락처 <span class="required">*</span></label>
-                <input type="tel" class="form-input" id="inqPhone" placeholder="010-0000-0000" required>
+              <div class="inq-form-group">
+                <label class="inq-label">연락처 <span class="required">*</span></label>
+                <input type="tel" class="inq-input" id="inqPhone" placeholder="010-0000-0000" required style="height:56px">
               </div>
             </div>
-            <div class="form-group">
-              <label class="form-label">이메일 <span class="required">*</span></label>
-              <input type="email" class="form-input" id="inqEmail" placeholder="example@email.com" required>
-            </div>
-            <div class="form-group">
-              <label class="form-label">문의 유형</label>
-              <select class="form-select" id="inqType">
+            <div class="inq-form-group">
+              <label class="inq-label">문의 유형 <span class="required">*</span></label>
+              <select class="inq-select" id="inqType" style="height:56px">
                 <option value="service">🔧 서비스 문의</option>
-                <option value="price">💰 견적 문의</option>
-                <option value="booking">📅 예약 문의</option>
-                <option value="membership">⭐ 멤버십 문의</option>
+                <option value="price">💰 견적 요청</option>
+                <option value="booking">📅 예약 변경</option>
                 <option value="other">💬 기타</option>
               </select>
             </div>
-            <div class="form-group">
-              <label class="form-label">제목 <span class="required">*</span></label>
-              <input type="text" class="form-input" id="inqSubject" placeholder="문의 제목을 입력하세요" required>
+            <div class="inq-form-group">
+              <label class="inq-label">문의 내용 <span class="required">*</span></label>
+              <textarea class="inq-textarea" id="inqMessage" placeholder="문의 내용을 자세히 입력해주세요" rows="5" required></textarea>
+              <!-- 호환용 숨김 필드 -->
+              <input type="hidden" id="inqEmail" value="no-email@hyundaiyacht.com">
+              <input type="hidden" id="inqSubject" value="홈페이지 문의">
             </div>
-            <div class="form-group">
-              <label class="form-label">문의 내용 <span class="required">*</span></label>
-              <textarea class="form-textarea" id="inqMessage" placeholder="문의 내용을 자세히 입력해주세요" rows="4" required></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary btn-full" id="inqSubmitBtn">
+            <label class="inq-consent">
+              <input type="checkbox" id="inqConsent" required>
+              <span>개인정보 수집 및 이용에 동의합니다 <span class="required">*</span></span>
+            </label>
+            <button type="submit" class="inq-submit-btn" id="inqSubmitBtn">
               <i class="fas fa-paper-plane"></i>&nbsp; 문의 보내기
             </button>
           </form>
@@ -1648,110 +1631,108 @@
 </section>
 
 <!-- ── Footer ── -->
-<footer>
-  <!-- CTA 배너 (footer 위) -->
-  <div class="footer-cta-bar">
+<footer class="footer-premium">
+  <!-- CTA 바 -->
+  <div class="fp-cta-bar">
     <div class="container">
-      <div class="footer-cta-inner">
+      <div class="fp-cta-inner">
         <div>
-          <div class="footer-cta-title">지금 바로 요트 케어를 시작하세요</div>
-          <div class="footer-cta-sub">전국 마리나 방문 서비스 · 24/7 온라인 예약</div>
+          <div class="fp-cta-title">지금 바로 요트 케어를 시작하세요</div>
+          <div class="fp-cta-sub">전국 마리나 방문 서비스 · 24/7 온라인 예약</div>
         </div>
-        <a href="/booking.html" class="btn btn-primary btn-lg">
-          <i class="fas fa-calendar-check"></i> 지금 예약하기
-        </a>
+        <a href="/booking.html" class="fp-cta-btn"><i class="fas fa-calendar-check"></i> 지금 예약하기</a>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <div class="footer-grid">
-      <!-- 브랜드 -->
-      <div class="footer-brand">
-        <div class="footer-logo">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-            <svg width="40" height="40" viewBox="0 0 36 36" fill="none">
-              <rect width="36" height="36" rx="8" fill="rgba(157,29,34,0.15)"/>
+  <!-- 4컬럼 그리드 -->
+  <div class="fp-body">
+    <div class="container">
+      <div class="fp-grid">
+
+        <!-- Col 1: Brand (30%) -->
+        <div class="fp-col fp-brand">
+          <div class="fp-logo">
+            <svg width="36" height="36" viewBox="0 0 36 36" fill="none">
+              <rect width="36" height="36" rx="8" fill="rgba(157,29,34,0.2)"/>
               <path d="M8 24 Q18 27 28 24 L26 28 Q18 30 10 28 Z" fill="#9D1D22"/>
               <path d="M13 24 L14 18 L22 18 L23 24 Z" fill="rgba(255,255,255,0.8)"/>
               <line x1="18" y1="24" x2="18" y2="8" stroke="rgba(255,255,255,0.9)" stroke-width="1.5"/>
               <path d="M18 10 L18 22 L11 22 Z" fill="rgba(255,255,255,0.3)"/>
               <path d="M18 10 L18 22 L24 21 Z" fill="rgba(255,255,255,0.2)"/>
             </svg>
-            <div>
-              <div class="footer-logo-hyundai">Hyundai Yachts</div>
-              <div class="footer-logo-yacht">YOUR DREAM WE MAKE</div>
+            <div class="fp-logo-text">
+              <span class="fp-logo-name">Hyundai Yachts</span>
+              <span class="fp-logo-slogan">YOUR DREAM WE MAKE</span>
             </div>
           </div>
-        </div>
-        <p class="footer-desc">프리미엄 요트 전문 관리 서비스. 국제 공인 전문 기술진이 직접 관리하는 완벽한 케어 솔루션으로 요트의 가치를 보존합니다.</p>
-
-        <!-- 빠른 연락처 -->
-        <div class="footer-contact-quick">
-          <a href="tel:15880000" class="footer-contact-btn"><i class="fas fa-phone"></i> 1588-0000</a>
-          <a href="mailto:care@hyundaiyacht.com" class="footer-contact-btn"><i class="fas fa-envelope"></i> 이메일</a>
-        </div>
-
-        <div class="footer-social">
-          <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-          <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-          <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-          <a href="#" aria-label="KakaoTalk"><i class="fas fa-comment"></i></a>
-        </div>
-      </div>
-
-      <!-- 서비스 -->
-      <div>
-        <div class="footer-title"><i class="fas fa-concierge-bell" style="margin-right:6px;color:var(--brand-red)"></i>서비스</div>
-        <div class="footer-links">
-          <a href="/booking.html?package=basic"><i class="fas fa-chevron-right"></i> 베이직 케어 <span class="footer-link-badge">150,000원~</span></a>
-          <a href="/booking.html?package=premium"><i class="fas fa-chevron-right"></i> 프리미엄 케어 <span class="footer-link-badge popular">인기</span></a>
-          <a href="/booking.html?package=signature"><i class="fas fa-chevron-right"></i> 시그니처 케어 <span class="footer-link-badge vip">VIP</span></a>
-          <a href="#compare"><i class="fas fa-chevron-right"></i> 패키지 비교</a>
-          <a href="#calculator"><i class="fas fa-chevron-right"></i> 견적 계산기</a>
-        </div>
-      </div>
-
-      <!-- 서비스 지역 -->
-      <div>
-        <div class="footer-title"><i class="fas fa-map-marker-alt" style="margin-right:6px;color:var(--brand-red)"></i>서비스 지역</div>
-        <div class="footer-links">
-          <a href="#marina"><i class="fas fa-chevron-right"></i> 수도권 · 한강 마리나</a>
-          <a href="#marina"><i class="fas fa-chevron-right"></i> 서해권 마리나</a>
-          <a href="#marina"><i class="fas fa-chevron-right"></i> 동해권 마리나</a>
-          <a href="#marina"><i class="fas fa-chevron-right"></i> 부산 · 경남 마리나</a>
-          <a href="#marina"><i class="fas fa-chevron-right"></i> 전남 · 제주 마리나</a>
-          <a href="#inquiry"><i class="fas fa-chevron-right"></i> 기타 지역 문의</a>
-        </div>
-      </div>
-
-      <!-- 고객 지원 -->
-      <div>
-        <div class="footer-title"><i class="fas fa-headset" style="margin-right:6px;color:var(--brand-red)"></i>고객 지원</div>
-        <div class="footer-links">
-          <a href="/login.html"><i class="fas fa-chevron-right"></i> 로그인</a>
-          <a href="/register.html"><i class="fas fa-chevron-right"></i> 회원가입</a>
-          <a href="/dashboard.html"><i class="fas fa-chevron-right"></i> 마이페이지</a>
-          <a href="#faq"><i class="fas fa-chevron-right"></i> FAQ</a>
-          <a href="#inquiry"><i class="fas fa-chevron-right"></i> 문의하기</a>
+          <p class="fp-desc">프리미엄 요트 케어의 새로운 기준. 국제 공인 전문 기술진이 당신의 요트를 완벽하게 케어합니다.</p>
+          <div class="fp-social">
+            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+            <a href="#" aria-label="KakaoTalk"><i class="fas fa-comment"></i></a>
+          </div>
         </div>
 
-        <!-- 영업시간 -->
-        <div class="footer-hours">
-          <div class="footer-hours-title">영업 시간</div>
-          <div class="footer-hours-row"><span>평일</span><span>09:00 ~ 18:00</span></div>
-          <div class="footer-hours-row"><span>주말·공휴일</span><span>휴무</span></div>
-          <div class="footer-hours-row"><span class="footer-hours-special">시그니처 회원</span><span>24시간 긴급출동</span></div>
+        <!-- Col 2: Services (25%) -->
+        <div class="fp-col">
+          <h4 class="fp-col-title">서비스</h4>
+          <nav class="fp-nav">
+            <a href="/booking.html?package=basic"><i class="fas fa-chevron-right"></i> 베이직 케어</a>
+            <a href="/booking.html?package=premium"><i class="fas fa-chevron-right"></i> 프리미엄 케어 <span class="fp-nav-badge fp-badge-hot">인기</span></a>
+            <a href="/booking.html?package=signature"><i class="fas fa-chevron-right"></i> 시그니처 케어 <span class="fp-nav-badge fp-badge-vip">VIP</span></a>
+            <a href="#calculator"><i class="fas fa-chevron-right"></i> 견적 계산기</a>
+          </nav>
         </div>
-      </div>
+
+        <!-- Col 3: Customer Support (25%) -->
+        <div class="fp-col">
+          <h4 class="fp-col-title">고객지원</h4>
+          <nav class="fp-nav">
+            <a href="#faq"><i class="fas fa-chevron-right"></i> FAQ</a>
+            <a href="#inquiry"><i class="fas fa-chevron-right"></i> 문의하기</a>
+            <a href="/dashboard.html"><i class="fas fa-chevron-right"></i> 예약 조회</a>
+            <a href="#marina"><i class="fas fa-chevron-right"></i> 서비스 지역</a>
+            <a href="/login.html"><i class="fas fa-chevron-right"></i> 로그인</a>
+            <a href="/register.html"><i class="fas fa-chevron-right"></i> 회원가입</a>
+          </nav>
+        </div>
+
+        <!-- Col 4: Contact (20%) -->
+        <div class="fp-col">
+          <h4 class="fp-col-title">연락처</h4>
+          <div class="fp-contact-list">
+            <a href="tel:15880000" class="fp-contact-item">
+              <i class="fas fa-phone-alt"></i>
+              <span>1588-0000</span>
+            </a>
+            <a href="mailto:care@hyundaiyacht.com" class="fp-contact-item">
+              <i class="fas fa-envelope"></i>
+              <span>care@hyundaiyacht.com</span>
+            </a>
+            <div class="fp-contact-item fp-contact-static">
+              <i class="fas fa-clock"></i>
+              <span>평일 09:00 ~ 18:00</span>
+            </div>
+          </div>
+          <a href="#inquiry" class="fp-emergency-btn"><i class="fas fa-headset"></i> 긴급 상담 신청</a>
+        </div>
+
+      </div><!-- /.fp-grid -->
     </div>
+  </div>
 
-    <div class="footer-bottom">
-      <div class="footer-copyright">© 2025 Hyundai Yacht Care. All rights reserved.</div>
-      <div class="footer-legal">
-        <a href="#">개인정보처리방침</a>
-        <a href="#">이용약관</a>
-        <a href="#">사이트맵</a>
+  <!-- Bottom bar -->
+  <div class="fp-bottom">
+    <div class="container">
+      <div class="fp-bottom-inner">
+        <span class="fp-copyright">© 2025 Hyundai Yacht Care. All rights reserved.</span>
+        <div class="fp-legal">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+          <a href="#">사이트맵</a>
+        </div>
       </div>
     </div>
   </div>
