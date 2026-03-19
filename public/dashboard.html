@@ -16,8 +16,7 @@
 
     /* ─── Layout ─── */
     .my-layout {
-      display: grid;
-      grid-template-columns: 240px 1fr;
+      display: block;
       min-height: 100vh;
     }
 
@@ -490,7 +489,6 @@
       .kpi-strip { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 860px) {
-      .my-layout { grid-template-columns: 1fr; }
       .my-sidebar { display: none; }
       .my-main { margin-left: 0; }
       .my-content { padding: 16px; }
