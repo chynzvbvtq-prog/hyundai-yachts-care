@@ -1,7 +1,7 @@
 # HYUNDAI YACHT CARE
 
 ## 프로젝트 개요
-- **이름**: Hyundai Yacht Care (현대요트 케어서비스)
+- **이름**: Hyundai Yachts Care (현대요트 케어서비스)
 - **목표**: 프리미엄 요트 케어 예약 및 관리 플랫폼
 - **타겟**: 고급 요트 오너 및 마리나 회원
 
